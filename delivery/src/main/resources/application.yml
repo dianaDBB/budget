@@ -2,7 +2,7 @@ server:
   address: 0.0.0.0
   servlet:
     contextPath: /budget
-  port: 443
+  port: 8443
   ssl:
     key-store: classpath:keystore.p12
     key-store-password: 123456
