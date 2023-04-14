@@ -1,7 +1,7 @@
 #
 # Build stage
 #
-FROM maven:3.8.6-jdk-17-slim AS build
+FROM maven:3.8.6-jdk-17 AS build
 COPY budget /home/app/budget
 RUN mvn -f /home/app/budget/pom.xml clean package
 
