@@ -2,7 +2,7 @@
 # Build stage
 #
 FROM maven:3.8.5-openjdk-17 AS build
-COPY budget /home/app/budget
+COPY budget /home/app
 RUN mvn -f /home/app/budget/pom.xml clean package
 
 #
