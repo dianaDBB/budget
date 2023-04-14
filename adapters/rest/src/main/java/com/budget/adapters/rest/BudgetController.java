@@ -1,8 +1,10 @@
 package com.budget.adapters.rest;
 
 import com.budget.core.BudgetService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.servers.Server;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -20,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @RestController
+@OpenAPIDefinition(servers = @Server(url = "https://budget-api.com", description = "Budget API"))
 @RequestMapping("/budget")
 public class BudgetController {
     @Autowired

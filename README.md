@@ -10,5 +10,5 @@
 - Kill the process: `kill -9 $(lsof -ti:8443)`
 
 ## Swagger
-- Local: https://localhost:8443/budget/swagger-ui/index.html#/
-- Deployed: https://budget-dbb.up.railway.app/budget/swagger-ui/index.html#/
+- Local: http://localhost:8443/budget/swagger-ui/index.html#/
+- Deployed: https://budget-bank.up.railway.app/budget/swagger-ui/index.html#/
