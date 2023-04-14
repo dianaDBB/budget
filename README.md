@@ -11,4 +11,4 @@
 
 ## Swagger
 - Local: https://localhost:443/budget/swagger-ui/index.html#/
-- Deployed: httpss://budget-dbb.up.railway.app/budget/swagger-ui/index.html#/
+- Deployed: https://budget-dbb.up.railway.app/budget/swagger-ui/index.html#/
