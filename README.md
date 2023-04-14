@@ -7,7 +7,8 @@
 
 ## Run
 - `java -jar path_to_delivery-1.0-SNAPSHOT.jar`
-- Kill the process: `kill -9 $(lsof -ti:8081)`
+- Kill the process: `kill -9 $(lsof -ti:443)`
 
 ## Swagger
-http://localhost:8081/budget/swagger-ui/index.html#/
+- Local: https://localhost:443/budget/swagger-ui/index.html#/
+- Deployed: httpss://budget-dbb.up.railway.app/budget/swagger-ui/index.html#/
