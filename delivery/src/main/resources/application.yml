@@ -9,6 +9,9 @@ server:
     keyStoreType: PKCS12
     keyAlias: tomcat
     enabled: true
+    protocol: TLS
+    enabled-protocols: TLSv1.2
+    client-auth: none
 
 montepio:
   name: Montepio
