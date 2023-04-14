@@ -22,7 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @RestController
-@OpenAPIDefinition(servers = @Server(url = "https://budget-bank.up.railway.app", description = "Budget API"))
+@OpenAPIDefinition(servers = @Server(url = "https://budget-bank.up.railway.app/budget", description = "Budget API"))
 @RequestMapping("/budget")
 public class BudgetController {
     @Autowired
