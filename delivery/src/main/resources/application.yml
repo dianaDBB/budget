@@ -12,24 +12,27 @@ montepio:
   descriptionColumnPosition: 2
   dateFormat: yyyy-MM-dd
   delimiter: \t
+  cdColumnPosition: -1
 
 activoBank:
   name: ActivoBank
-  firstLine: 10
+  firstLine: 8
   dateColumnPosition: 0
   amountColumnPosition: 3
   descriptionColumnPosition: 2
-  dateFormat: yyyy-MM-dd
+  dateFormat: dd-MMMM-yyyy
   delimiter: \t
+  cdColumnPosition: -1
 
 creditoAgricola:
   name: CreditoAgricola
-  firstLine: 10
+  firstLine: 6
   dateColumnPosition: 0
-  amountColumnPosition: 3
+  amountColumnPosition: 4
   descriptionColumnPosition: 2
-  dateFormat: yyyy-MM-dd
+  dateFormat: dd/MM/yyyy
   delimiter: \t
+  cdColumnPosition: 5
 
 cryptoCom:
   name: CryptoCom
@@ -39,3 +42,4 @@ cryptoCom:
   descriptionColumnPosition: 1
   dateFormat: "yyyy-MM-dd hh:mm:ss"
   delimiter: ","
+  cdColumnPosition: -1

@@ -10,9 +10,10 @@ public interface BankConfig {
     int getAmountColumnPosition();
     int getDateColumnPosition();
     int getDescriptionColumnPosition();
+    int getCDColumnPosition();
     Date getDate(String value) throws ParseException;
-    double getAmount(String value);
-    String getType(double value);
+    double getAmount(String value, String creditOrDebit);
+    String getType(double value, String creditOrDebit);
     String getCategory();
     String getSubCategory();
 }

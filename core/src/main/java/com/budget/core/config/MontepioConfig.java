@@ -16,6 +16,7 @@ public class MontepioConfig implements BankConfig {
     public int descriptionColumnPosition;
     public String dateFormat;
     public String delimiter;
+    public int cdColumnPosition;
 
     public MontepioConfig(
             @Value("${montepio.name}") String name,
@@ -24,7 +25,8 @@ public class MontepioConfig implements BankConfig {
             @Value("${montepio.amountColumnPosition}") int amountColumnPosition,
             @Value("${montepio.descriptionColumnPosition}") int descriptionColumnPosition,
             @Value("${montepio.dateFormat}") String dateFormat,
-            @Value("${montepio.delimiter}") String delimiter) {
+            @Value("${montepio.delimiter}") String delimiter,
+            @Value("${montepio.cdColumnPosition}") int cdColumnPosition) {
         this.name = name;
         this.firstLine = firstLine;
         this.dateColumnPosition = dateColumnPosition;
@@ -32,6 +34,7 @@ public class MontepioConfig implements BankConfig {
         this.descriptionColumnPosition = descriptionColumnPosition;
         this.dateFormat = dateFormat;
         this.delimiter = delimiter;
+        this.cdColumnPosition = cdColumnPosition;
     }
 
     @Override
@@ -66,18 +69,23 @@ public class MontepioConfig implements BankConfig {
     }
 
     @Override
+    public int getCDColumnPosition() {
+        return this.cdColumnPosition;
+    }
+
+    @Override
     public Date getDate(String value) throws ParseException {
         String dateFormat = this.dateFormat;
         return (new SimpleDateFormat(dateFormat)).parse(value);
     }
 
     @Override
-    public double getAmount(String value) {
+    public double getAmount(String value, String creditOrDebit) {
         return Double.parseDouble(value.replace(".", "").replace(",", "."));
     }
 
     @Override
-    public String getType(double value) {
+    public String getType(double value, String creditOrDebit) {
         return (value > 0) ? "Income" : "Expense";
     }
 

@@ -16,6 +16,7 @@ public class CryptoComConfig implements BankConfig {
     public int descriptionColumnPosition;
     public String dateFormat;
     public String delimiter;
+    public int cdColumnPosition;
 
     public CryptoComConfig(
             @Value("${cryptoCom.name}") String name,
@@ -24,7 +25,8 @@ public class CryptoComConfig implements BankConfig {
             @Value("${cryptoCom.amountColumnPosition}") int amountColumnPosition,
             @Value("${cryptoCom.descriptionColumnPosition}") int descriptionColumnPosition,
             @Value("${cryptoCom.dateFormat}") String dateFormat,
-            @Value("${cryptoCom.delimiter}") String delimiter) {
+            @Value("${cryptoCom.delimiter}") String delimiter,
+            @Value("${cryptoCom.cdColumnPosition}") int cdColumnPosition) {
         this.name = name;
         this.firstLine = firstLine;
         this.dateColumnPosition = dateColumnPosition;
@@ -32,6 +34,7 @@ public class CryptoComConfig implements BankConfig {
         this.descriptionColumnPosition = descriptionColumnPosition;
         this.dateFormat = dateFormat;
         this.delimiter = delimiter;
+        this.cdColumnPosition = cdColumnPosition;
     }
 
     @Override
@@ -66,18 +69,23 @@ public class CryptoComConfig implements BankConfig {
     }
 
     @Override
+    public int getCDColumnPosition() {
+        return this.cdColumnPosition;
+    }
+
+    @Override
     public Date getDate(String value) throws ParseException {
         String dateFormat = this.dateFormat;
         return (new SimpleDateFormat(dateFormat)).parse(value);
     }
 
     @Override
-    public double getAmount(String value) {
+    public double getAmount(String value, String creditOrDebit) {
         return Double.parseDouble(value);
     }
 
     @Override
-    public String getType(double value) {
+    public String getType(double value, String creditOrDebit) {
         return (value > 0) ? "Income" : "Expense";
     }
 

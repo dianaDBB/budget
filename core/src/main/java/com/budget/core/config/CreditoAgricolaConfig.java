@@ -16,6 +16,7 @@ public class CreditoAgricolaConfig implements BankConfig {
     public int descriptionColumnPosition;
     public String dateFormat;
     public String delimiter;
+    public int cdColumnPosition;
 
     public CreditoAgricolaConfig(
             @Value("${creditoAgricola.name}") String name,
@@ -24,7 +25,8 @@ public class CreditoAgricolaConfig implements BankConfig {
             @Value("${creditoAgricola.amountColumnPosition}") int amountColumnPosition,
             @Value("${creditoAgricola.descriptionColumnPosition}") int descriptionColumnPosition,
             @Value("${creditoAgricola.dateFormat}") String dateFormat,
-            @Value("${creditoAgricola.delimiter}") String delimiter) {
+            @Value("${creditoAgricola.delimiter}") String delimiter,
+            @Value("${creditoAgricola.cdColumnPosition}") int cdColumnPosition) {
         this.name = name;
         this.firstLine = firstLine;
         this.dateColumnPosition = dateColumnPosition;
@@ -32,6 +34,7 @@ public class CreditoAgricolaConfig implements BankConfig {
         this.descriptionColumnPosition = descriptionColumnPosition;
         this.dateFormat = dateFormat;
         this.delimiter = delimiter;
+        this.cdColumnPosition = cdColumnPosition;
     }
 
     @Override
@@ -66,19 +69,28 @@ public class CreditoAgricolaConfig implements BankConfig {
     }
 
     @Override
+    public int getCDColumnPosition() {
+        return this.cdColumnPosition;
+    }
+
+    @Override
     public Date getDate(String value) throws ParseException {
         String dateFormat = this.dateFormat;
         return (new SimpleDateFormat(dateFormat)).parse(value);
     }
 
     @Override
-    public double getAmount(String value) {
-        return Double.parseDouble(value);
+    public double getAmount(String value, String creditOrDebit) {
+        if(creditOrDebit.equals("C")) {
+            return Double.parseDouble(value);
+        }
+
+        return Double.parseDouble(value) * -1;
     }
 
     @Override
-    public String getType(double value) {
-        return (value > 0) ? "Income" : "Expense";
+    public String getType(double value, String creditOrDebit) {
+        return (creditOrDebit.equals("C")) ? "Income" : "Expense";
     }
 
     @Override
