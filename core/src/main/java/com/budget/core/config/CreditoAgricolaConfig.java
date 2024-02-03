@@ -87,21 +87,4 @@ public class CreditoAgricolaConfig implements BankConfig {
 
         return Double.parseDouble(value) * -1;
     }
-
-    @Override
-    public String getType(double value, String creditOrDebit) {
-        return (creditOrDebit.equals("C")) ? "Income" : "Expense";
-    }
-
-    @Override
-    public String getCategory() {
-        // TODO: we can add here some logic to get the category
-        return "";
-    }
-
-    @Override
-    public String getSubCategory() {
-        // TODO: we can add here some logic to get the sub-category
-        return "";
-    }
 }

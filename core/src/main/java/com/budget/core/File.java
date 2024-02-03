@@ -92,15 +92,15 @@ public class File {
                     String creditOrDebit = (bank.config.getCDColumnPosition() >= 0)
                             ? bankRow.getCell(bank.config.getCDColumnPosition()).toString()
                             : "N/A";
+                    String originalDescription = bankRow.getCell(bank.config.getDescriptionColumnPosition()).toString();
+
                     double amount = bank.config.getAmount(bankRow.getCell(bank.config.getAmountColumnPosition()).toString(), creditOrDebit);
                     Date date = bank.config.getDate(bankRow.getCell(bank.config.getDateColumnPosition()).toString());
-                    String type = bank.config.getType(amount, creditOrDebit);
-                    String originalDescription = bankRow.getCell(bank.config.getDescriptionColumnPosition()).toString();
-                    String category = bank.config.getCategory();
-                    String subCategory = bank.config.getSubCategory();
+                    String type = bank.config.getType(amount, creditOrDebit, originalDescription);
+                    String[] category = bank.config.getCategory(originalDescription);
 
                     // add new row, with values for each column, to Excel file
-                    addRow(bankName, date, type, category, subCategory, amount, originalDescription);
+                    addRow(bankName, date, type, category[0], category[1], amount, originalDescription);
                 }
             }
             workbook.close();
@@ -127,15 +127,15 @@ public class File {
                         String creditOrDebit = (bank.config.getCDColumnPosition() >= 0)
                                 ? columns[bank.config.getCDColumnPosition()]
                                 : "N/A";
+                        String originalDescription = columns[bank.config.getDescriptionColumnPosition()];
+
                         double amount = bank.config.getAmount(columns[bank.config.getAmountColumnPosition()], creditOrDebit);
                         Date date = bank.config.getDate(columns[bank.config.getDateColumnPosition()]);
-                        String type = bank.config.getType(amount, creditOrDebit);
-                        String originalDescription = columns[bank.config.getDescriptionColumnPosition()];
-                        String category = bank.config.getCategory();
-                        String subCategory = bank.config.getSubCategory();
+                        String type = bank.config.getType(amount, creditOrDebit, originalDescription);
+                        String[] category = bank.config.getCategory(originalDescription);
 
                         // add new row, with values for each column, to Excel file
-                        addRow(bankName, date, type, category, subCategory, amount, originalDescription);
+                        addRow(bankName, date, type, category[0], category[1], amount, originalDescription);
                     }
                 }
 

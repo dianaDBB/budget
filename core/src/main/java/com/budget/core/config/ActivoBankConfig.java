@@ -83,21 +83,4 @@ public class ActivoBankConfig implements BankConfig {
     public double getAmount(String value, String creditOrDebit) {
         return Double.parseDouble(value);
     }
-
-    @Override
-    public String getType(double value, String creditOrDebit) {
-        return (value > 0) ? "Income" : "Expense";
-    }
-
-    @Override
-    public String getCategory() {
-        // TODO: we can add here some logic to get the category
-        return "";
-    }
-
-    @Override
-    public String getSubCategory() {
-        // TODO: we can add here some logic to get the sub-category
-        return "";
-    }
 }
