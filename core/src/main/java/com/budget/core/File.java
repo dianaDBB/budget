@@ -88,6 +88,16 @@ public class File {
             Workbook workbook = WorkbookFactory.create(bank.file.getInputStream());
             for (Row bankRow : workbook.getSheetAt(0)) {
                 if(bankRow.getRowNum() >= bank.config.getFirstLine()) {
+                    String firstCell = bankRow.getCell(0).toString();
+
+                    if(firstCell.isEmpty()) {
+                        continue;
+                    }
+
+                    if(bank.config.ignoreValues().contains(firstCell)) {
+                        continue;
+                    }
+
                     String bankName = bank.config.getName();
                     String creditOrDebit = (bank.config.getCDColumnPosition() >= 0)
                             ? bankRow.getCell(bank.config.getCDColumnPosition()).toString()

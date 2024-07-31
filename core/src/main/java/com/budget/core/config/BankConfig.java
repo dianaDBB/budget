@@ -3,8 +3,13 @@ package com.budget.core.config;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 public interface BankConfig {
+    default Set<String> ignoreValues() {
+        return Set.of();
+    }
+
     String getName();
 
     int getFirstLine();

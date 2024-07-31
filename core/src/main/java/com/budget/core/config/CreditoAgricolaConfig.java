@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 
 @Configuration
 public class CreditoAgricolaConfig implements BankConfig {
@@ -35,6 +36,11 @@ public class CreditoAgricolaConfig implements BankConfig {
         this.dateFormat = dateFormat;
         this.delimiter = delimiter;
         this.cdColumnPosition = cdColumnPosition;
+    }
+
+    @Override
+    public Set<String> ignoreValues() {
+        return Set.of("Nome Ordenante", "NIB/IBAN/Conta Ordenante", "Nome do Beneficiário");
     }
 
     @Override
