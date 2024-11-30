@@ -43,14 +43,13 @@ public class BudgetController {
     @Operation(description = "From all banks csv file, generates an Excel file with the correct format")
     @ApiResponse(responseCode = "200", description = "Excel file is generated successfully")
     public ResponseEntity<ByteArrayResource> allFilesToExcel (
-            @RequestPart("montepioFile") MultipartFile montepioFile,
             @RequestPart("activoBankFile") MultipartFile activoBankFile,
             @RequestPart("creditoAgricolaFile") MultipartFile creditoAgricolaFile,
             @RequestPart("cryptoComFile") MultipartFile cryptoComFile
     ){
         try {
             Workbook workbook = budgetService.allFilesToExcel(
-                    montepioFile, activoBankFile, creditoAgricolaFile, cryptoComFile);
+                    /*montepioFile,*/ activoBankFile, creditoAgricolaFile, cryptoComFile);
             return getBankFileResponse(workbook, "banks");
         }
         catch (Exception e) {

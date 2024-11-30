@@ -27,12 +27,10 @@ public class BudgetServiceImpl implements BudgetService {
     CryptoComConfig cryptoComConfig;
 
     @Override
-    public Workbook allFilesToExcel(MultipartFile montepioFile,
-                                    MultipartFile activoBankFile,
+    public Workbook allFilesToExcel(MultipartFile activoBankFile,
                                     MultipartFile creditoAgricolaFile,
                                     MultipartFile cryptoComFile) {
         var banksExcelFile = new File(List.of(
-                new Bank(montepioConfig, montepioFile),
                 new Bank(activoBankConfig, activoBankFile),
                 new Bank(creditoAgricolaConfig, creditoAgricolaFile),
                 new Bank(cryptoComConfig, cryptoComFile)

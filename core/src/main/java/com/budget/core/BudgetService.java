@@ -8,8 +8,7 @@ import java.io.IOException;
 
 @Component
 public interface BudgetService {
-    Workbook allFilesToExcel(MultipartFile montepioFile,
-                             MultipartFile activoBankFile,
+    Workbook allFilesToExcel(MultipartFile activoBankFile,
                              MultipartFile creditoAgricolaFile,
                              MultipartFile cryptoComFile) throws IOException;
     Workbook montepioFileToExcel(MultipartFile multipartFile) throws IOException;
