@@ -40,7 +40,7 @@ public class CreditoAgricolaConfig implements BankConfig {
 
     @Override
     public Set<String> ignoreValues() {
-        return Set.of("Nome Ordenante", "NIB/IBAN/Conta Ordenante", "Nome do Beneficiário");
+        return Set.of("Nome Ordenante", "NIB/IBAN/Conta Ordenante", "Nome do Beneficiário", "Referência");
     }
 
     @Override
