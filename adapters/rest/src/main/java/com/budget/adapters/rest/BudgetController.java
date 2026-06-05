@@ -3,6 +3,7 @@ package com.budget.adapters.rest;
 import com.budget.core.BudgetService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.servers.Server;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -22,7 +23,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @RestController
-@OpenAPIDefinition(servers = @Server(url = "http://localhost:8443/budget", description = "Budget API"))
+// @OpenAPIDefinition(servers = @Server(url = "http://localhost:8443/budget", description = "Budget API"))
+@OpenAPIDefinition(info = @Info(title = "Budget API", version = "1.0"))
 @RequestMapping("/budget")
 public class BudgetController {
     @Autowired
