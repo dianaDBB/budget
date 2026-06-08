@@ -1,16 +1,18 @@
 # How to run
 
-1. Select the file `delivery/src/main/java/com.budget/BudgetApiApplication.java`
-2. Right click and select "Run"
-3. Open a browser and go to http://localhost:8443/budget/swagger-ui/index.html#/
-   - Expand the `budget/file/all`
-   - Click on "Try it out"
-   - Select the files
-   - Click on "Execute"
-   - File will be generated - click on "Download" to get the file
+- Open terminal and execute the following:
+```
+mvn clean install
+mvn spring-boot:run
+```
 
-## Postman local
-- http://localhost:8443/budget/budget/file/all
+- Or select the file `delivery/src/main/java/com.budget/BudgetApiApplication.java`, right click and select "Run"
 
-## Swagger
+# Swagger
 - http://localhost:8443/budget/swagger-ui/index.html#/
+
+# Render
+https://dashboard.render.com/
+
+- Used to deploy and expose the API
+- https://budget-cemp.onrender.com/budget/swagger-ui/index.html
