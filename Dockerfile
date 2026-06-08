@@ -1,15 +1,24 @@
 #
 # Build stage
 #
-FROM maven:3.8.5-openjdk-17 AS build
-COPY . /home/app/
-COPY pom.xml /home/app
-RUN mvn -f /home/app/pom.xml clean package
+FROM maven:3.9.6-eclipse-temurin-21 AS build
+
+WORKDIR /home/app
+
+COPY pom.xml .
+COPY src ./src
+
+RUN mvn clean package -DskipTests
 
 #
 # Package stage
 #
-FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /home/app/delivery/target/delivery-1.0.0-SNAPSHOT.jar /usr/local/lib/budget.jar
+FROM eclipse-temurin:21-jdk
+
+WORKDIR /app
+
+COPY --from=build /home/app/target/*.jar app.jar
+
 EXPOSE 8443
-ENTRYPOINT ["java","-jar","/usr/local/lib/budget.jar"]
+
+ENTRYPOINT ["java","-jar","app.jar"]
