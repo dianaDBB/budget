@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.servers.Server;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -15,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @RestController
-// @OpenAPIDefinition(servers = @Server(url = "http://localhost:8443/budget", description = "Budget API"))
 @OpenAPIDefinition(info = @Info(title = "Budget API", version = "1.0"))
 @RequestMapping("/budget")
 public class BudgetController {
@@ -45,9 +44,9 @@ public class BudgetController {
     @Operation(description = "From all banks csv file, generates an Excel file with the correct format")
     @ApiResponse(responseCode = "200", description = "Excel file is generated successfully")
     public ResponseEntity<ByteArrayResource> allFilesToExcel (
-            @RequestPart("activoBankFile") MultipartFile activoBankFile,
-            @RequestPart("creditoAgricolaFile") MultipartFile creditoAgricolaFile,
-            @RequestPart("cryptoComFile") MultipartFile cryptoComFile
+            @RequestParam("activoBankFile") MultipartFile activoBankFile,
+            @RequestParam("creditoAgricolaFile") MultipartFile creditoAgricolaFile,
+            @RequestParam("cryptoComFile") MultipartFile cryptoComFile
     ){
         try {
             Workbook workbook = budgetService.allFilesToExcel(
