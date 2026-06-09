@@ -29,7 +29,7 @@ public interface BankConfig {
     double getAmount(String value, String creditOrDebit);
 
     default String getType(double value, String creditOrDebit, String originalDescription) {
-        if(originalDescription.toUpperCase().contains("S/ LEVANTAMENTOS")) {
+        if (originalDescription.toUpperCase().contains("S/ LEVANTAMENTOS")) {
             return "Expense";
         }
         if (originalDescription.toUpperCase().contains("TRF P/ DIANA") ||
@@ -55,7 +55,7 @@ public interface BankConfig {
     }
 
     default String[] getCategory(String value) {
-        if(value.toUpperCase().contains("S/ LEVANTAMENTOS")) {
+        if (value.toUpperCase().contains("S/ LEVANTAMENTOS")) {
             return new String[]{"Bank", "Fees"};
         } else if (value.toUpperCase().contains("VODAFONE")) {
             return new String[]{"Utilities", "Internet"};
@@ -141,7 +141,7 @@ public interface BankConfig {
             return new String[]{"Utilities", "Phone"};
         } else if (value.toUpperCase().contains("TRF.     0000351 00938121242")) {
             return new String[]{"Home", "Loan"};
-        } else if(value.toUpperCase().contains("POSTO ABASTECIMENT")) {
+        } else if (value.toUpperCase().contains("POSTO ABASTECIMENT")) {
             return new String[]{"Car", "Fuel"};
         }
 

@@ -45,8 +45,7 @@ public class CryptoComConfig implements BankConfig {
     }
 
     @Override
-    public int getDescriptionColumnPosition()
-    {
+    public int getDescriptionColumnPosition() {
         return this.descriptionColumnPosition;
     }
 

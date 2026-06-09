@@ -51,8 +51,7 @@ public class CreditoAgricolaConfig implements BankConfig {
     }
 
     @Override
-    public int getDescriptionColumnPosition()
-    {
+    public int getDescriptionColumnPosition() {
         return this.descriptionColumnPosition;
     }
 
@@ -69,7 +68,7 @@ public class CreditoAgricolaConfig implements BankConfig {
 
     @Override
     public double getAmount(String value, String creditOrDebit) {
-        if(creditOrDebit.equals("C")) {
+        if (creditOrDebit.equals("C")) {
             return Double.parseDouble(value);
         }
 

@@ -87,14 +87,14 @@ public class File {
         try {
             Workbook workbook = WorkbookFactory.create(bank.file.getInputStream());
             for (Row bankRow : workbook.getSheetAt(0)) {
-                if(bankRow.getRowNum() >= bank.config.getFirstLine()) {
+                if (bankRow.getRowNum() >= bank.config.getFirstLine()) {
                     String firstCell = bankRow.getCell(0).toString();
 
-                    if(firstCell.isEmpty()) {
+                    if (firstCell.isEmpty()) {
                         continue;
                     }
 
-                    if(bank.config.ignoreValues().contains(firstCell)) {
+                    if (bank.config.ignoreValues().contains(firstCell)) {
                         continue;
                     }
 
@@ -130,7 +130,7 @@ public class File {
         List<String> lines = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines().toList();
         for (String line : lines) {
             try {
-                if(lineCount >= bank.config.getFirstLine()) {
+                if (lineCount >= bank.config.getFirstLine()) {
                     String[] columns = line.split(bank.config.getDelimiter());
                     if (columns.length > 1) {
                         String bankName = bank.config.getName();
