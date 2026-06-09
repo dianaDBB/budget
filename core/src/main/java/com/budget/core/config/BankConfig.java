@@ -22,7 +22,7 @@ public interface BankConfig {
 
     int getDescriptionColumnPosition();
 
-    int getCDColumnPosition();
+    int getCdColumnPosition();
 
     Date getDate(String value) throws ParseException;
 
@@ -147,4 +147,20 @@ public interface BankConfig {
 
         return new String[]{"", ""};
     }
+
+    void setName(String name);
+
+    void setFirstLine(int firstLine);
+
+    void setDateColumnPosition(int dateColumnPosition);
+
+    void setAmountColumnPosition(int amountColumnPosition);
+
+    void setDescriptionColumnPosition(int descriptionColumnPosition);
+
+    void setDateFormat(String dateFormat);
+
+    void setDelimiter(String delimiter);
+
+    void setCdColumnPosition(int cdColumnPosition);
 }

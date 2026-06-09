@@ -76,34 +76,42 @@ public class CreditoAgricolaConfig implements BankConfig {
         return Double.parseDouble(value) * -1;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public void setFirstLine(int firstLine) {
         this.firstLine = firstLine;
     }
 
+    @Override
     public void setDateColumnPosition(int dateColumnPosition) {
         this.dateColumnPosition = dateColumnPosition;
     }
 
+    @Override
     public void setAmountColumnPosition(int amountColumnPosition) {
         this.amountColumnPosition = amountColumnPosition;
     }
 
+    @Override
     public void setDescriptionColumnPosition(int descriptionColumnPosition) {
         this.descriptionColumnPosition = descriptionColumnPosition;
     }
 
+    @Override
     public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
     }
 
+    @Override
     public void setDelimiter(String delimiter) {
         this.delimiter = delimiter;
     }
 
+    @Override
     public void setCdColumnPosition(int cdColumnPosition) {
         this.cdColumnPosition = cdColumnPosition;
     }

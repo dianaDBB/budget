@@ -1,41 +1,23 @@
 package com.budget.core.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Configuration
+@Component
+@ConfigurationProperties(prefix = "crypto-com")
 public class CryptoComConfig implements BankConfig {
-    public String name;
-    public int firstLine;
-    public int dateColumnPosition;
-    public int amountColumnPosition;
-    public int descriptionColumnPosition;
-    public String dateFormat;
-    public String delimiter;
-    public int cdColumnPosition;
-
-    public CryptoComConfig(
-            @Value("${cryptoCom.name}") String name,
-            @Value("${cryptoCom.firstLine}") int firstLine,
-            @Value("${cryptoCom.dateColumnPosition}") int dateColumnPosition,
-            @Value("${cryptoCom.amountColumnPosition}") int amountColumnPosition,
-            @Value("${cryptoCom.descriptionColumnPosition}") int descriptionColumnPosition,
-            @Value("${cryptoCom.dateFormat}") String dateFormat,
-            @Value("${cryptoCom.delimiter}") String delimiter,
-            @Value("${cryptoCom.cdColumnPosition}") int cdColumnPosition) {
-        this.name = name;
-        this.firstLine = firstLine;
-        this.dateColumnPosition = dateColumnPosition;
-        this.amountColumnPosition = amountColumnPosition;
-        this.descriptionColumnPosition = descriptionColumnPosition;
-        this.dateFormat = dateFormat;
-        this.delimiter = delimiter;
-        this.cdColumnPosition = cdColumnPosition;
-    }
+    private String name;
+    private int firstLine;
+    private int dateColumnPosition;
+    private int amountColumnPosition;
+    private int descriptionColumnPosition;
+    private String dateFormat;
+    private String delimiter;
+    private int cdColumnPosition;
 
     @Override
     public String getName() {
@@ -69,7 +51,7 @@ public class CryptoComConfig implements BankConfig {
     }
 
     @Override
-    public int getCDColumnPosition() {
+    public int getCdColumnPosition() {
         return this.cdColumnPosition;
     }
 
@@ -82,5 +64,45 @@ public class CryptoComConfig implements BankConfig {
     @Override
     public double getAmount(String value, String creditOrDebit) {
         return Double.parseDouble(value);
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void setFirstLine(int firstLine) {
+        this.firstLine = firstLine;
+    }
+
+    @Override
+    public void setDateColumnPosition(int dateColumnPosition) {
+        this.dateColumnPosition = dateColumnPosition;
+    }
+
+    @Override
+    public void setAmountColumnPosition(int amountColumnPosition) {
+        this.amountColumnPosition = amountColumnPosition;
+    }
+
+    @Override
+    public void setDescriptionColumnPosition(int descriptionColumnPosition) {
+        this.descriptionColumnPosition = descriptionColumnPosition;
+    }
+
+    @Override
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
+
+    @Override
+    public void setDelimiter(String delimiter) {
+        this.delimiter = delimiter;
+    }
+
+    @Override
+    public void setCdColumnPosition(int cdColumnPosition) {
+        this.cdColumnPosition = cdColumnPosition;
     }
 }
