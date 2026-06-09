@@ -1,42 +1,24 @@
 package com.budget.core.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
-@Configuration
+@Component
+@ConfigurationProperties(prefix = "credito-agricola")
 public class CreditoAgricolaConfig implements BankConfig {
-    public String name;
-    public int firstLine;
-    public int dateColumnPosition;
-    public int amountColumnPosition;
-    public int descriptionColumnPosition;
-    public String dateFormat;
-    public String delimiter;
-    public int cdColumnPosition;
-
-    public CreditoAgricolaConfig(
-            @Value("${creditoAgricola.name}") String name,
-            @Value("${creditoAgricola.firstLine}") int firstLine,
-            @Value("${creditoAgricola.dateColumnPosition}") int dateColumnPosition,
-            @Value("${creditoAgricola.amountColumnPosition}") int amountColumnPosition,
-            @Value("${creditoAgricola.descriptionColumnPosition}") int descriptionColumnPosition,
-            @Value("${creditoAgricola.dateFormat}") String dateFormat,
-            @Value("${creditoAgricola.delimiter}") String delimiter,
-            @Value("${creditoAgricola.cdColumnPosition}") int cdColumnPosition) {
-        this.name = name;
-        this.firstLine = firstLine;
-        this.dateColumnPosition = dateColumnPosition;
-        this.amountColumnPosition = amountColumnPosition;
-        this.descriptionColumnPosition = descriptionColumnPosition;
-        this.dateFormat = dateFormat;
-        this.delimiter = delimiter;
-        this.cdColumnPosition = cdColumnPosition;
-    }
+    private String name;
+    private int firstLine;
+    private int dateColumnPosition;
+    private int amountColumnPosition;
+    private int descriptionColumnPosition;
+    private String dateFormat;
+    private String delimiter;
+    private int cdColumnPosition;
 
     @Override
     public Set<String> ignoreValues() {
@@ -75,7 +57,7 @@ public class CreditoAgricolaConfig implements BankConfig {
     }
 
     @Override
-    public int getCDColumnPosition() {
+    public int getCdColumnPosition() {
         return this.cdColumnPosition;
     }
 
@@ -92,5 +74,37 @@ public class CreditoAgricolaConfig implements BankConfig {
         }
 
         return Double.parseDouble(value) * -1;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setFirstLine(int firstLine) {
+        this.firstLine = firstLine;
+    }
+
+    public void setDateColumnPosition(int dateColumnPosition) {
+        this.dateColumnPosition = dateColumnPosition;
+    }
+
+    public void setAmountColumnPosition(int amountColumnPosition) {
+        this.amountColumnPosition = amountColumnPosition;
+    }
+
+    public void setDescriptionColumnPosition(int descriptionColumnPosition) {
+        this.descriptionColumnPosition = descriptionColumnPosition;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
+
+    public void setDelimiter(String delimiter) {
+        this.delimiter = delimiter;
+    }
+
+    public void setCdColumnPosition(int cdColumnPosition) {
+        this.cdColumnPosition = cdColumnPosition;
     }
 }

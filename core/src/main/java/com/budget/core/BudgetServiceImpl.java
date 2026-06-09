@@ -4,7 +4,6 @@ import com.budget.core.config.ActivoBankConfig;
 import com.budget.core.config.Bank;
 import com.budget.core.config.CreditoAgricolaConfig;
 import com.budget.core.config.CryptoComConfig;
-import com.budget.core.config.MontepioConfig;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,9 +13,6 @@ import java.util.List;
 
 @Service
 public class BudgetServiceImpl implements BudgetService {
-    @Autowired
-    MontepioConfig montepioConfig;
-
     @Autowired
     ActivoBankConfig activoBankConfig;
 
@@ -36,12 +32,6 @@ public class BudgetServiceImpl implements BudgetService {
                 new Bank(cryptoComConfig, cryptoComFile)
         ));
         return banksExcelFile.bankFileToExcelFile();
-    }
-
-    @Override
-    public Workbook montepioFileToExcel(MultipartFile multipartFile) {
-        var file = new File(new Bank(montepioConfig, multipartFile));
-        return file.bankFileToExcelFile();
     }
 
     @Override

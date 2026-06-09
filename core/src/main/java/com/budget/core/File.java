@@ -99,8 +99,8 @@ public class File {
                     }
 
                     String bankName = bank.config.getName();
-                    String creditOrDebit = (bank.config.getCDColumnPosition() >= 0)
-                            ? bankRow.getCell(bank.config.getCDColumnPosition()).toString()
+                    String creditOrDebit = (bank.config.getCdColumnPosition() >= 0)
+                            ? bankRow.getCell(bank.config.getCdColumnPosition()).toString()
                             : "N/A";
                     String originalDescription = bankRow.getCell(bank.config.getDescriptionColumnPosition()).toString();
 
@@ -134,8 +134,8 @@ public class File {
                     String[] columns = line.split(bank.config.getDelimiter());
                     if (columns.length > 1) {
                         String bankName = bank.config.getName();
-                        String creditOrDebit = (bank.config.getCDColumnPosition() >= 0)
-                                ? columns[bank.config.getCDColumnPosition()]
+                        String creditOrDebit = (bank.config.getCdColumnPosition() >= 0)
+                                ? columns[bank.config.getCdColumnPosition()]
                                 : "N/A";
                         String originalDescription = columns[bank.config.getDescriptionColumnPosition()];
 

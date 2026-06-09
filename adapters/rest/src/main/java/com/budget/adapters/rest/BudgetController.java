@@ -49,22 +49,8 @@ public class BudgetController {
             @RequestParam("cryptoComFile") MultipartFile cryptoComFile
     ){
         try {
-            Workbook workbook = budgetService.allFilesToExcel(
-                    /*montepioFile,*/ activoBankFile, creditoAgricolaFile, cryptoComFile);
+            Workbook workbook = budgetService.allFilesToExcel(activoBankFile, creditoAgricolaFile, cryptoComFile);
             return getBankFileResponse(workbook, "banks");
-        }
-        catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping(value = "/file/montepio", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    @Operation(description = "From Montepio csv file, generates an Excel file with the correct format")
-    @ApiResponse(responseCode = "200", description = "Excel file is generated successfully")
-    public ResponseEntity<ByteArrayResource> montepioFileToExcel (@RequestPart("file") MultipartFile file) {
-        try {
-            Workbook workbook = budgetService.montepioFileToExcel(file);
-            return getBankFileResponse(workbook, "montepio");
         }
         catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
