@@ -1,29 +1,26 @@
 package com.budget.tests;
 
 import com.budget.BaseIT;
+import com.budget.apis.CryptoComApi;
+import com.budget.apis.Entry;
+import io.restassured.response.Response;
 import org.apache.poi.ss.usermodel.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
-import java.nio.file.Files;
+import java.util.List;
 
+import static com.budget.apis.CreditoAgricolaApi.createCreditoAgricolaInvalidFile;
+import static com.budget.apis.CryptoComApi.*;
+import static com.budget.helpers.FileXLSX.*;
+import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CryptoComFileIT extends BaseIT {
-    private File createCryptoComInputFile(String description, double amount) throws IOException {
-        File file = new File("target/test-cryptoCom-" + System.currentTimeMillis() + ".csv");
-        double nativeAmount = amount * 1.1;
-        String content = "Timestamp (UTC),Transaction Description,Currency,Amount,To Currency,To Amount,Native Currency,Native Amount,Native Amount (in USD),Transaction Kind,Transaction Hash\n" +
-                String.format("2026-06-09 10:00:00,%s,EUR,%.2f,,,EUR,%.2f,%.2f,,\n", description, amount, amount, nativeAmount);
-
-        Files.write(file.toPath(), content.getBytes());
-        return file;
-    }
-
     @Test
     void shouldUploadFileAndReturnValidXlsx() throws Exception {
         // Given I have an input file with a test transaction
-        File inputFile = createCryptoComInputFile("Test Transaction", -50.00);
+        File inputFile = createCryptoComFile(List.of(new Entry("Test Transaction", -50.00)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -53,7 +50,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeGroceryTransaction() throws Exception {
         // Given I have an input file with a grocery transaction
-        File inputFile = createCryptoComInputFile("COMPRA CONTINENTE Store", -45.50);
+        File inputFile = createCryptoComFile(List.of(new Entry("COMPRA CONTINENTE Store", -45.50)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -69,7 +66,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeDiningOutTransaction() throws Exception {
         // Given I have an input file with a dining transaction
-        File inputFile = createCryptoComInputFile("UBER    EATS Restaurant", -22.30);
+        File inputFile = createCryptoComFile(List.of(new Entry("UBER    EATS Restaurant", -22.30)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -85,7 +82,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeStreamingTransaction() throws Exception {
         // Given I have an input file with a streaming subscription transaction
-        File inputFile = createCryptoComInputFile("NETFLIX Subscription", -12.99);
+        File inputFile = createCryptoComFile(List.of(new Entry("NETFLIX Subscription", -12.99)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -101,7 +98,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeHealthTransaction() throws Exception {
         // Given I have an input file with a pharmacy transaction
-        File inputFile = createCryptoComInputFile("FARMACIA Pharmacy", -18.50);
+        File inputFile = createCryptoComFile(List.of(new Entry("FARMACIA Pharmacy", -18.50)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -117,7 +114,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeGymTransaction() throws Exception {
         // Given I have an input file with a gym transaction
-        File inputFile = createCryptoComInputFile("BALTAREJO Gym", -49.99);
+        File inputFile = createCryptoComFile(List.of(new Entry("BALTAREJO Gym", -49.99)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -133,7 +130,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeInternetTransaction() throws Exception {
         // Given I have an input file with an internet transaction
-        File inputFile = createCryptoComInputFile("VODAFONE Internet", -35.99);
+        File inputFile = createCryptoComFile(List.of(new Entry("VODAFONE Internet", -35.99)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -149,7 +146,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizePhoneTransaction() throws Exception {
         // Given I have an input file with a phone transaction
-        File inputFile = createCryptoComInputFile("NOS COM Phone", -40.50);
+        File inputFile = createCryptoComFile(List.of(new Entry("NOS COM Phone", -40.50)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -165,7 +162,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeFuelTransaction() throws Exception {
         // Given I have an input file with a fuel transaction
-        File inputFile = createCryptoComInputFile("GALP Fuel Station", -60.00);
+        File inputFile = createCryptoComFile(List.of(new Entry("GALP Fuel Station", -60.00)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -181,7 +178,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeTollsTransaction() throws Exception {
         // Given I have an input file with a tolls transaction
-        File inputFile = createCryptoComInputFile("VIA VERDE Toll", -8.50);
+        File inputFile = createCryptoComFile(List.of(new Entry("VIA VERDE Toll", -8.50)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -197,7 +194,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeContractorTransaction() throws Exception {
         // Given I have an input file with a contractor transaction
-        File inputFile = createCryptoComInputFile("IDEIAS DECIMAIS Contractor", -150.00);
+        File inputFile = createCryptoComFile(List.of(new Entry("IDEIAS DECIMAIS Contractor", -150.00)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -213,7 +210,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeSuppliesTransaction() throws Exception {
         // Given I have an input file with an office supplies transaction
-        File inputFile = createCryptoComInputFile("COMPRA STAPLES Supplies", -25.75);
+        File inputFile = createCryptoComFile(List.of(new Entry("COMPRA STAPLES Supplies", -25.75)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -229,7 +226,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeFeesTransaction() throws Exception {
         // Given I have an input file with a bank fees transaction
-        File inputFile = createCryptoComInputFile("COMISSÃO S/ Bank Fee", -2.50);
+        File inputFile = createCryptoComFile(List.of(new Entry("COMISSÃO S/ Bank Fee", -2.50)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -245,7 +242,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeLoanTransaction() throws Exception {
         // Given I have an input file with a loan transaction
-        File inputFile = createCryptoComInputFile("TRF.     0000351 00938121242", -250.00);
+        File inputFile = createCryptoComFile(List.of(new Entry("TRF.     0000351 00938121242", -250.00)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -261,7 +258,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldNotCategorizeUnknownTransaction() throws Exception {
         // Given I have an input file with an unknown transaction
-        File inputFile = createCryptoComInputFile("Unknown Random Purchase", -99.99);
+        File inputFile = createCryptoComFile(List.of(new Entry("Unknown Random Purchase", -99.99)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -277,7 +274,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldClassifyIncomeTransaction() throws Exception {
         // Given I have an input file with an income transaction
-        File inputFile = createCryptoComInputFile("EUR Deposit Income", 1000.00);
+        File inputFile = createCryptoComFile(List.of(new Entry("EUR Deposit Income", 1000.00)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -296,7 +293,7 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldClassifyExpenseTransaction() throws Exception {
         // Given I have an input file with an expense transaction
-        File inputFile = createCryptoComInputFile("Random Purchase Expense", -75.50);
+        File inputFile = createCryptoComFile(List.of(new Entry("Random Purchase Expense", -75.50)));
 
         // When I generate the budget file
         Workbook workbook = uploadCryptoComFile(inputFile);
@@ -310,5 +307,45 @@ public class CryptoComFileIT extends BaseIT {
 
         // Teardown
         assertTrue(inputFile.delete(), "Fail to delete the input file");
+    }
+
+    @Test
+    void shouldReturnOkWhenFileIsEmpty() throws Exception {
+        // Given an empty file
+        File emptyFile = createEmptyFile();
+
+        // When I try to upload it to the cryptoCom endpoint
+        Response response = given()
+                .multiPart("file", emptyFile)
+                .contentType("multipart/form-data")
+                .when()
+                .post(CryptoComApi.url);
+
+        // Then it may return 200 or error (graceful degradation acceptable)
+        int statusCode = response.statusCode();
+        assertEquals(200, statusCode, "Should return error status code (200), got: " + statusCode);
+
+        // Teardown
+        assertTrue(emptyFile.delete(), "Fail to delete test file");
+    }
+
+    @Test
+    void shouldReturnErrorWhenFileHasInvalidFormat() throws Exception {
+        // Given an invalid format file
+        File invalidFile = createCryptoComInvalidFile("this is not a number");
+
+        // When I try to upload it
+        Response response = given()
+                .multiPart("file", invalidFile)
+                .contentType("multipart/form-data")
+                .when()
+                .post(CryptoComApi.url);
+
+        // Then it should fail
+        int statusCode = response.statusCode();
+        assertEquals(500, statusCode, "Should return error status code (500), got: " + statusCode);
+
+        // Teardown
+        assertTrue(invalidFile.delete(), "Fail to delete test file");
     }
 }
