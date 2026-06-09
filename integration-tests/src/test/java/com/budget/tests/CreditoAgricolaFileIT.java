@@ -1,32 +1,82 @@
 package com.budget.tests;
 
 import com.budget.BaseIT;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
-import java.nio.file.Files;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CryptoComFileIT extends BaseIT {
-    private File createCryptoComInputFile(String description, double amount) throws IOException {
-        File file = new File("target/test-cryptoCom-" + System.currentTimeMillis() + ".csv");
-        double nativeAmount = amount * 1.1;
-        String content = "Timestamp (UTC),Transaction Description,Currency,Amount,To Currency,To Amount,Native Currency,Native Amount,Native Amount (in USD),Transaction Kind,Transaction Hash\n" +
-                String.format("2026-06-09 10:00:00,%s,EUR,%.2f,,,EUR,%.2f,%.2f,,\n", description, amount, amount, nativeAmount);
+public class CreditoAgricolaFileIT extends BaseIT {
+    private File createCreditoAgricolaInputFile(String description, double amount, String creditDebit) throws IOException {
+        File file = new File("target/test-creditoAgricola-" + System.currentTimeMillis() + ".xlsx");
+        double initialBalance = 1000.00;
+        LocalDate transDate = LocalDate.parse("01/05/2026", DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH));
+        LocalDate valueDate = LocalDate.parse("01/05/2026", DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH));
 
-        Files.write(file.toPath(), content.getBytes());
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Transactions");
+
+            // Description header
+            Row desc1 = sheet.createRow(0);
+            setCell(desc1, 0, "Operação: Consulta de Movimentos de Contas D.O.");
+
+            Row desc2 = sheet.createRow(1);
+            setCell(desc2, 0, "Conta: 40367927251");
+
+            Row desc3 = sheet.createRow(2);
+            setCell(desc3, 0, "De: 01/05/2026");
+
+            Row desc4 = sheet.createRow(3);
+            setCell(desc4, 0, "A: 31/05/2026");
+
+            Row desc5 = sheet.createRow(4);
+            setCell(desc5, 0, "");
+
+            // Header
+            Row header = sheet.createRow(5);
+            setCell(header, 0, "Data de Movimento");
+            setCell(header, 1, "Data Valor");
+            setCell(header, 2, "Descrição");
+            setCell(header, 3, "Descritivo");
+            setCell(header, 4, "Montante");
+            setCell(header, 5, "D");
+            setCell(header, 6, "Saldo Contabilístico");
+
+            // Data row
+            Row row = sheet.createRow(6);
+            setCell(row, 0, transDate, "dd/MM/yyyy");
+            setCell(row, 1, valueDate, "dd/MM/yyyy");
+            setCell(row, 2, description);
+            setCell(row, 3, description);
+            setCell(row, 4, amount);
+            setCell(row, 5, creditDebit);
+            setCell(row, 6, initialBalance - amount);
+
+            try (FileOutputStream fos = new FileOutputStream(file)) {
+                workbook.write(fos);
+            }
+        }
+
         return file;
     }
 
     @Test
     void shouldUploadFileAndReturnValidXlsx() throws Exception {
         // Given I have an input file with a test transaction
-        File inputFile = createCryptoComInputFile("Test Transaction", -50.00);
+        File inputFile = createCreditoAgricolaInputFile("Test Transaction", 50.00, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the file has the correct structure and headers
         Sheet sheet = workbook.getSheetAt(0);
@@ -53,10 +103,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeGroceryTransaction() throws Exception {
         // Given I have an input file with a grocery transaction
-        File inputFile = createCryptoComInputFile("COMPRA CONTINENTE Store", -45.50);
+        File inputFile = createCreditoAgricolaInputFile("COMPRA CONTINENTE Store", 45.50, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file has the correct Category / Sub-Category
         assertEquals("Home", getCellStringValue(workbook, 1, 3));
@@ -69,10 +119,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeDiningOutTransaction() throws Exception {
         // Given I have an input file with a dining transaction
-        File inputFile = createCryptoComInputFile("UBER    EATS Restaurant", -22.30);
+        File inputFile = createCreditoAgricolaInputFile("UBER    EATS Restaurant", 22.30, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file has the correct Category / Sub-Category
         assertEquals("Daily_Livings", getCellStringValue(workbook, 1, 3));
@@ -85,10 +135,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeStreamingTransaction() throws Exception {
         // Given I have an input file with a streaming subscription transaction
-        File inputFile = createCryptoComInputFile("NETFLIX Subscription", -12.99);
+        File inputFile = createCreditoAgricolaInputFile("NETFLIX Subscription", 12.99, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file has the correct Category / Sub-Category
         assertEquals("Daily_Livings", getCellStringValue(workbook, 1, 3));
@@ -101,10 +151,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeHealthTransaction() throws Exception {
         // Given I have an input file with a pharmacy transaction
-        File inputFile = createCryptoComInputFile("FARMACIA Pharmacy", -18.50);
+        File inputFile = createCreditoAgricolaInputFile("FARMACIA Pharmacy", 18.50, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file has the correct Category / Sub-Category
         assertEquals("Daily_Livings", getCellStringValue(workbook, 1, 3));
@@ -117,10 +167,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeGymTransaction() throws Exception {
         // Given I have an input file with a gym transaction
-        File inputFile = createCryptoComInputFile("BALTAREJO Gym", -49.99);
+        File inputFile = createCreditoAgricolaInputFile("BALTAREJO Gym", 49.99, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file has the correct Category / Sub-Category
         assertEquals("Daily_Livings", getCellStringValue(workbook, 1, 3));
@@ -133,10 +183,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeInternetTransaction() throws Exception {
         // Given I have an input file with an internet transaction
-        File inputFile = createCryptoComInputFile("VODAFONE Internet", -35.99);
+        File inputFile = createCreditoAgricolaInputFile("VODAFONE Internet", 35.99, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file has the correct Category / Sub-Category
         assertEquals("Utilities", getCellStringValue(workbook, 1, 3));
@@ -149,10 +199,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizePhoneTransaction() throws Exception {
         // Given I have an input file with a phone transaction
-        File inputFile = createCryptoComInputFile("NOS COM Phone", -40.50);
+        File inputFile = createCreditoAgricolaInputFile("NOS COM Phone", 40.50, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file has the correct Category / Sub-Category
         assertEquals("Utilities", getCellStringValue(workbook, 1, 3));
@@ -165,10 +215,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeFuelTransaction() throws Exception {
         // Given I have an input file with a fuel transaction
-        File inputFile = createCryptoComInputFile("GALP Fuel Station", -60.00);
+        File inputFile = createCreditoAgricolaInputFile("GALP Fuel Station", 60.00, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file has the correct Category / Sub-Category
         assertEquals("Car", getCellStringValue(workbook, 1, 3));
@@ -181,10 +231,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeTollsTransaction() throws Exception {
         // Given I have an input file with a tolls transaction
-        File inputFile = createCryptoComInputFile("VIA VERDE Toll", -8.50);
+        File inputFile = createCreditoAgricolaInputFile("VIA VERDE Toll", 8.50, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file has the correct Category / Sub-Category
         assertEquals("Car", getCellStringValue(workbook, 1, 3));
@@ -197,10 +247,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeContractorTransaction() throws Exception {
         // Given I have an input file with a contractor transaction
-        File inputFile = createCryptoComInputFile("IDEIAS DECIMAIS Contractor", -150.00);
+        File inputFile = createCreditoAgricolaInputFile("IDEIAS DECIMAIS Contractor", 150.00, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file has the correct Category / Sub-Category
         assertEquals("House_Construction", getCellStringValue(workbook, 1, 3));
@@ -213,10 +263,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeSuppliesTransaction() throws Exception {
         // Given I have an input file with an office supplies transaction
-        File inputFile = createCryptoComInputFile("COMPRA STAPLES Supplies", -25.75);
+        File inputFile = createCreditoAgricolaInputFile("COMPRA STAPLES Supplies", 25.75, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file has the correct Category / Sub-Category
         assertEquals("Job´s", getCellStringValue(workbook, 1, 3));
@@ -229,10 +279,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeFeesTransaction() throws Exception {
         // Given I have an input file with a bank fees transaction
-        File inputFile = createCryptoComInputFile("COMISSÃO S/ Bank Fee", -2.50);
+        File inputFile = createCreditoAgricolaInputFile("COMISSÃO S/ Bank Fee", 2.50, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file has the correct Category / Sub-Category
         assertEquals("Bank", getCellStringValue(workbook, 1, 3));
@@ -245,10 +295,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldCategorizeLoanTransaction() throws Exception {
         // Given I have an input file with a loan transaction
-        File inputFile = createCryptoComInputFile("TRF.     0000351 00938121242", -250.00);
+        File inputFile = createCreditoAgricolaInputFile("TRF.     0000351 00938121242", 250.00, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file has the correct Category / Sub-Category
         assertEquals("Home", getCellStringValue(workbook, 1, 3));
@@ -261,10 +311,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldNotCategorizeUnknownTransaction() throws Exception {
         // Given I have an input file with an unknown transaction
-        File inputFile = createCryptoComInputFile("Unknown Random Purchase", -99.99);
+        File inputFile = createCreditoAgricolaInputFile("Unknown Random Purchase", 99.99, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file has empty Category / Sub-Category
         assertEquals("", getCellStringValue(workbook, 1, 3));
@@ -277,10 +327,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldClassifyIncomeTransaction() throws Exception {
         // Given I have an input file with an income transaction
-        File inputFile = createCryptoComInputFile("EUR Deposit Income", 1000.00);
+        File inputFile = createCreditoAgricolaInputFile("EUR Deposit Income", 1000.00, "C");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file classifies it as Income or Transfer with positive amount
         String type = getCellStringValue(workbook, 1, 2);
@@ -296,10 +346,10 @@ public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldClassifyExpenseTransaction() throws Exception {
         // Given I have an input file with an expense transaction
-        File inputFile = createCryptoComInputFile("Random Purchase Expense", -75.50);
+        File inputFile = createCreditoAgricolaInputFile("Random Purchase Expense", 75.50, "D");
 
         // When I generate the budget file
-        Workbook workbook = uploadCryptoComFile(inputFile);
+        Workbook workbook = uploadCreditoAgricolaFile(inputFile);
 
         // Then the generated file classifies it as Expense with negative amount
         String type = getCellStringValue(workbook, 1, 2);
