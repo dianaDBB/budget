@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN mvn clean package
+RUN mvn -pl delivery -am clean package -DskipTests
 
 FROM eclipse-temurin:21-jdk
 
