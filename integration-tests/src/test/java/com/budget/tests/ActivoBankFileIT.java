@@ -250,7 +250,7 @@ public class ActivoBankFileIT extends BaseIT {
                 .multiPart("file", emptyFile)
                 .contentType("multipart/form-data")
                 .when()
-                .post(ActivoBankApi.url);
+                .post(ActivoBankApi.uploadFileUrl);
 
         int statusCode = response.statusCode();
         assertEquals(500, statusCode, "Should return error status code (500), got: " + statusCode);
@@ -266,7 +266,7 @@ public class ActivoBankFileIT extends BaseIT {
                 .multiPart("file", invalidFile)
                 .contentType("multipart/form-data")
                 .when()
-                .post(ActivoBankApi.url);
+                .post(ActivoBankApi.uploadFileUrl);
 
         int statusCode = response.statusCode();
         assertEquals(500, statusCode, "Should return error status code (500), got: " + statusCode);

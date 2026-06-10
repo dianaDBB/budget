@@ -1,5 +1,6 @@
 package com.budget.apis;
 
+import com.budget.adapters.rest.BankFileFormatDto;
 import io.restassured.response.Response;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -17,7 +18,8 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ActivoBankApi {
-    public static String url = "/budget/budget/file/activoBank";
+    public static String uploadFileUrl = "/budget/budget/file/activoBank";
+    public static String getFormatUrl = "/budget/budget/format/activoBank";
 
     public static File createActivoBankFile(List<EntryDto> entryList) throws IOException {
         File file = new File("target/test-activoBank-valid-" + System.currentTimeMillis() + ".xlsx");
@@ -108,7 +110,7 @@ public class ActivoBankApi {
                         .multiPart("file", inputFile)
                         .contentType("multipart/form-data")
                         .when()
-                        .post(ActivoBankApi.url)
+                        .post(ActivoBankApi.uploadFileUrl)
                         .then()
                         .statusCode(200)
                         .extract()
@@ -118,5 +120,18 @@ public class ActivoBankApi {
         assertTrue(bytes.length > 0, "Response bytes length should be bigger that 0");
 
         return new XSSFWorkbook(new ByteArrayInputStream(bytes));
+    }
+
+    public static BankFileFormatDto getActivoBankFormat() {
+        Response response =
+                given()
+                        .when()
+                        .get(ActivoBankApi.getFormatUrl)
+                        .then()
+                        .statusCode(200)
+                        .extract()
+                        .response();
+
+        return response.as(BankFileFormatDto.class);
     }
 }
