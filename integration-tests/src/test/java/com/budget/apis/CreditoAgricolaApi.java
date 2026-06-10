@@ -18,9 +18,9 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreditoAgricolaApi {
-    public static String url = "/budget/budget/file/creditoAgricola";
+    public static String generateFileUrl = "/budget/budget/file/creditoAgricola";
 
-    public static File createCreditoAgricolaFile(List<EntryDto> entryList) throws IOException {
+    public static File createValidFile(List<EntryDto> entryList) throws IOException {
         File file = new File("target/test-creditoAgricola-valid-" + System.currentTimeMillis() + ".xlsx");
         double initialBalance = 1000.00;
         LocalDate transDate = LocalDate.parse("01/05/2026", DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH));
@@ -68,7 +68,7 @@ public class CreditoAgricolaApi {
         return file;
     }
 
-    public static File createCreditoAgricolaInvalidFile(String invalidValue) throws IOException {
+    public static File createInvalidFile(String invalidValue) throws IOException {
         File file = new File("target/test-creditoAgrocila-invalid-" + System.currentTimeMillis() + ".xlsx");
         LocalDate transDate = LocalDate.parse("01-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
         LocalDate valueDate = LocalDate.parse("02-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
@@ -108,13 +108,13 @@ public class CreditoAgricolaApi {
         return file;
     }
 
-    public static XSSFWorkbook uploadCreditoAgricolaFile(File inputFile) throws IOException {
+    public static XSSFWorkbook generateFile(File inputFile) throws IOException {
         Response response =
                 given()
                         .multiPart("file", inputFile)
                         .contentType("multipart/form-data")
                         .when()
-                        .post(url)
+                        .post(generateFileUrl)
                         .then()
                         .statusCode(200)
                         .extract()

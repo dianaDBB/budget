@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class BankFormatIT extends BaseIT {
     @Test
     void shouldReturnActivoBankFileFormat() {
-        BankFileFormatDto format = ActivoBankApi.getActivoBankFormat();
+        BankFileFormatDto format = ActivoBankApi.getBankFormat();
 
         assertNotNull(format);
         assertEquals("ActivoBank", format.bankName(), "'bankName' should be 'ActivoBank'");

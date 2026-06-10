@@ -11,9 +11,9 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AllBanksApi {
-    public static String url = "/budget/budget/file/all";
+    public static String generateFileUrl = "/budget/budget/file/all";
 
-    public static XSSFWorkbook uploadAllBankFiles(File activoBankFile, File creditoAgricolaFile, File cryptoComFile) throws IOException {
+    public static XSSFWorkbook generateFile(File activoBankFile, File creditoAgricolaFile, File cryptoComFile) throws IOException {
         Response response =
                 given()
                         .multiPart("activoBankFile", activoBankFile)
@@ -21,7 +21,7 @@ public class AllBanksApi {
                         .multiPart("cryptoComFile", cryptoComFile)
                         .contentType("multipart/form-data")
                         .when()
-                        .post(url)
+                        .post(generateFileUrl)
                         .then()
                         .statusCode(200)
                         .extract()

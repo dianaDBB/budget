@@ -13,9 +13,9 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CryptoComApi {
-    public static String url = "/budget/budget/file/cryptoCom";
+    public static String generateFileUrl = "/budget/budget/file/cryptoCom";
 
-    public static File createCryptoComFile(List<EntryDto> entryList) throws IOException {
+    public static File createValidFile(List<EntryDto> entryList) throws IOException {
         File file = new File("target/test-cryptoCom-" + System.currentTimeMillis() + ".csv");
         StringBuilder content = new StringBuilder("Timestamp (UTC),Transaction Description,Currency,Amount,To Currency,To Amount,Native Currency,Native Amount,Native Amount (in USD),Transaction Kind,Transaction Hash\n");
 
@@ -28,7 +28,7 @@ public class CryptoComApi {
         return file;
     }
 
-    public static File createCryptoComInvalidFile(String invalidValue) throws IOException {
+    public static File createInvalidFile(String invalidValue) throws IOException {
         File file = new File("target/test-cryptoCom-" + System.currentTimeMillis() + ".csv");
 
         Files.write(file.toPath(), ("Timestamp (UTC),Transaction Description,Currency,Amount,To Currency,To Amount,Native Currency,Native Amount,Native Amount (in USD),Transaction Kind,Transaction Hash\n"
@@ -36,8 +36,8 @@ public class CryptoComApi {
         return file;
     }
 
-    public static XSSFWorkbook uploadCryptoComFile(File inputFile) throws IOException {
-        Response response = given().multiPart("file", inputFile).contentType("multipart/form-data").when().post(CryptoComApi.url).then().statusCode(200).extract().response();
+    public static XSSFWorkbook generateFile(File inputFile) throws IOException {
+        Response response = given().multiPart("file", inputFile).contentType("multipart/form-data").when().post(CryptoComApi.generateFileUrl).then().statusCode(200).extract().response();
 
         byte[] bytes = response.asByteArray();
         assertTrue(bytes.length > 0, "Response bytes length should be bigger that 0");
