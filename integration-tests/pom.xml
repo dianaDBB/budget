@@ -26,13 +26,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!--dependency>
-            <groupId>com.budget</groupId>
-            <artifactId>core</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency-->
-
         <!-- Spring Boot Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
