@@ -2,7 +2,7 @@ package com.budget.tests;
 
 import com.budget.BaseIT;
 import com.budget.apis.CryptoComApi;
-import com.budget.apis.Entry;
+import com.budget.apis.EntryDto;
 import io.restassured.response.Response;
 import org.apache.poi.ss.usermodel.*;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CryptoComFileIT extends BaseIT {
     @Test
     void shouldUploadFileAndReturnValidXlsx() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("Test Transaction", -50.00)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("Test Transaction", -50.00)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -44,7 +44,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldCategorizeGroceryTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("COMPRA CONTINENTE Store", -45.50)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("COMPRA CONTINENTE Store", -45.50)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -56,7 +56,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldCategorizeDiningOutTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("UBER    EATS Restaurant", -22.30)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("UBER    EATS Restaurant", -22.30)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -68,7 +68,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldCategorizeStreamingTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("NETFLIX Subscription", -12.99)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("NETFLIX Subscription", -12.99)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -80,7 +80,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldCategorizeHealthTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("FARMACIA Pharmacy", -18.50)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("FARMACIA Pharmacy", -18.50)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -92,7 +92,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldCategorizeGymTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("BALTAREJO Gym", -49.99)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("BALTAREJO Gym", -49.99)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -104,7 +104,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldCategorizeInternetTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("VODAFONE Internet", -35.99)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("VODAFONE Internet", -35.99)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -116,7 +116,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldCategorizePhoneTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("NOS COM Phone", -40.50)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("NOS COM Phone", -40.50)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -128,7 +128,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldCategorizeFuelTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("GALP Fuel Station", -60.00)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("GALP Fuel Station", -60.00)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -140,7 +140,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldCategorizeTollsTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("VIA VERDE Toll", -8.50)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("VIA VERDE Toll", -8.50)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -152,7 +152,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldCategorizeContractorTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("IDEIAS DECIMAIS Contractor", -150.00)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("IDEIAS DECIMAIS Contractor", -150.00)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -164,7 +164,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldCategorizeSuppliesTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("COMPRA STAPLES Supplies", -25.75)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("COMPRA STAPLES Supplies", -25.75)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -176,7 +176,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldCategorizeFeesTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("COMISSÃO S/ Bank Fee", -2.50)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("COMISSÃO S/ Bank Fee", -2.50)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -188,7 +188,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldCategorizeLoanTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("TRF.     0000351 00938121242", -250.00)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("TRF.     0000351 00938121242", -250.00)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -200,7 +200,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldNotCategorizeUnknownTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("Unknown Random Purchase", -99.99)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("Unknown Random Purchase", -99.99)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -212,7 +212,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldClassifyIncomeTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("EUR Deposit Income", 1000.00)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("EUR Deposit Income", 1000.00)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 
@@ -227,7 +227,7 @@ public class CryptoComFileIT extends BaseIT {
 
     @Test
     void shouldClassifyExpenseTransaction() throws Exception {
-        File inputFile = createCryptoComFile(List.of(new Entry("Random Purchase Expense", -75.50)));
+        File inputFile = createCryptoComFile(List.of(new EntryDto("Random Purchase Expense", -75.50)));
 
         Workbook workbook = uploadCryptoComFile(inputFile);
 

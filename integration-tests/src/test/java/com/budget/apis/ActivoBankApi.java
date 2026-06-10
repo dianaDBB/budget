@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ActivoBankApi {
     public static String url = "/budget/budget/file/activoBank";
 
-    public static File createActivoBankFile(List<Entry> entryList) throws IOException {
+    public static File createActivoBankFile(List<EntryDto> entryList) throws IOException {
         File file = new File("target/test-activoBank-valid-" + System.currentTimeMillis() + ".xlsx");
         double initialBalance = 1000.00;
         LocalDate transDate = LocalDate.parse("01-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
@@ -28,7 +28,7 @@ public class ActivoBankApi {
         try (var workbook = new XSSFWorkbook()) {
             var sheet = workbook.createSheet("Transactions");
 
-            setCell(sheet.createRow(0), 0, "HISTÓRICO DE CONTA NÚMERO 45602657434");
+            setCell(sheet.createRow(0), 0, "HISTÓRICO DE CONTA NÚMERO 123456");
             setCell(sheet.createRow(1), 0, "Moeda: EUR");
             setCell(sheet.createRow(2), 0, "");
             setCell(sheet.createRow(3), 0, "Tipo: Todos");
@@ -44,7 +44,7 @@ public class ActivoBankApi {
             setCell(header, 4, "Saldo");
 
             int rowIndex = 8;
-            for (Entry entry : entryList) {
+            for (EntryDto entry : entryList) {
                 var row = sheet.createRow(rowIndex);
                 setCell(row, 0, transDate, "dd-MMMM-yyyy");
                 setCell(row, 1, valueDate, "dd-MMMM-yyyy");

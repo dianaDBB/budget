@@ -1,5 +1,6 @@
 package com.budget.core;
 
+import com.budget.core.config.BankConfig;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,4 +18,6 @@ public interface BudgetService {
     Workbook creditoAgricolaFileToExcel(MultipartFile multipartFile) throws IOException;
 
     Workbook cryptoComFileToExcel(MultipartFile multipartFile) throws IOException;
+
+    BankConfig getActivoBankConfig();
 }

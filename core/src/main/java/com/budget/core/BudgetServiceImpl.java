@@ -2,6 +2,7 @@ package com.budget.core;
 
 import com.budget.core.config.ActivoBankConfig;
 import com.budget.core.config.Bank;
+import com.budget.core.config.BankConfig;
 import com.budget.core.config.CreditoAgricolaConfig;
 import com.budget.core.config.CryptoComConfig;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -50,5 +51,10 @@ public class BudgetServiceImpl implements BudgetService {
     public Workbook cryptoComFileToExcel(MultipartFile multipartFile) {
         var file = new File(new Bank(cryptoComConfig, multipartFile));
         return file.bankFileToExcelFile();
+    }
+
+    @Override
+    public BankConfig getActivoBankConfig() {
+        return activoBankConfig;
     }
 }

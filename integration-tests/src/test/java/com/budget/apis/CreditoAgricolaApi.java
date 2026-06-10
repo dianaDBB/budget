@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CreditoAgricolaApi {
     public static String url = "/budget/budget/file/creditoAgricola";
 
-    public static File createCreditoAgricolaFile(List<Entry> entryList) throws IOException {
+    public static File createCreditoAgricolaFile(List<EntryDto> entryList) throws IOException {
         File file = new File("target/test-creditoAgricola-valid-" + System.currentTimeMillis() + ".xlsx");
         double initialBalance = 1000.00;
         LocalDate transDate = LocalDate.parse("01/05/2026", DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH));
@@ -45,7 +45,7 @@ public class CreditoAgricolaApi {
             setCell(header, 6, "Saldo Contabilístico");
 
             int rowIndex = 6;
-            for (Entry entry : entryList) {
+            for (EntryDto entry : entryList) {
                 var row = sheet.createRow(rowIndex);
 
                 setCell(row, 0, transDate, "dd/MM/yyyy");

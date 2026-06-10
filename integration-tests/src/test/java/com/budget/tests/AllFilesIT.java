@@ -1,7 +1,7 @@
 package com.budget.tests;
 
 import com.budget.BaseIT;
-import com.budget.apis.Entry;
+import com.budget.apis.EntryDto;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -21,9 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AllFilesIT extends BaseIT {
     @Test
     void shouldUploadAllFilesAndReturnValidXlsx() throws Exception {
-        File activoBankFile = createActivoBankFile(List.of(new Entry("Test Transaction ActivoBank", -50.00)));
-        File creditoAgricolaFile = createCreditoAgricolaFile(List.of(new Entry("Test Transaction CreditoAgricola", 30.00, "D")));
-        File cryptoComFile = createCryptoComFile(List.of(new Entry("Test Transaction CryptoCom", -20.00)));
+        File activoBankFile = createActivoBankFile(List.of(new EntryDto("Test Transaction ActivoBank", -50.00)));
+        File creditoAgricolaFile = createCreditoAgricolaFile(List.of(new EntryDto("Test Transaction CreditoAgricola", 30.00, "D")));
+        File cryptoComFile = createCryptoComFile(List.of(new EntryDto("Test Transaction CryptoCom", -20.00)));
 
         Workbook workbook = uploadAllBankFiles(activoBankFile, creditoAgricolaFile, cryptoComFile);
 
@@ -58,9 +58,9 @@ public class AllFilesIT extends BaseIT {
 
     @Test
     void shouldCombineTransactionsFromAllBanks() throws Exception {
-        File activoBankFile = createActivoBankFile(List.of(new Entry("COMPRA CONTINENTE Store", -45.50)));
-        File creditoAgricolaFile = createCreditoAgricolaFile(List.of(new Entry("UBER    EATS Restaurant", 22.30, "D")));
-        File cryptoComFile = createCryptoComFile(List.of(new Entry("Bitcoin Purchase", -100.00)));
+        File activoBankFile = createActivoBankFile(List.of(new EntryDto("COMPRA CONTINENTE Store", -45.50)));
+        File creditoAgricolaFile = createCreditoAgricolaFile(List.of(new EntryDto("UBER    EATS Restaurant", 22.30, "D")));
+        File cryptoComFile = createCryptoComFile(List.of(new EntryDto("Bitcoin Purchase", -100.00)));
 
         Workbook workbook = uploadAllBankFiles(activoBankFile, creditoAgricolaFile, cryptoComFile);
 
@@ -91,17 +91,17 @@ public class AllFilesIT extends BaseIT {
     @Test
     void shouldHandleMultipleTransactionsPerBank() throws Exception {
         File activoBankFile = createActivoBankFile(List.of(
-                new Entry("COMPRA CONTINENTE Store", -45.50),
-                new Entry("NETFLIX Subscription", -12.99),
-                new Entry("GALP Fuel Station", -60.00)
+                new EntryDto("COMPRA CONTINENTE Store", -45.50),
+                new EntryDto("NETFLIX Subscription", -12.99),
+                new EntryDto("GALP Fuel Station", -60.00)
         ));
         File creditoAgricolaFile = createCreditoAgricolaFile(List.of(
-                new Entry("UBER    EATS Restaurant", 22.30, "D"),
-                new Entry("VODAFONE Internet", 35.99, "D")
+                new EntryDto("UBER    EATS Restaurant", 22.30, "D"),
+                new EntryDto("VODAFONE Internet", 35.99, "D")
         ));
         File cryptoComFile = createCryptoComFile(List.of(
-                new Entry("Bitcoin Purchase", -100.00),
-                new Entry("Ethereum Purchase", -50.00)
+                new EntryDto("Bitcoin Purchase", -100.00),
+                new EntryDto("Ethereum Purchase", -50.00)
         ));
 
         Workbook workbook = uploadAllBankFiles(activoBankFile, creditoAgricolaFile, cryptoComFile);
@@ -138,9 +138,9 @@ public class AllFilesIT extends BaseIT {
 
     @Test
     void shouldCategorizeTransactionsFromAllBanks() throws Exception {
-        File activoBankFile = createActivoBankFile(List.of(new Entry("COMPRA CONTINENTE Store", -45.50)));
-        File creditoAgricolaFile = createCreditoAgricolaFile(List.of(new Entry("UBER    EATS Restaurant", 22.30, "D")));
-        File cryptoComFile = createCryptoComFile(List.of(new Entry("Bitcoin Purchase", -100.00)));
+        File activoBankFile = createActivoBankFile(List.of(new EntryDto("COMPRA CONTINENTE Store", -45.50)));
+        File creditoAgricolaFile = createCreditoAgricolaFile(List.of(new EntryDto("UBER    EATS Restaurant", 22.30, "D")));
+        File cryptoComFile = createCryptoComFile(List.of(new EntryDto("Bitcoin Purchase", -100.00)));
 
         Workbook workbook = uploadAllBankFiles(activoBankFile, creditoAgricolaFile, cryptoComFile);
 
@@ -169,14 +169,14 @@ public class AllFilesIT extends BaseIT {
     @Test
     void shouldClassifyIncomeAndExpenseTransactionsFromAllBanks() throws Exception {
         File activoBankFile = createActivoBankFile(List.of(
-                new Entry("EUR Deposit Income", 1000.00),
-                new Entry("COMPRA CONTINENTE Store", -45.50)
+                new EntryDto("EUR Deposit Income", 1000.00),
+                new EntryDto("COMPRA CONTINENTE Store", -45.50)
         ));
         File creditoAgricolaFile = createCreditoAgricolaFile(List.of(
-                new Entry("UBER    EATS Restaurant", 22.30, "D")
+                new EntryDto("UBER    EATS Restaurant", 22.30, "D")
         ));
         File cryptoComFile = createCryptoComFile(List.of(
-                new Entry("Bitcoin Purchase", -100.00)
+                new EntryDto("Bitcoin Purchase", -100.00)
         ));
 
         Workbook workbook = uploadAllBankFiles(activoBankFile, creditoAgricolaFile, cryptoComFile);
