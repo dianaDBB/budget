@@ -1,4 +1,4 @@
-# How to run
+# How to run locally
 
 - Open terminal and execute the following:
 
@@ -11,11 +11,9 @@ mvn spring-boot:run
 
 # Swagger
 
-- http://localhost:8443/budget/swagger-ui/index.html#/
+- Local: http://localhost:8443/budget/swagger-ui/index.html#/
+- Release: https://budget-cemp.onrender.com/budget/swagger-ui/index.html
 
-# Render
+# Deploy
 
-https://dashboard.render.com/
-
-- Used to deploy and expose the API
-- https://budget-cemp.onrender.com/budget/swagger-ui/index.html
+Deploy is done using [Render](https://dashboard.render.com/)
