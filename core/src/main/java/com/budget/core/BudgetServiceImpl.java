@@ -57,4 +57,14 @@ public class BudgetServiceImpl implements BudgetService {
     public BankConfig getActivoBankConfig() {
         return activoBankConfig;
     }
+
+    @Override
+    public BankConfig getCreditoAgricolaConfig() {
+        return creditoAgricolaConfig;
+    }
+
+    @Override
+    public BankConfig getCryptoComConfig() {
+        return cryptoComConfig;
+    }
 }

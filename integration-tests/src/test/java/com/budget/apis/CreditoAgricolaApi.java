@@ -1,5 +1,6 @@
 package com.budget.apis;
 
+import com.budget.adapters.rest.BankFileFormatDto;
 import io.restassured.response.Response;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreditoAgricolaApi {
     public static String generateFileUrl = "/budget/budget/file/creditoAgricola";
+    public static String getFormatUrl = "/budget/budget/format/creditoAgricola";
 
     public static File createValidFile(List<EntryDto> entryList) throws IOException {
         File file = new File("target/test-creditoAgricola-valid-" + System.currentTimeMillis() + ".xlsx");
@@ -30,7 +32,7 @@ public class CreditoAgricolaApi {
             var sheet = workbook.createSheet("Transactions");
 
             setCell(sheet.createRow(0), 0, "Operação: Consulta de Movimentos de Contas D.O.");
-            setCell(sheet.createRow(1), 0, "Conta: 40367927251");
+            setCell(sheet.createRow(1), 0, "Conta: 123456");
             setCell(sheet.createRow(2), 0, "De: 01/05/2026");
             setCell(sheet.createRow(3), 0, "A: 31/05/2026");
             setCell(sheet.createRow(4), 0, "");
@@ -124,5 +126,18 @@ public class CreditoAgricolaApi {
         assertTrue(bytes.length > 0, "Response bytes length should be bigger that 0");
 
         return new XSSFWorkbook(new ByteArrayInputStream(bytes));
+    }
+
+    public static BankFileFormatDto getFormat() {
+        Response response =
+                given()
+                        .when()
+                        .get(getFormatUrl)
+                        .then()
+                        .statusCode(200)
+                        .extract()
+                        .response();
+
+        return response.as(BankFileFormatDto.class);
     }
 }

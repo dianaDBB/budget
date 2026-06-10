@@ -1,5 +1,6 @@
 package com.budget.apis;
 
+import com.budget.adapters.rest.BankFileFormatDto;
 import io.restassured.response.Response;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -14,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CryptoComApi {
     public static String generateFileUrl = "/budget/budget/file/cryptoCom";
+    public static String getFormatUrl = "/budget/budget/format/cryptoCom";
 
     public static File createValidFile(List<EntryDto> entryList) throws IOException {
         File file = new File("target/test-cryptoCom-" + System.currentTimeMillis() + ".csv");
@@ -43,5 +45,18 @@ public class CryptoComApi {
         assertTrue(bytes.length > 0, "Response bytes length should be bigger that 0");
 
         return new XSSFWorkbook(new ByteArrayInputStream(bytes));
+    }
+
+    public static BankFileFormatDto getFormat() {
+        Response response =
+                given()
+                        .when()
+                        .get(getFormatUrl)
+                        .then()
+                        .statusCode(200)
+                        .extract()
+                        .response();
+
+        return response.as(BankFileFormatDto.class);
     }
 }

@@ -20,4 +20,8 @@ public interface BudgetService {
     Workbook cryptoComFileToExcel(MultipartFile multipartFile) throws IOException;
 
     BankConfig getActivoBankConfig();
+
+    BankConfig getCreditoAgricolaConfig();
+
+    BankConfig getCryptoComConfig();
 }

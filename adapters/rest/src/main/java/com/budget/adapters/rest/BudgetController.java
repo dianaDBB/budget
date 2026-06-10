@@ -111,69 +111,226 @@ public class BudgetController {
                     "dd-MMMM-yyyy",
                     null,
                     """
-                    <style>
-                        table
-                        {
-                            border: 1px;
-                            border-right: 1px solid black;
-                            border-bottom: 1px solid black;
-                            border-collapse: collapse;
-                        }
-                        td,th
-                        {
-                            border-left:1px solid black;
-                            border-top:1px solid black;
-                            padding: 4px;
-                        }
-                        .excelColum
-                        {
-                            text-align: center;
-                            vertical-align: middle;
-                            background: Gainsboro;
-                            color: Grey;
-                        }
-                        .excelRow
-                        {
-                            text-align: left;
-                            vertical-align: middle;
-                            background: Gainsboro;
-                            color: Grey;
-                        }
-                    </style>
-                    <table>
-                        <tr>
-                            <td> </td>
-                            <td class="excelColum">A</td>
-                            <td class="excelColum">B</td>
-                            <td class="excelColum">C</td>
-                            <td class="excelColum">D</td>
-                            <td class="excelColum">E</td>
-                        </tr>
-                        <tr><td class="excelRow">1</td><td colspan = "5">HISTÓRICO DE CONTA NÚMERO 123456</td></tr>
-                        <tr><td class="excelRow">2</td><td colspan = "5">Moeda: EUR</td></tr>
-                        <tr><td class="excelRow">3</td><td colspan = "5"> </td></tr>
-                        <tr><td class="excelRow">4</td><td colspan = "5">Tipo: Todos</td></tr>
-                        <tr><td class="excelRow">5</td><td colspan = "5">Data de: 01/05/2026</td></tr>
-                        <tr><td class="excelRow">6</td><td colspan = "5">Data até: 31/05/2026</td></tr>
-                        <tr><td class="excelRow">7</td><td colspan = "5"> </td></tr>
-                        <tr>
-                            <td class="excelRow">8</td>
-                            <th>Data Lanc.</th>
-                            <th>Data Valor</th>
-                            <th>Descrição</th>
-                            <th>Valor</th>
-                            <th>Saldo</th>
-                        </tr>
-                        <tr>
-                            <td class="excelRow">9</td>
-                            <td>01-05-2026</td>
-                            <td>02-05-2026</td>
-                            <td>PAG BXVAL- 5004 VIAVERDE</td>
-                            <td>-11.40</td>
-                            <td>156.34</td>
-                        </tr>
-                    </table>
-                    """);
+                            <style>
+                                table
+                                {
+                                    border: 1px;
+                                    border-right: 1px solid black;
+                                    border-bottom: 1px solid black;
+                                    border-collapse: collapse;
+                                }
+                                td,th
+                                {
+                                    border-left:1px solid black;
+                                    border-top:1px solid black;
+                                    padding: 4px;
+                                }
+                                .excelColum
+                                {
+                                    text-align: center;
+                                    vertical-align: middle;
+                                    background: Gainsboro;
+                                    color: Grey;
+                                }
+                                .excelRow
+                                {
+                                    text-align: left;
+                                    vertical-align: middle;
+                                    background: Gainsboro;
+                                    color: Grey;
+                                }
+                            </style>
+                            <table>
+                                <tr>
+                                    <td> </td>
+                                    <td class="excelColum">A</td>
+                                    <td class="excelColum">B</td>
+                                    <td class="excelColum">C</td>
+                                    <td class="excelColum">D</td>
+                                    <td class="excelColum">E</td>
+                                </tr>
+                                <tr><td class="excelRow">1</td><td colspan = "5">HISTÓRICO DE CONTA NÚMERO 123456</td></tr>
+                                <tr><td class="excelRow">2</td><td colspan = "5">Moeda: EUR</td></tr>
+                                <tr><td class="excelRow">3</td><td colspan = "5"> </td></tr>
+                                <tr><td class="excelRow">4</td><td colspan = "5">Tipo: Todos</td></tr>
+                                <tr><td class="excelRow">5</td><td colspan = "5">Data de: 01/05/2026</td></tr>
+                                <tr><td class="excelRow">6</td><td colspan = "5">Data até: 31/05/2026</td></tr>
+                                <tr><td class="excelRow">7</td><td colspan = "5"> </td></tr>
+                                <tr>
+                                    <td class="excelRow">8</td>
+                                    <th>Data Lanc.</th>
+                                    <th>Data Valor</th>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                    <th>Saldo</th>
+                                </tr>
+                                <tr>
+                                    <td class="excelRow">9</td>
+                                    <td>01-05-2026</td>
+                                    <td>02-05-2026</td>
+                                    <td>PAG BXVAL- 5004 VIAVERDE</td>
+                                    <td>-11.40</td>
+                                    <td>156.34</td>
+                                </tr>
+                            </table>
+                            """);
+            return ResponseEntity.ok(format);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/format/creditoAgricola", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Operation(description = "Returns the expected format for CreditoAgricola input files")
+    @ApiResponse(responseCode = "200", description = "Format information retrieved successfully")
+    public ResponseEntity<BankFileFormatDto> getCreditoAgricolaFormat() {
+        try {
+            BankConfig config = budgetService.getCreditoAgricolaConfig();
+            BankFileFormatDto format = new BankFileFormatDto(
+                    config.getName(),
+                    "XLSX",
+                    config.getFirstLine(),
+                    config.getDateColumnPosition() + 1,
+                    config.getAmountColumnPosition() + 1,
+                    config.getDescriptionColumnPosition() + 1,
+                    config.getCdColumnPosition() + 1,
+                    "dd/MM/yyyy",
+                    null,
+                    """
+                            <style>
+                                table
+                                {
+                                    border: 1px;
+                                    border-right: 1px solid black;
+                                    border-bottom: 1px solid black;
+                                    border-collapse: collapse;
+                                }
+                                td,th
+                                {
+                                    border-left:1px solid black;
+                                    border-top:1px solid black;
+                                    padding: 4px;
+                                }
+                                .excelColum
+                                {
+                                    text-align: center;
+                                    vertical-align: middle;
+                                    background: Gainsboro;
+                                    color: Grey;
+                                }
+                                .excelRow
+                                {
+                                    text-align: left;
+                                    vertical-align: middle;
+                                    background: Gainsboro;
+                                    color: Grey;
+                                }
+                            </style>
+                            <table>
+                                <tr>
+                                    <td> </td>
+                                    <td class="excelColum">A</td>
+                                    <td class="excelColum">B</td>
+                                    <td class="excelColum">C</td>
+                                    <td class="excelColum">D</td>
+                                    <td class="excelColum">E</td>
+                                    <td class="excelColum">F</td>
+                                    <td class="excelColum">G</td>
+                                </tr>
+                                <tr><td class="excelRow">1</td><td colspan = "7">Operação: Consulta de Movimentos de Contas D.O.</td></tr>
+                                <tr><td class="excelRow">2</td><td colspan = "7">Conta: 123456</td></tr>
+                                <tr><td class="excelRow">3</td><td colspan = "7">De: 30/04/2026</td></tr>
+                                <tr><td class="excelRow">4</td><td colspan = "7">A: 31/05/2026</td></tr>
+                                <tr><td class="excelRow">5</td><td colspan = "7"> </td></tr>
+                                <tr>
+                                    <td class="excelRow">6</td>
+                                    <th>Data de Movimento</th>
+                                    <th>Data Valor</th>
+                                    <th>Descrição</th>
+                                    <th>Descritivo</th>
+                                    <th>Montante</th>
+                                    <th>D/C</th>
+                                    <th>Saldo Contabilístico</th>
+                                </tr>
+                                <tr>
+                                    <td class="excelRow">7</td>
+                                    <td>01/05/2026</td>
+                                    <td>02/05/2026</td>
+                                    <td>PAG BXVAL- 5004 VIAVERDE</td>
+                                    <td>PAG BXVAL- 5004 VIAVERDE</td>
+                                    <td>11.40</td>
+                                    <td>D</td>
+                                    <td>156.34</td>
+                                </tr>
+                            </table>
+                            """);
+            return ResponseEntity.ok(format);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/format/cryptoCom", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Operation(description = "Returns the expected format for CryptoCom input files")
+    @ApiResponse(responseCode = "200", description = "Format information retrieved successfully")
+    public ResponseEntity<BankFileFormatDto> getCryptoComFormat() {
+        try {
+            BankConfig config = budgetService.getCryptoComConfig();
+            BankFileFormatDto format = new BankFileFormatDto(
+                    config.getName(),
+                    "CSV",
+                    config.getFirstLine(),
+                    config.getDateColumnPosition() + 1,
+                    config.getAmountColumnPosition() + 1,
+                    config.getDescriptionColumnPosition() + 1,
+                    null,
+                    "yyyy-MM-dd hh:mm:ss",
+                    config.getDelimiter(),
+                    """
+                            <style>
+                                table
+                                {
+                                    border: 1px;
+                                    border-right: 1px solid black;
+                                    border-bottom: 1px solid black;
+                                    border-collapse: collapse;
+                                }
+                                td,th
+                                {
+                                    border-left:1px solid black;
+                                    border-top:1px solid black;
+                                    padding: 4px;
+                                }
+                            </style>
+                            <table>
+                                <tr>
+                                    <th>Timestamp (UTC)</th>
+                                    <th>Transaction Description</th>
+                                    <th>Currency</th>
+                                    <th>Amount</th>
+                                    <th>To Currency</th>
+                                    <th>To Amount</th>
+                                    <th>Native Currency</th>
+                                    <th>Native Amount</th>
+                                    <th>Native Amount (in USD)</th>
+                                    <th>Transaction Kind</th>
+                                    <th>Transaction Hash</th>
+                                </tr>
+                                <tr>
+                                    <td>2026-05-02 12:36:36</td>
+                                    <td>PAG BXVAL- 5004 VIAVERDE</td>
+                                    <td>EUR</td>
+                                    <td>-11.40</td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td>EUR</td>
+                                    <td>-11.40</td>
+                                    <td>-12.42</td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                            </table>
+                            """);
             return ResponseEntity.ok(format);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
