@@ -1,6 +1,7 @@
 package com.budget.core;
 
 import com.budget.core.config.Bank;
+import com.budget.core.config.CategoryConfig;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Row;
@@ -20,16 +21,19 @@ import java.util.List;
 
 public class File {
     public List<Bank> banksList;
+    private final CategoryConfig categoryConfig;
     private Workbook excelFile;
 
-    public File(List<Bank> bankList) {
+    public File(List<Bank> bankList, CategoryConfig categoryConfig) {
         this.banksList = bankList;
+        this.categoryConfig = categoryConfig;
         this.excelFile = this.createExcelFile("allBanks");
     }
 
-    public File(Bank bank) {
-        banksList = List.of(bank);
-        excelFile = this.createExcelFile(bank.config.getName());
+    public File(Bank bank, CategoryConfig categoryConfig) {
+        this.banksList = List.of(bank);
+        this.categoryConfig = categoryConfig;
+        this.excelFile = this.createExcelFile(bank.config.getName());
     }
 
     Workbook createExcelFile(String sheetName) {
@@ -107,7 +111,7 @@ public class File {
                     double amount = bank.config.getAmount(bankRow.getCell(bank.config.getAmountColumnPosition()).toString(), creditOrDebit);
                     Date date = bank.config.getDate(bankRow.getCell(bank.config.getDateColumnPosition()).toString());
                     String type = bank.config.getType(amount, creditOrDebit, originalDescription);
-                    String[] category = bank.config.getCategory(originalDescription);
+                    String[] category = categoryConfig.getCategory(originalDescription);
 
                     // add new row, with values for each column, to Excel file
                     addRow(bankName, date, type, category[0], category[1], amount, originalDescription);
@@ -142,7 +146,7 @@ public class File {
                         double amount = bank.config.getAmount(columns[bank.config.getAmountColumnPosition()], creditOrDebit);
                         Date date = bank.config.getDate(columns[bank.config.getDateColumnPosition()]);
                         String type = bank.config.getType(amount, creditOrDebit, originalDescription);
-                        String[] category = bank.config.getCategory(originalDescription);
+                        String[] category = categoryConfig.getCategory(originalDescription);
 
                         // add new row, with values for each column, to Excel file
                         addRow(bankName, date, type, category[0], category[1], amount, originalDescription);

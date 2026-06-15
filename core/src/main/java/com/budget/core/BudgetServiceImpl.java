@@ -4,6 +4,7 @@ import com.budget.core.config.ActivoBankConfig;
 import com.budget.core.config.Bank;
 import com.budget.core.config.BankConfig;
 import com.budget.core.config.BankConfigRequest;
+import com.budget.core.config.CategoryConfig;
 import com.budget.core.config.CreditoAgricolaConfig;
 import com.budget.core.config.CryptoComConfig;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -24,6 +25,9 @@ public class BudgetServiceImpl implements BudgetService {
     @Autowired
     CryptoComConfig cryptoComConfig;
 
+    @Autowired
+    CategoryConfig categoryConfig;
+
     @Override
     public Workbook allFilesToExcel(MultipartFile activoBankFile,
                                     MultipartFile creditoAgricolaFile,
@@ -32,25 +36,25 @@ public class BudgetServiceImpl implements BudgetService {
                 new Bank(activoBankConfig, activoBankFile),
                 new Bank(creditoAgricolaConfig, creditoAgricolaFile),
                 new Bank(cryptoComConfig, cryptoComFile)
-        ));
+        ), categoryConfig);
         return banksExcelFile.bankFileToExcelFile();
     }
 
     @Override
     public Workbook activoBankFileToExcel(MultipartFile multipartFile) {
-        var file = new File(new Bank(activoBankConfig, multipartFile));
+        var file = new File(new Bank(activoBankConfig, multipartFile), categoryConfig);
         return file.bankFileToExcelFile();
     }
 
     @Override
     public Workbook creditoAgricolaFileToExcel(MultipartFile multipartFile) {
-        var file = new File(new Bank(creditoAgricolaConfig, multipartFile));
+        var file = new File(new Bank(creditoAgricolaConfig, multipartFile), categoryConfig);
         return file.bankFileToExcelFile();
     }
 
     @Override
     public Workbook cryptoComFileToExcel(MultipartFile multipartFile) {
-        var file = new File(new Bank(cryptoComConfig, multipartFile));
+        var file = new File(new Bank(cryptoComConfig, multipartFile), categoryConfig);
         return file.bankFileToExcelFile();
     }
 
