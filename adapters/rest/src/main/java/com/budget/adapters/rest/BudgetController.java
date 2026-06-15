@@ -114,70 +114,7 @@ public class BudgetController {
                     null,
                     config.getDateFormat(),
                     null,
-                    """
-                            <style>
-                                table
-                                {
-                                    border: 1px;
-                                    border-right: 1px solid black;
-                                    border-bottom: 1px solid black;
-                                    border-collapse: collapse;
-                                }
-                                td,th
-                                {
-                                    border-left:1px solid black;
-                                    border-top:1px solid black;
-                                    padding: 4px;
-                                }
-                                .excelColum
-                                {
-                                    text-align: center;
-                                    vertical-align: middle;
-                                    background: Gainsboro;
-                                    color: Grey;
-                                }
-                                .excelRow
-                                {
-                                    text-align: left;
-                                    vertical-align: middle;
-                                    background: Gainsboro;
-                                    color: Grey;
-                                }
-                            </style>
-                            <table>
-                                <tr>
-                                    <td> </td>
-                                    <td class="excelColum">A</td>
-                                    <td class="excelColum">B</td>
-                                    <td class="excelColum">C</td>
-                                    <td class="excelColum">D</td>
-                                    <td class="excelColum">E</td>
-                                </tr>
-                                <tr><td class="excelRow">1</td><td colspan = "5">HISTÓRICO DE CONTA NÚMERO 123456</td></tr>
-                                <tr><td class="excelRow">2</td><td colspan = "5">Moeda: EUR</td></tr>
-                                <tr><td class="excelRow">3</td><td colspan = "5"> </td></tr>
-                                <tr><td class="excelRow">4</td><td colspan = "5">Tipo: Todos</td></tr>
-                                <tr><td class="excelRow">5</td><td colspan = "5">Data de: 01/05/2026</td></tr>
-                                <tr><td class="excelRow">6</td><td colspan = "5">Data até: 31/05/2026</td></tr>
-                                <tr><td class="excelRow">7</td><td colspan = "5"> </td></tr>
-                                <tr>
-                                    <td class="excelRow">8</td>
-                                    <th>Data Lanc.</th>
-                                    <th>Data Valor</th>
-                                    <th>Descrição</th>
-                                    <th>Valor</th>
-                                    <th>Saldo</th>
-                                </tr>
-                                <tr>
-                                    <td class="excelRow">9</td>
-                                    <td>01-05-2026</td>
-                                    <td>02-05-2026</td>
-                                    <td>PAG BXVAL- 5004 VIAVERDE</td>
-                                    <td>-11.40</td>
-                                    <td>156.34</td>
-                                </tr>
-                            </table>
-                            """);
+                    config.createXlsxExample(config));
             return ResponseEntity.ok(format);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -200,74 +137,7 @@ public class BudgetController {
                     config.getCdColumnPosition() + 1,
                     config.getDateFormat(),
                     null,
-                    """
-                            <style>
-                                table
-                                {
-                                    border: 1px;
-                                    border-right: 1px solid black;
-                                    border-bottom: 1px solid black;
-                                    border-collapse: collapse;
-                                }
-                                td,th
-                                {
-                                    border-left:1px solid black;
-                                    border-top:1px solid black;
-                                    padding: 4px;
-                                }
-                                .excelColum
-                                {
-                                    text-align: center;
-                                    vertical-align: middle;
-                                    background: Gainsboro;
-                                    color: Grey;
-                                }
-                                .excelRow
-                                {
-                                    text-align: left;
-                                    vertical-align: middle;
-                                    background: Gainsboro;
-                                    color: Grey;
-                                }
-                            </style>
-                            <table>
-                                <tr>
-                                    <td> </td>
-                                    <td class="excelColum">A</td>
-                                    <td class="excelColum">B</td>
-                                    <td class="excelColum">C</td>
-                                    <td class="excelColum">D</td>
-                                    <td class="excelColum">E</td>
-                                    <td class="excelColum">F</td>
-                                    <td class="excelColum">G</td>
-                                </tr>
-                                <tr><td class="excelRow">1</td><td colspan = "7">Operação: Consulta de Movimentos de Contas D.O.</td></tr>
-                                <tr><td class="excelRow">2</td><td colspan = "7">Conta: 123456</td></tr>
-                                <tr><td class="excelRow">3</td><td colspan = "7">De: 30/04/2026</td></tr>
-                                <tr><td class="excelRow">4</td><td colspan = "7">A: 31/05/2026</td></tr>
-                                <tr><td class="excelRow">5</td><td colspan = "7"> </td></tr>
-                                <tr>
-                                    <td class="excelRow">6</td>
-                                    <th>Data de Movimento</th>
-                                    <th>Data Valor</th>
-                                    <th>Descrição</th>
-                                    <th>Descritivo</th>
-                                    <th>Montante</th>
-                                    <th>D/C</th>
-                                    <th>Saldo Contabilístico</th>
-                                </tr>
-                                <tr>
-                                    <td class="excelRow">7</td>
-                                    <td>01/05/2026</td>
-                                    <td>02/05/2026</td>
-                                    <td>PAG BXVAL- 5004 VIAVERDE</td>
-                                    <td>PAG BXVAL- 5004 VIAVERDE</td>
-                                    <td>11.40</td>
-                                    <td>D</td>
-                                    <td>156.34</td>
-                                </tr>
-                            </table>
-                            """);
+                    config.createXlsxExample(config));
             return ResponseEntity.ok(format);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -342,7 +212,7 @@ public class BudgetController {
     }
 
     @PutMapping(value = "/config/{bankName}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(description = "Update the configuration for a specific bank at runtime. Bank names: montepio, activoBank, creditoAgricola, cryptoCom")
+    @Operation(description = "Update the configuration for a specific bank at runtime. Bank names: activoBank, creditoAgricola, cryptoCom")
     @ApiResponse(responseCode = "200", description = "Configuration updated successfully")
     @ApiResponse(responseCode = "400", description = "Unknown bank name")
     public ResponseEntity<Void> updateConfig(
