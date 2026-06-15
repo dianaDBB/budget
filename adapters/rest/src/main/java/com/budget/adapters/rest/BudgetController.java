@@ -160,51 +160,7 @@ public class BudgetController {
                     null,
                     config.getDateFormat(),
                     config.getDelimiter(),
-                    """
-                            <style>
-                                table
-                                {
-                                    border: 1px;
-                                    border-right: 1px solid black;
-                                    border-bottom: 1px solid black;
-                                    border-collapse: collapse;
-                                }
-                                td,th
-                                {
-                                    border-left:1px solid black;
-                                    border-top:1px solid black;
-                                    padding: 4px;
-                                }
-                            </style>
-                            <table>
-                                <tr>
-                                    <th>Timestamp (UTC)</th>
-                                    <th>Transaction Description</th>
-                                    <th>Currency</th>
-                                    <th>Amount</th>
-                                    <th>To Currency</th>
-                                    <th>To Amount</th>
-                                    <th>Native Currency</th>
-                                    <th>Native Amount</th>
-                                    <th>Native Amount (in USD)</th>
-                                    <th>Transaction Kind</th>
-                                    <th>Transaction Hash</th>
-                                </tr>
-                                <tr>
-                                    <td>2026-05-02 12:36:36</td>
-                                    <td>PAG BXVAL- 5004 VIAVERDE</td>
-                                    <td>EUR</td>
-                                    <td>-11.40</td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td>EUR</td>
-                                    <td>-11.40</td>
-                                    <td>-12.42</td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                            </table>
-                            """);
+                    config.createCsvExample(config));
             return ResponseEntity.ok(format);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
