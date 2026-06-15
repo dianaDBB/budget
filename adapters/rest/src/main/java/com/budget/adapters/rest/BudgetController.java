@@ -3,6 +3,7 @@ package com.budget.adapters.rest;
 import com.budget.core.BudgetService;
 import com.budget.core.config.BankConfig;
 import com.budget.core.config.BankConfigRequest;
+import com.budget.core.config.CategoryRule;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -27,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @OpenAPIDefinition(info = @Info(title = "Budget API", version = "1.0"))
@@ -180,5 +182,20 @@ public class BudgetController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping(value = "/config/categories", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(description = "Returns the current category rules")
+    @ApiResponse(responseCode = "200", description = "Category rules retrieved successfully")
+    public ResponseEntity<List<CategoryRule>> getCategoryRules() {
+        return ResponseEntity.ok(budgetService.getCategoryRules());
+    }
+
+    @PutMapping(value = "/config/categories", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(description = "Replace the category rules at runtime")
+    @ApiResponse(responseCode = "200", description = "Category rules updated successfully")
+    public ResponseEntity<Void> updateCategoryRules(@RequestBody List<CategoryRule> rules) {
+        budgetService.updateCategoryRules(rules);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

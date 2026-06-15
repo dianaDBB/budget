@@ -5,6 +5,7 @@ import com.budget.core.config.Bank;
 import com.budget.core.config.BankConfig;
 import com.budget.core.config.BankConfigRequest;
 import com.budget.core.config.CategoryConfig;
+import com.budget.core.config.CategoryRule;
 import com.budget.core.config.CreditoAgricolaConfig;
 import com.budget.core.config.CryptoComConfig;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -82,5 +83,15 @@ public class BudgetServiceImpl implements BudgetService {
             default -> throw new IllegalArgumentException("Unknown bank: " + bankName);
         };
         config.update(request);
+    }
+
+    @Override
+    public List<CategoryRule> getCategoryRules() {
+        return categoryConfig.getRules();
+    }
+
+    @Override
+    public void updateCategoryRules(List<CategoryRule> rules) {
+        categoryConfig.setRules(rules);
     }
 }
