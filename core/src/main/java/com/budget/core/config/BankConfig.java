@@ -16,6 +16,8 @@ public interface BankConfig {
 
     String getDelimiter();
 
+    String getDateFormat();
+
     int getAmountColumnPosition();
 
     int getDateColumnPosition();
@@ -163,4 +165,6 @@ public interface BankConfig {
     void setDelimiter(String delimiter);
 
     void setCdColumnPosition(int cdColumnPosition);
+    
+    void update(BankConfigRequest request);
 }

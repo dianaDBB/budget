@@ -1,6 +1,7 @@
 package com.budget.core;
 
 import com.budget.core.config.BankConfig;
+import com.budget.core.config.BankConfigRequest;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,4 +25,6 @@ public interface BudgetService {
     BankConfig getCreditoAgricolaConfig();
 
     BankConfig getCryptoComConfig();
+    
+    void updateConfig(String bankName, BankConfigRequest request);
 }

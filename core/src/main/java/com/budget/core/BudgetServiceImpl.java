@@ -3,6 +3,7 @@ package com.budget.core;
 import com.budget.core.config.ActivoBankConfig;
 import com.budget.core.config.Bank;
 import com.budget.core.config.BankConfig;
+import com.budget.core.config.BankConfigRequest;
 import com.budget.core.config.CreditoAgricolaConfig;
 import com.budget.core.config.CryptoComConfig;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -66,5 +67,16 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public BankConfig getCryptoComConfig() {
         return cryptoComConfig;
+    }
+
+    @Override
+    public void updateConfig(String bankName, BankConfigRequest request) {
+        BankConfig config = switch (bankName.toLowerCase()) {
+            case "activobank" -> activoBankConfig;
+            case "creditoagricola" -> creditoAgricolaConfig;
+            case "cryptocom" -> cryptoComConfig;
+            default -> throw new IllegalArgumentException("Unknown bank: " + bankName);
+        };
+        config.update(request);
     }
 }

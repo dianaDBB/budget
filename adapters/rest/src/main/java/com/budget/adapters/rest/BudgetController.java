@@ -2,6 +2,7 @@ package com.budget.adapters.rest;
 
 import com.budget.core.BudgetService;
 import com.budget.core.config.BankConfig;
+import com.budget.core.config.BankConfigRequest;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -14,7 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -108,7 +112,7 @@ public class BudgetController {
                     config.getAmountColumnPosition() + 1,
                     config.getDescriptionColumnPosition() + 1,
                     null,
-                    "dd-MMMM-yyyy",
+                    config.getDateFormat(),
                     null,
                     """
                             <style>
@@ -194,7 +198,7 @@ public class BudgetController {
                     config.getAmountColumnPosition() + 1,
                     config.getDescriptionColumnPosition() + 1,
                     config.getCdColumnPosition() + 1,
-                    "dd/MM/yyyy",
+                    config.getDateFormat(),
                     null,
                     """
                             <style>
@@ -284,7 +288,7 @@ public class BudgetController {
                     config.getAmountColumnPosition() + 1,
                     config.getDescriptionColumnPosition() + 1,
                     null,
-                    "yyyy-MM-dd hh:mm:ss",
+                    config.getDateFormat(),
                     config.getDelimiter(),
                     """
                             <style>
@@ -334,6 +338,21 @@ public class BudgetController {
             return ResponseEntity.ok(format);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping(value = "/config/{bankName}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(description = "Update the configuration for a specific bank at runtime. Bank names: montepio, activoBank, creditoAgricola, cryptoCom")
+    @ApiResponse(responseCode = "200", description = "Configuration updated successfully")
+    @ApiResponse(responseCode = "400", description = "Unknown bank name")
+    public ResponseEntity<Void> updateConfig(
+            @PathVariable String bankName,
+            @RequestBody BankConfigRequest request) {
+        try {
+            budgetService.updateConfig(bankName, request);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

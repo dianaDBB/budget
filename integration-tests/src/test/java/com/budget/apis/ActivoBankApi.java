@@ -104,6 +104,58 @@ public class ActivoBankApi {
         return file;
     }
 
+    public static Response generateFileRaw(File inputFile) {
+        return given()
+                .multiPart("file", inputFile)
+                .contentType("multipart/form-data")
+                .when()
+                .post(ActivoBankApi.generateFileUrl);
+    }
+
+    /**
+     * Creates a file whose data rows start at the given 0-based rowIndex.
+     * Rows before dataStartRow are filled with filler header text.
+     */
+    public static File createFileWithFirstLineAt(int dataStartRow, List<EntryDto> entryList) throws IOException {
+        File file = new File("target/test-activoBank-firstLine-" + dataStartRow + "-" + System.currentTimeMillis() + ".xlsx");
+        LocalDate transDate = LocalDate.parse("01-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
+        LocalDate valueDate = LocalDate.parse("02-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
+        double initialBalance = 1000.00;
+
+        try (var workbook = new XSSFWorkbook()) {
+            var sheet = workbook.createSheet("Transactions");
+
+            for (int i = 0; i < dataStartRow - 1; i++) {
+                setCell(sheet.createRow(i), 0, "Header row " + (i + 1));
+            }
+
+            var header = sheet.createRow(dataStartRow - 1);
+            setCell(header, 0, "Data Lanc.");
+            setCell(header, 1, "Data Valor");
+            setCell(header, 2, "Descrição");
+            setCell(header, 3, "Valor");
+            setCell(header, 4, "Saldo");
+
+            int rowIndex = dataStartRow;
+            for (EntryDto entry : entryList) {
+                var row = sheet.createRow(rowIndex);
+                setCell(row, 0, transDate, "dd-MMMM-yyyy");
+                setCell(row, 1, valueDate, "dd-MMMM-yyyy");
+                setCell(row, 2, entry.description());
+                setCell(row, 3, entry.amount());
+                setCell(row, 4, initialBalance - entry.amount());
+                initialBalance -= entry.amount();
+                rowIndex++;
+            }
+
+            try (FileOutputStream fos = new FileOutputStream(file)) {
+                workbook.write(fos);
+            }
+        }
+
+        return file;
+    }
+
     public static XSSFWorkbook generateFile(File inputFile) throws IOException {
         Response response =
                 given()

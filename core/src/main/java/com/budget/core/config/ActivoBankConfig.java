@@ -55,6 +55,22 @@ public class ActivoBankConfig implements BankConfig {
     }
 
     @Override
+    public String getDateFormat() {
+        return this.dateFormat;
+    }
+
+    @Override
+    public void update(BankConfigRequest request) {
+        if (request.getFirstLine() != null) this.firstLine = request.getFirstLine();
+        if (request.getDelimiter() != null) this.delimiter = request.getDelimiter();
+        if (request.getDateFormat() != null) this.dateFormat = request.getDateFormat();
+        if (request.getAmountColumnPosition() != null) this.amountColumnPosition = request.getAmountColumnPosition();
+        if (request.getDateColumnPosition() != null) this.dateColumnPosition = request.getDateColumnPosition();
+        if (request.getDescriptionColumnPosition() != null) this.descriptionColumnPosition = request.getDescriptionColumnPosition();
+        if (request.getCdColumnPosition() != null) this.cdColumnPosition = request.getCdColumnPosition();
+    }
+
+    @Override
     public Date getDate(String value) throws ParseException {
         String dateFormat = this.dateFormat;
         return (new SimpleDateFormat(dateFormat)).parse(value);
