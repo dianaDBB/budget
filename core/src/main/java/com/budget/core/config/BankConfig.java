@@ -229,7 +229,7 @@ public interface BankConfig {
         for (int i = 0; i < firstDataLine - 1; i++) {
             htmlExample.append("<tr>")
                     .append("<td class=\"excelRow\">").append(i + 1).append("</td>")
-                    .append("<td colspan=\"").append(maxCol + 1).append("\">").append("Row ").append(i + 1).append(config.getName()).append("</td>")
+                    .append("<td colspan=\"").append(maxCol + 1).append("\">").append("Row ").append(i + 1).append("</td>")
                     .append("</tr>");
         }
 
