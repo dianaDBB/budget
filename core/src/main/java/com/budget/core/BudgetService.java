@@ -25,6 +25,6 @@ public interface BudgetService {
     BankConfig getCreditoAgricolaConfig();
 
     BankConfig getCryptoComConfig();
-    
+
     void updateConfig(String bankName, BankConfigRequest request);
 }

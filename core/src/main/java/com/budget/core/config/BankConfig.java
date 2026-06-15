@@ -165,6 +165,6 @@ public interface BankConfig {
     void setDelimiter(String delimiter);
 
     void setCdColumnPosition(int cdColumnPosition);
-    
+
     void update(BankConfigRequest request);
 }
