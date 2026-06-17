@@ -185,13 +185,13 @@ public class FileConfigEntity {
                 .max(Integer::compareTo).orElse(0);
 
         StringBuilder html = new StringBuilder("""
-                        <style>
-                            table { border: 1px; border-right: 1px solid black; border-bottom: 1px solid black; border-collapse: collapse; }
-                            td,th { border-left:1px solid black; border-top:1px solid black; padding: 4px; }
-                            .excelColum { text-align: center; vertical-align: middle; background: Gainsboro; color: Grey; }
-                            .excelRow { text-align: left; vertical-align: middle; background: Gainsboro; color: Grey; }
-                        </style>
-                        <table><tr><td> </td>""");
+                <style>
+                    table { border: 1px; border-right: 1px solid black; border-bottom: 1px solid black; border-collapse: collapse; }
+                    td,th { border-left:1px solid black; border-top:1px solid black; padding: 4px; }
+                    .excelColum { text-align: center; vertical-align: middle; background: Gainsboro; color: Grey; }
+                    .excelRow { text-align: left; vertical-align: middle; background: Gainsboro; color: Grey; }
+                </style>
+                <table><tr><td> </td>""");
 
         for (int i = 0; i <= maxCol; i++)
             html.append("<td class=\"excelColum\">").append((char) ('A' + i)).append("</td>");

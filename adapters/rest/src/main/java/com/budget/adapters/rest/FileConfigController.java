@@ -1,5 +1,6 @@
 package com.budget.adapters.rest;
 
+import com.budget.adapters.rest.dto.BankFileFormatDto;
 import com.budget.core.FileConfigService;
 import com.budget.core.config.FileConfigEntity;
 import com.budget.core.config.BankConfigRequest;

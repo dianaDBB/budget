@@ -26,7 +26,8 @@ public class FileConfigServiceImpl implements FileConfigService {
             if (request.getDateFormat() != null) entity.setDateformat(request.getDateFormat());
             if (request.getAmountColumnPosition() != null) entity.setAmountColumnPos(request.getAmountColumnPosition());
             if (request.getDateColumnPosition() != null) entity.setDateColumnPos(request.getDateColumnPosition());
-            if (request.getDescriptionColumnPosition() != null) entity.setDescColumnPos(request.getDescriptionColumnPosition());
+            if (request.getDescriptionColumnPosition() != null)
+                entity.setDescColumnPos(request.getDescriptionColumnPosition());
             if (request.getCdColumnPosition() != null)
                 entity.setCreditDebitColumnPos(request.getCdColumnPosition() == -1 ? null : request.getCdColumnPosition());
             fileConfigRepository.save(entity);

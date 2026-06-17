@@ -1,4 +1,4 @@
-package com.budget.adapters.rest;
+package com.budget.adapters.rest.dto;
 
 public record BankFileFormatDto(
         String bankName,

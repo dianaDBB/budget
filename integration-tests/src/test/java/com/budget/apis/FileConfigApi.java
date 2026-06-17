@@ -1,6 +1,6 @@
 package com.budget.apis;
 
-import com.budget.adapters.rest.BankFileFormatDto;
+import com.budget.adapters.rest.dto.BankFileFormatDto;
 import com.budget.core.config.BankConfigRequest;
 
 import io.restassured.response.Response;

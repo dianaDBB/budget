@@ -1,7 +1,7 @@
 package com.budget.tests;
 
 import com.budget.BaseIT;
-import com.budget.adapters.rest.BankFileFormatDto;
+import com.budget.adapters.rest.dto.BankFileFormatDto;
 import com.budget.apis.FileConfigApi;
 
 import org.junit.jupiter.api.Test;
