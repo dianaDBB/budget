@@ -1,6 +1,6 @@
 package com.budget.adapters.rest;
 
-import com.budget.core.CategoriesService;
+import com.budget.core.CategoryService;
 import com.budget.core.config.CategoryEntity;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,23 +20,23 @@ import java.util.List;
 
 @RestController
 @OpenAPIDefinition(info = @Info(title = "Budget API", version = "1.0"))
-@RequestMapping("/categories")
-public class CategoriesController {
+@RequestMapping("/category")
+public class CategoryController {
     @Autowired
-    CategoriesService categoriesService;
+    CategoryService categoryService;
 
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "Returns the current category rules")
     @ApiResponse(responseCode = "200", description = "Category rules retrieved successfully")
     public ResponseEntity<List<CategoryEntity>> getCategoryRules() {
-        return ResponseEntity.ok(categoriesService.getAllCategories());
+        return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
     @PutMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "Replace the category rules at runtime")
     @ApiResponse(responseCode = "200", description = "Category rules updated successfully")
-    public ResponseEntity<Void> updateCategoryRules(@RequestBody List<CategoryEntity> rules) {
-        categoriesService.updateCategories(rules);
+    public ResponseEntity<Void> updateCategoryRules(@RequestBody List<CategoryEntity> categories) {
+        categoryService.updateCategories(categories);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

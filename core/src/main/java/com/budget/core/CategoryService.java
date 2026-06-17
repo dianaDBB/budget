@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public interface CategoriesService {
+public interface CategoryService {
     List<CategoryEntity> getAllCategories();
 
     String[] getCategory(String value);

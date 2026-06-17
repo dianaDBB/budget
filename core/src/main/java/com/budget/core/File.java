@@ -20,18 +20,18 @@ import java.util.List;
 
 public class File {
     public List<Bank> banksList;
-    private final CategoriesService categoriesService;
+    private final CategoryService categoryService;
     private Workbook excelFile;
 
-    public File(List<Bank> bankList, CategoriesService categoriesService) {
+    public File(List<Bank> bankList, CategoryService categoryService) {
         this.banksList = bankList;
-        this.categoriesService = categoriesService;
+        this.categoryService = categoryService;
         this.excelFile = this.createExcelFile("allBanks");
     }
 
-    public File(Bank bank, CategoriesService categoriesService) {
+    public File(Bank bank, CategoryService categoryService) {
         this.banksList = List.of(bank);
-        this.categoriesService = categoriesService;
+        this.categoryService = categoryService;
         this.excelFile = this.createExcelFile(bank.config.getBankName());
     }
 
@@ -110,7 +110,7 @@ public class File {
                     double amount = bank.config.getAmount(bankRow.getCell(bank.config.getAmountColumnPos()).toString(), creditOrDebit);
                     Date date = bank.config.getFormatedDate(bankRow.getCell(bank.config.getDateColumnPos()).toString());
                     String type = bank.config.getType(amount, creditOrDebit, originalDescription);
-                    String[] category = categoriesService.getCategory(originalDescription);
+                    String[] category = categoryService.getCategory(originalDescription);
 
                     // add new row, with values for each column, to Excel file
                     addRow(bankName, date, type, category[0], category[1], amount, originalDescription);
@@ -145,7 +145,7 @@ public class File {
                         double amount = bank.config.getAmount(columns[bank.config.getAmountColumnPos()], creditOrDebit);
                         Date date = bank.config.getFormatedDate(columns[bank.config.getDateColumnPos()]);
                         String type = bank.config.getType(amount, creditOrDebit, originalDescription);
-                        String[] category = categoriesService.getCategory(originalDescription);
+                        String[] category = categoryService.getCategory(originalDescription);
 
                         // add new row, with values for each column, to Excel file
                         addRow(bankName, date, type, category[0], category[1], amount, originalDescription);

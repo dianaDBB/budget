@@ -16,7 +16,7 @@ public class BudgetServiceImpl implements BudgetService {
     FileConfigService fileConfigService;
 
     @Autowired
-    CategoriesService categoriesService;
+    CategoryService categoryService;
 
     @Override
     public Workbook allFilesToExcel(MultipartFile activoBankFile,
@@ -26,12 +26,12 @@ public class BudgetServiceImpl implements BudgetService {
                 new Bank(fileConfigService.getBankFileConfig("activobank"), activoBankFile),
                 new Bank(fileConfigService.getBankFileConfig("creditoagricola"), creditoAgricolaFile),
                 new Bank(fileConfigService.getBankFileConfig("cryptocom"), cryptoComFile)
-        ), categoriesService).bankFileToExcelFile();
+        ), categoryService).bankFileToExcelFile();
     }
 
     @Override
     public Workbook bankFileToExcel(String bankName, MultipartFile multipartFile) {
         FileConfigEntity config = fileConfigService.getBankFileConfig(bankName);
-        return new File(new Bank(config, multipartFile), categoriesService).bankFileToExcelFile();
+        return new File(new Bank(config, multipartFile), categoryService).bankFileToExcelFile();
     }
 }
