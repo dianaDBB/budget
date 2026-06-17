@@ -22,6 +22,10 @@ jobs:
           cache: maven
 
       - name: Verify
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: mvn --batch-mode clean verify
 
       - name: Package
