@@ -1,10 +1,9 @@
-package com.budget.apis;
+package com.budget.helpers;
 
-import com.budget.adapters.rest.BankFileFormatDto;
-import io.restassured.response.Response;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.ByteArrayInputStream;
+import com.budget.dto.EntryDto;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,13 +13,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.budget.helpers.FileXLSX.setCell;
-import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ActivoBankApi {
-    public static String generateFileUrl = "/budget/budget/file/activoBank";
-    public static String getBankFormatUrl = "/budget/budget/format/activoBank";
-
+public class ActivoBank {
     public static File createValidFile(List<EntryDto> entryList) throws IOException {
         File file = new File("target/test-activoBank-valid-" + System.currentTimeMillis() + ".xlsx");
         double initialBalance = 1000.00;
@@ -104,18 +98,6 @@ public class ActivoBankApi {
         return file;
     }
 
-    public static Response generateFileRaw(File inputFile) {
-        return given()
-                .multiPart("file", inputFile)
-                .contentType("multipart/form-data")
-                .when()
-                .post(ActivoBankApi.generateFileUrl);
-    }
-
-    /**
-     * Creates a file whose data rows start at the given 0-based rowIndex.
-     * Rows before dataStartRow are filled with filler header text.
-     */
     public static File createFileWithFirstLineAt(int dataStartRow, List<EntryDto> entryList) throws IOException {
         File file = new File("target/test-activoBank-firstLine-" + dataStartRow + "-" + System.currentTimeMillis() + ".xlsx");
         LocalDate transDate = LocalDate.parse("01-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
@@ -154,36 +136,5 @@ public class ActivoBankApi {
         }
 
         return file;
-    }
-
-    public static XSSFWorkbook generateFile(File inputFile) throws IOException {
-        Response response =
-                given()
-                        .multiPart("file", inputFile)
-                        .contentType("multipart/form-data")
-                        .when()
-                        .post(ActivoBankApi.generateFileUrl)
-                        .then()
-                        .statusCode(200)
-                        .extract()
-                        .response();
-
-        byte[] bytes = response.asByteArray();
-        assertTrue(bytes.length > 0, "Response bytes length should be bigger that 0");
-
-        return new XSSFWorkbook(new ByteArrayInputStream(bytes));
-    }
-
-    public static BankFileFormatDto getBankFormat() {
-        Response response =
-                given()
-                        .when()
-                        .get(ActivoBankApi.getBankFormatUrl)
-                        .then()
-                        .statusCode(200)
-                        .extract()
-                        .response();
-
-        return response.as(BankFileFormatDto.class);
-    }
+    }    
 }

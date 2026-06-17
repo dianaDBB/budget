@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "categories")
-public class CategoryRule {
+public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

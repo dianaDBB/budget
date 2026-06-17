@@ -1,11 +1,10 @@
-package com.budget.apis;
+package com.budget.helpers;
 
-import com.budget.adapters.rest.BankFileFormatDto;
-import io.restassured.response.Response;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.ByteArrayInputStream;
+import com.budget.dto.EntryDto;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,13 +14,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.budget.helpers.FileXLSX.setCell;
-import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CreditoAgricolaApi {
-    public static String generateFileUrl = "/budget/budget/file/creditoAgricola";
-    public static String getFormatUrl = "/budget/budget/format/creditoAgricola";
-
+public class CreditoAgricola {
     public static File createValidFile(List<EntryDto> entryList) throws IOException {
         File file = new File("target/test-creditoAgricola-valid-" + System.currentTimeMillis() + ".xlsx");
         double initialBalance = 1000.00;
@@ -108,36 +102,5 @@ public class CreditoAgricolaApi {
         }
 
         return file;
-    }
-
-    public static XSSFWorkbook generateFile(File inputFile) throws IOException {
-        Response response =
-                given()
-                        .multiPart("file", inputFile)
-                        .contentType("multipart/form-data")
-                        .when()
-                        .post(generateFileUrl)
-                        .then()
-                        .statusCode(200)
-                        .extract()
-                        .response();
-
-        byte[] bytes = response.asByteArray();
-        assertTrue(bytes.length > 0, "Response bytes length should be bigger that 0");
-
-        return new XSSFWorkbook(new ByteArrayInputStream(bytes));
-    }
-
-    public static BankFileFormatDto getFormat() {
-        Response response =
-                given()
-                        .when()
-                        .get(getFormatUrl)
-                        .then()
-                        .statusCode(200)
-                        .extract()
-                        .response();
-
-        return response.as(BankFileFormatDto.class);
     }
 }

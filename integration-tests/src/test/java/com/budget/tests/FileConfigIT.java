@@ -2,17 +2,16 @@ package com.budget.tests;
 
 import com.budget.BaseIT;
 import com.budget.adapters.rest.BankFileFormatDto;
-import com.budget.apis.ActivoBankApi;
-import com.budget.apis.CreditoAgricolaApi;
-import com.budget.apis.CryptoComApi;
+import com.budget.apis.FileConfigApi;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BankFormatsIT extends BaseIT {
+public class FileConfigIT extends BaseIT {
     @Test
     void shouldReturnCreditoAgricolaFileFormat() {
-        BankFileFormatDto format = CreditoAgricolaApi.getFormat();
+        BankFileFormatDto format = FileConfigApi.getConfig("CreditoAgricola");
 
         assertNotNull(format);
         assertEquals("CreditoAgricola", format.bankName(), "'bankName' should be 'CreditoAgricola'");
@@ -32,7 +31,7 @@ public class BankFormatsIT extends BaseIT {
 
     @Test
     void shouldReturnCryptoComFileFormat() {
-        BankFileFormatDto format = CryptoComApi.getFormat();
+        BankFileFormatDto format = FileConfigApi.getConfig("CryptoCom");
 
         assertNotNull(format);
         assertEquals("CryptoCom", format.bankName(), "'bankName' should be 'CryptoCom'");
@@ -52,7 +51,7 @@ public class BankFormatsIT extends BaseIT {
 
     @Test
     void shouldReturnActivoBankFileFormatViaApi() {
-        BankFileFormatDto format = ActivoBankApi.getBankFormat();
+        BankFileFormatDto format = FileConfigApi.getConfig("ActivoBank");
 
         assertNotNull(format);
         assertEquals("ActivoBank", format.bankName(), "'bankName' should be 'ActivoBank'");

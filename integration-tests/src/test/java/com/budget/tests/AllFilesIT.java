@@ -2,6 +2,11 @@ package com.budget.tests;
 
 import com.budget.BaseIT;
 import com.budget.apis.*;
+import com.budget.dto.EntryDto;
+import com.budget.helpers.ActivoBank;
+import com.budget.helpers.CreditoAgricola;
+import com.budget.helpers.CryptoCom;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -17,11 +22,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AllFilesIT extends BaseIT {
     @Test
     void shouldUploadAllFilesAndReturnValidXlsx() throws Exception {
-        File activoBankFile = ActivoBankApi.createValidFile(List.of(new EntryDto("Test Transaction ActivoBank", -50.00)));
-        File creditoAgricolaFile = CreditoAgricolaApi.createValidFile(List.of(new EntryDto("Test Transaction CreditoAgricola", 30.00, "D")));
-        File cryptoComFile = CryptoComApi.createValidFile(List.of(new EntryDto("Test Transaction CryptoCom", -20.00)));
+        File activoBankFile = ActivoBank.createValidFile(List.of(new EntryDto("Test Transaction ActivoBank", -50.00)));
+        File creditoAgricolaFile = CreditoAgricola.createValidFile(List.of(new EntryDto("Test Transaction CreditoAgricola", 30.00, "D")));
+        File cryptoComFile = CryptoCom.createValidFile(List.of(new EntryDto("Test Transaction CryptoCom", -20.00)));
 
-        Workbook workbook = AllBanksApi.generateFile(activoBankFile, creditoAgricolaFile, cryptoComFile);
+        Workbook workbook = BudgetApi.generateAllBanksFile(activoBankFile, creditoAgricolaFile, cryptoComFile);
 
         Sheet sheet = workbook.getSheetAt(0);
         assertNotNull(sheet, "File should have at least 1 sheet");
@@ -54,11 +59,11 @@ public class AllFilesIT extends BaseIT {
 
     @Test
     void shouldCombineTransactionsFromAllBanks() throws Exception {
-        File activoBankFile = ActivoBankApi.createValidFile(List.of(new EntryDto("COMPRA CONTINENTE Store", -45.50)));
-        File creditoAgricolaFile = CreditoAgricolaApi.createValidFile(List.of(new EntryDto("UBER    EATS Restaurant", 22.30, "D")));
-        File cryptoComFile = CryptoComApi.createValidFile(List.of(new EntryDto("Bitcoin Purchase", -100.00)));
+        File activoBankFile = ActivoBank.createValidFile(List.of(new EntryDto("COMPRA CONTINENTE Store", -45.50)));
+        File creditoAgricolaFile = CreditoAgricola.createValidFile(List.of(new EntryDto("UBER    EATS Restaurant", 22.30, "D")));
+        File cryptoComFile = CryptoCom.createValidFile(List.of(new EntryDto("Bitcoin Purchase", -100.00)));
 
-        Workbook workbook = AllBanksApi.generateFile(activoBankFile, creditoAgricolaFile, cryptoComFile);
+        Workbook workbook = BudgetApi.generateAllBanksFile(activoBankFile, creditoAgricolaFile, cryptoComFile);
 
         Sheet sheet = workbook.getSheetAt(0);
         int lastRow = sheet.getLastRowNum();
@@ -86,21 +91,21 @@ public class AllFilesIT extends BaseIT {
 
     @Test
     void shouldHandleMultipleTransactionsPerBank() throws Exception {
-        File activoBankFile = ActivoBankApi.createValidFile(List.of(
+        File activoBankFile = ActivoBank.createValidFile(List.of(
                 new EntryDto("COMPRA CONTINENTE Store", -45.50),
                 new EntryDto("NETFLIX Subscription", -12.99),
                 new EntryDto("GALP Fuel Station", -60.00)
         ));
-        File creditoAgricolaFile = CreditoAgricolaApi.createValidFile(List.of(
+        File creditoAgricolaFile = CreditoAgricola.createValidFile(List.of(
                 new EntryDto("UBER    EATS Restaurant", 22.30, "D"),
                 new EntryDto("VODAFONE Internet", 35.99, "D")
         ));
-        File cryptoComFile = CryptoComApi.createValidFile(List.of(
+        File cryptoComFile = CryptoCom.createValidFile(List.of(
                 new EntryDto("Bitcoin Purchase", -100.00),
                 new EntryDto("Ethereum Purchase", -50.00)
         ));
 
-        Workbook workbook = AllBanksApi.generateFile(activoBankFile, creditoAgricolaFile, cryptoComFile);
+        Workbook workbook = BudgetApi.generateAllBanksFile(activoBankFile, creditoAgricolaFile, cryptoComFile);
 
         Sheet sheet = workbook.getSheetAt(0);
         int lastRow = sheet.getLastRowNum();
@@ -134,11 +139,11 @@ public class AllFilesIT extends BaseIT {
 
     @Test
     void shouldCategorizeTransactionsFromAllBanks() throws Exception {
-        File activoBankFile = ActivoBankApi.createValidFile(List.of(new EntryDto("COMPRA CONTINENTE Store", -45.50)));
-        File creditoAgricolaFile = CreditoAgricolaApi.createValidFile(List.of(new EntryDto("UBER    EATS Restaurant", 22.30, "D")));
-        File cryptoComFile = CryptoComApi.createValidFile(List.of(new EntryDto("Bitcoin Purchase", -100.00)));
+        File activoBankFile = ActivoBank.createValidFile(List.of(new EntryDto("COMPRA CONTINENTE Store", -45.50)));
+        File creditoAgricolaFile = CreditoAgricola.createValidFile(List.of(new EntryDto("UBER    EATS Restaurant", 22.30, "D")));
+        File cryptoComFile = CryptoCom.createValidFile(List.of(new EntryDto("Bitcoin Purchase", -100.00)));
 
-        Workbook workbook = AllBanksApi.generateFile(activoBankFile, creditoAgricolaFile, cryptoComFile);
+        Workbook workbook = BudgetApi.generateAllBanksFile(activoBankFile, creditoAgricolaFile, cryptoComFile);
 
         Sheet sheet = workbook.getSheetAt(0);
         int lastRow = sheet.getLastRowNum();
@@ -164,18 +169,18 @@ public class AllFilesIT extends BaseIT {
 
     @Test
     void shouldClassifyIncomeAndExpenseTransactionsFromAllBanks() throws Exception {
-        File activoBankFile = ActivoBankApi.createValidFile(List.of(
+        File activoBankFile = ActivoBank.createValidFile(List.of(
                 new EntryDto("EUR Deposit Income", 1000.00),
                 new EntryDto("COMPRA CONTINENTE Store", -45.50)
         ));
-        File creditoAgricolaFile = CreditoAgricolaApi.createValidFile(List.of(
+        File creditoAgricolaFile = CreditoAgricola.createValidFile(List.of(
                 new EntryDto("UBER    EATS Restaurant", 22.30, "D")
         ));
-        File cryptoComFile = CryptoComApi.createValidFile(List.of(
+        File cryptoComFile = CryptoCom.createValidFile(List.of(
                 new EntryDto("Bitcoin Purchase", -100.00)
         ));
 
-        Workbook workbook = AllBanksApi.generateFile(activoBankFile, creditoAgricolaFile, cryptoComFile);
+        Workbook workbook = BudgetApi.generateAllBanksFile(activoBankFile, creditoAgricolaFile, cryptoComFile);
 
         Sheet sheet = workbook.getSheetAt(0);
         int lastRow = sheet.getLastRowNum();

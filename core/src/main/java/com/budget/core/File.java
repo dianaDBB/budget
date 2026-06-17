@@ -1,7 +1,6 @@
 package com.budget.core;
 
 import com.budget.core.config.Bank;
-import com.budget.core.config.CategoryConfig;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Row;
@@ -21,19 +20,19 @@ import java.util.List;
 
 public class File {
     public List<Bank> banksList;
-    private final CategoryConfig categoryConfig;
+    private final CategoriesService categoriesService;
     private Workbook excelFile;
 
-    public File(List<Bank> bankList, CategoryConfig categoryConfig) {
+    public File(List<Bank> bankList, CategoriesService categoriesService) {
         this.banksList = bankList;
-        this.categoryConfig = categoryConfig;
+        this.categoriesService = categoriesService;
         this.excelFile = this.createExcelFile("allBanks");
     }
 
-    public File(Bank bank, CategoryConfig categoryConfig) {
+    public File(Bank bank, CategoriesService categoriesService) {
         this.banksList = List.of(bank);
-        this.categoryConfig = categoryConfig;
-        this.excelFile = this.createExcelFile(bank.config.getName());
+        this.categoriesService = categoriesService;
+        this.excelFile = this.createExcelFile(bank.config.getBankName());
     }
 
     Workbook createExcelFile(String sheetName) {
@@ -77,7 +76,7 @@ public class File {
 
     Workbook bankFileToExcelFile() {
         banksList.forEach((bank) -> {
-            if (bank.config.getName().equals("CreditoAgricola") || bank.config.getName().equals("ActivoBank")) {
+            if ("XLSX".equals(bank.config.getFileFormat())) {
                 processXlsxFile(bank);
             } else {
                 processFile(bank);
@@ -102,16 +101,16 @@ public class File {
                         continue;
                     }
 
-                    String bankName = bank.config.getName();
-                    String creditOrDebit = (bank.config.getCdColumnPosition() >= 0)
-                            ? bankRow.getCell(bank.config.getCdColumnPosition()).toString()
+                    String bankName = bank.config.getBankName();
+                    String creditOrDebit = (bank.config.getCreditDebitColumnPos() >= 0)
+                            ? bankRow.getCell(bank.config.getCreditDebitColumnPos()).toString()
                             : "N/A";
-                    String originalDescription = bankRow.getCell(bank.config.getDescriptionColumnPosition()).toString();
+                    String originalDescription = bankRow.getCell(bank.config.getDescColumnPos()).toString();
 
-                    double amount = bank.config.getAmount(bankRow.getCell(bank.config.getAmountColumnPosition()).toString(), creditOrDebit);
-                    Date date = bank.config.getDate(bankRow.getCell(bank.config.getDateColumnPosition()).toString());
+                    double amount = bank.config.getAmount(bankRow.getCell(bank.config.getAmountColumnPos()).toString(), creditOrDebit);
+                    Date date = bank.config.getFormatedDate(bankRow.getCell(bank.config.getDateColumnPos()).toString());
                     String type = bank.config.getType(amount, creditOrDebit, originalDescription);
-                    String[] category = categoryConfig.getCategory(originalDescription);
+                    String[] category = categoriesService.getCategory(originalDescription);
 
                     // add new row, with values for each column, to Excel file
                     addRow(bankName, date, type, category[0], category[1], amount, originalDescription);
@@ -137,16 +136,16 @@ public class File {
                 if (lineCount >= bank.config.getFirstLine()) {
                     String[] columns = line.split(bank.config.getDelimiter());
                     if (columns.length > 1) {
-                        String bankName = bank.config.getName();
-                        String creditOrDebit = (bank.config.getCdColumnPosition() >= 0)
-                                ? columns[bank.config.getCdColumnPosition()]
+                        String bankName = bank.config.getBankName();
+                        String creditOrDebit = (bank.config.getCreditDebitColumnPos() >= 0)
+                                ? columns[bank.config.getCreditDebitColumnPos()]
                                 : "N/A";
-                        String originalDescription = columns[bank.config.getDescriptionColumnPosition()];
+                        String originalDescription = columns[bank.config.getDescColumnPos()];
 
-                        double amount = bank.config.getAmount(columns[bank.config.getAmountColumnPosition()], creditOrDebit);
-                        Date date = bank.config.getDate(columns[bank.config.getDateColumnPosition()]);
+                        double amount = bank.config.getAmount(columns[bank.config.getAmountColumnPos()], creditOrDebit);
+                        Date date = bank.config.getFormatedDate(columns[bank.config.getDateColumnPos()]);
                         String type = bank.config.getType(amount, creditOrDebit, originalDescription);
-                        String[] category = categoryConfig.getCategory(originalDescription);
+                        String[] category = categoriesService.getCategory(originalDescription);
 
                         // add new row, with values for each column, to Excel file
                         addRow(bankName, date, type, category[0], category[1], amount, originalDescription);
