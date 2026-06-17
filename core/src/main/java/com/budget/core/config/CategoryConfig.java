@@ -1,26 +1,28 @@
 package com.budget.core.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import com.budget.core.repository.CategoryRuleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@ConfigurationProperties(prefix = "categories")
 public class CategoryConfig {
-    private List<CategoryRule> rules = new ArrayList<>();
+
+    @Autowired
+    private CategoryRuleRepository categoryRuleRepository;
 
     public List<CategoryRule> getRules() {
-        return rules;
+        return categoryRuleRepository.findAll();
     }
 
     public void setRules(List<CategoryRule> rules) {
-        this.rules = rules;
+        categoryRuleRepository.deleteAll();
+        categoryRuleRepository.saveAll(rules);
     }
 
     public String[] getCategory(String value) {
-        return rules.stream()
+        return categoryRuleRepository.findAll().stream()
                 .filter(rule -> value.toUpperCase().contains(rule.getKeyword().toUpperCase()))
                 .findFirst()
                 .map(rule -> new String[]{rule.getCategory(), rule.getSubCategory()})
