@@ -1,14 +1,9 @@
 package com.budget.core.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Component
-@ConfigurationProperties(prefix = "activo-bank")
 public class ActivoBankConfig implements BankConfig {
     private String name;
     private int firstLine;

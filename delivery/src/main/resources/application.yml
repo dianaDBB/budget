@@ -4,6 +4,16 @@ server:
     contextPath: /budget
   port: 8443
 
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+
 categories:
   rules:
     - keyword: "S/ LEVANTAMENTOS"
@@ -138,33 +148,3 @@ categories:
     - keyword: "POSTO ABASTECIMENT"
       category: Car
       sub-category: Fuel
-
-activo-bank:
-  name: ActivoBank
-  firstLine: 8
-  dateColumnPosition: 0
-  amountColumnPosition: 3
-  descriptionColumnPosition: 2
-  dateFormat: dd-MMMM-yyyy
-  delimiter: \t
-  cdColumnPosition: -1
-
-credito-agricola:
-  name: CreditoAgricola
-  firstLine: 6
-  dateColumnPosition: 0
-  amountColumnPosition: 4
-  descriptionColumnPosition: 2
-  dateFormat: dd/MM/yyyy
-  delimiter: \t
-  cdColumnPosition: 5
-
-crypto-com:
-  name: CryptoCom
-  firstLine: 2
-  dateColumnPosition: 0
-  amountColumnPosition: 3
-  descriptionColumnPosition: 1
-  dateFormat: "yyyy-MM-dd hh:mm:ss"
-  delimiter: ","
-  cdColumnPosition: -1

@@ -8,6 +8,7 @@ import com.budget.core.config.CategoryConfig;
 import com.budget.core.config.CategoryRule;
 import com.budget.core.config.CreditoAgricolaConfig;
 import com.budget.core.config.CryptoComConfig;
+import com.budget.core.repository.FileConfigRepository;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Autowired
     CategoryConfig categoryConfig;
+
+    @Autowired
+    FileConfigRepository fileConfigRepository;
 
     @Override
     public Workbook allFilesToExcel(MultipartFile activoBankFile,
@@ -82,7 +86,19 @@ public class BudgetServiceImpl implements BudgetService {
             case "cryptocom" -> cryptoComConfig;
             default -> throw new IllegalArgumentException("Unknown bank: " + bankName);
         };
+        
         config.update(request);
+
+        fileConfigRepository.findByBankName(config.getName()).ifPresent(entity -> {
+            entity.setFirstLine(config.getFirstLine());
+            entity.setDateColumnPos(config.getDateColumnPosition());
+            entity.setAmountColumnPos(config.getAmountColumnPosition());
+            entity.setDescColumnPos(config.getDescriptionColumnPosition());
+            entity.setDateformat(config.getDateFormat());
+            entity.setDelimiter(config.getDelimiter());
+            entity.setCreditDebitColumnPos(config.getCdColumnPosition() == -1 ? null : config.getCdColumnPosition());
+            fileConfigRepository.save(entity);
+        });
     }
 
     @Override
