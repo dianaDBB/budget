@@ -30,11 +30,12 @@ There are no guarantees regarding stability, structure, or completeness.
 
 ## How to run locally
 
+- Ensure you have `dotenv-cli` installed globally (example: `sudo npm install -g dotenv-cli`)
 - Open terminal and execute the following:
 
 ```
 mvn clean install
-mvn spring-boot:run
+dotenv -e .env mvn spring-boot:run
 ```
 
 - Or select the file `delivery/src/main/java/com.budget/BudgetApiApplication.java`, right click and select "Run"
