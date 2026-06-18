@@ -1,5 +1,6 @@
 package com.budget.core;
 
+import com.budget.core.dto.CategoryRuleDto;
 import com.budget.core.entity.CategoryRuleEntity;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +10,7 @@ import java.util.List;
 public interface CategoryRuleService {
     List<CategoryRuleEntity> getAllCategoryRules();
 
-    String[] getCategoryRules(String value);
+    CategoryRuleDto getCategoryRules(String value);
 
     void updateCategoryRules(List<CategoryRuleEntity> categoryRules);
 }

@@ -1,5 +1,6 @@
 package com.budget.core;
 
+import com.budget.core.dto.CategoryRuleDto;
 import com.budget.core.repository.CategoryRuleRepository;
 import com.budget.core.entity.CategoryRuleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,12 @@ public class CategoryRuleServiceImpl implements CategoryRuleService {
     }
 
     @Override
-    public String[] getCategoryRules(String keyword) {
+    public CategoryRuleDto getCategoryRules(String keyword) {
         return categoryRuleRepository.findAll().stream()
                 .filter(rule -> keyword.toUpperCase().contains(rule.getKeyword().toUpperCase()))
                 .findFirst()
-                .map(rule -> new String[]{rule.getCategory(), rule.getSubCategory()})
-                .orElse(new String[]{"", ""});
+                .map(rule -> new CategoryRuleDto(rule.getCategory(), rule.getSubCategory(), rule.getType()))
+                .orElse(new CategoryRuleDto(null, null, null));
     }
 
     @Override

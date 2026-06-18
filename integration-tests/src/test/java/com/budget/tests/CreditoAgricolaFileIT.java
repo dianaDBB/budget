@@ -226,7 +226,7 @@ public class CreditoAgricolaFileIT extends BaseIT {
         String type = getCellStringValue(workbook, 1, 2);
         double amount = getCellNumericValue(workbook, 1, 5);
 
-        assertTrue("Income".equals(type) || "TrasnferInHouse".equals(type), "Type should be Income or Transfer");
+        assertEquals("TransferInHouse", type, "Type should be TransferInHouse");
         assertTrue(amount >= 0, "Amount should be positive for income");
 
         assertTrue(inputFile.delete(), "Fail to delete the input file");

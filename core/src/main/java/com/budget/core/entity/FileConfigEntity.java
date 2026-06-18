@@ -52,7 +52,7 @@ public class FileConfigEntity {
     private int descColumnPos;
 
     @Column(name = "credit_debit_column_pos")
-    private Integer creditDebitColumnPos;
+    private int creditDebitColumnPos;
 
     @Column(name = "date-format")
     private String dateFormat;
@@ -86,15 +86,7 @@ public class FileConfigEntity {
         return amount;
     }
 
-    public String getType(double value, String creditOrDebit, String originalDescription) {
-        String desc = originalDescription.toUpperCase();
-        if (desc.contains("S/ LEVANTAMENTOS")) return "Expense";
-        if (desc.contains("TRF P/ DIANA") || desc.contains("LEV ATM") ||
-                desc.contains("TRF IMEDIATA DIANA") || desc.contains("TRF A CRÉDITO SEPA+ DIANA") ||
-                desc.contains("LEVANT") || desc.contains("EUR DEPOSIT") ||
-                desc.contains("LEV.ATM") || desc.contains("LEVANTAMENTO") ||
-                desc.contains("TRF.IPS P/ PAULO FILIPE") || desc.contains("TRF P/ PAULO ROCHA") ||
-                desc.contains("TRF P/ DIANA BARBOSA")) return "TrasnferInHouse";
+    public String getType(double value, String creditOrDebit) {
         if (!Objects.equals(creditOrDebit, "N/A"))
             return creditOrDebit.equals("C") ? "Income" : "Expense";
         return (value > 0) ? "Income" : "Expense";

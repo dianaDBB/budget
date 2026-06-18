@@ -196,8 +196,7 @@ public class AllFilesIT extends BaseIT {
 
         assertEquals("ActivoBank", getCellStringValue(workbook, 1, 0));
         String type1 = getCellStringValue(workbook, 1, 2);
-        assertTrue("Income".equals(type1) || "TrasnferInHouse".equals(type1), "Row 1 should be classified as Income " +
-                "or Transfer");
+        assertEquals("TransferInHouse", type1, "Row 1 should be classified as TransferInHouse");
         assertEquals(1000.00, getCellNumericValue(workbook, 1, 5));
 
         assertEquals("ActivoBank", getCellStringValue(workbook, 2, 0));
