@@ -1,6 +1,7 @@
 package com.budget.core;
 
 import com.budget.core.dto.BankDto;
+import com.budget.core.dto.FileLineDto;
 import com.budget.core.entity.FileConfigEntity;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,18 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     public Workbook allFilesToExcel(List<String> bankNames, List<MultipartFile> files) {
-        List<BankDto> bankDtos = IntStream.range(0, bankNames.size())
-                .mapToObj(i -> new BankDto(
-                        fileConfigService.getBankFileConfig(bankNames.get(i)),
-                        files.get(i)
-                ))
-                .toList();
+        List<BankDto> banks =
+                IntStream.range(0, bankNames.size()).mapToObj(i -> new BankDto(fileConfigService.getBankFileConfig(bankNames.get(i)), files.get(i))).toList();
 
-        return new File(bankDtos, categoryRuleService).bankFileToExcelFile();
+        return new File(banks, categoryRuleService).bankFileToExcelFile();
+    }
+
+    @Override
+    public List<FileLineDto> previewAllFilesToExcel(List<String> bankNames, List<MultipartFile> files) {
+        List<BankDto> banks =
+                IntStream.range(0, bankNames.size()).mapToObj(i -> new BankDto(fileConfigService.getBankFileConfig(bankNames.get(i)), files.get(i))).toList();
+
+        return new File(banks, categoryRuleService).previewBankFileToExcelFile();
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.budget.core;
 
 import com.budget.core.dto.BankDto;
 import com.budget.core.dto.CategoryRuleDto;
+import com.budget.core.dto.FileLineDto;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Row;
@@ -87,13 +88,71 @@ public class File {
         return excelFile;
     }
 
-    private void processXlsxFile(BankDto bankDto) {
+    List<FileLineDto> previewBankFileToExcelFile() {
+        List<FileLineDto> previewFile = new java.util.ArrayList<>();
+
+        banksList.forEach((bankDto) -> {
+            if ("XLSX".equals(bankDto.getConfig().getFileFormat())) {
+                previewFile.addAll(this.previewXlsxFile(bankDto));
+            } else {
+                previewFile.addAll(this.previewFile(bankDto));
+            }
+        });
+
+        return previewFile;
+    }
+
+    private FileLineDto getXlsxLine(BankDto bankDto, Row bankRow) throws ParseException {
         String bankName = bankDto.getConfig().getBankName();
         int cdColPos = bankDto.getConfig().getCreditDebitColumnPos();
         int descColPos = bankDto.getConfig().getDescColumnPos();
         int amountColPos = bankDto.getConfig().getAmountColumnPos();
         int dateColPos = bankDto.getConfig().getDateColumnPos();
 
+        String creditOrDebit = (cdColPos >= 0) ? bankRow.getCell(cdColPos).toString() : "N/A";
+
+        String originalDescription = bankRow.getCell(descColPos).toString();
+
+        double amount = bankDto.getConfig().getAmount(bankRow.getCell(amountColPos).toString(),
+                creditOrDebit);
+
+        Date date = bankDto.getConfig().getFormatedDate(bankRow.getCell(dateColPos).toString());
+
+        CategoryRuleDto categoryRule = categoryRuleService.getCategoryRules(originalDescription);
+
+        String type = categoryRule.getType() != null ? categoryRule.getType() :
+                bankDto.getConfig().getType(amount, creditOrDebit);
+
+        return new FileLineDto(bankName, date.toString(), type, categoryRule.getCategory(),
+                categoryRule.getSubCategory(), amount, originalDescription);
+    }
+
+    private FileLineDto getCsvLine(BankDto bankDto, String[] columns) throws ParseException {
+        String bankName = bankDto.getConfig().getBankName();
+        int cdColPos = bankDto.getConfig().getCreditDebitColumnPos();
+        int descColPos = bankDto.getConfig().getDescColumnPos();
+        int amountColPos = bankDto.getConfig().getAmountColumnPos();
+        int dateColPos = bankDto.getConfig().getDateColumnPos();
+
+
+        String creditOrDebit = (cdColPos >= 0) ? columns[cdColPos] : "N/A";
+
+        String originalDescription = columns[descColPos];
+
+        double amount = bankDto.getConfig().getAmount(columns[amountColPos], creditOrDebit);
+
+        Date date = bankDto.getConfig().getFormatedDate(columns[dateColPos]);
+
+        CategoryRuleDto categoryRule = categoryRuleService.getCategoryRules(originalDescription);
+
+        String type = categoryRule.getType() != null ? categoryRule.getType() :
+                bankDto.getConfig().getType(amount, creditOrDebit);
+
+        return new FileLineDto(bankName, date.toString(), type, categoryRule.getCategory(),
+                categoryRule.getSubCategory(), amount, originalDescription);
+    }
+
+    private void processXlsxFile(BankDto bankDto) {
         try {
             Workbook workbook = WorkbookFactory.create(bankDto.getFile().getInputStream());
             for (Row bankRow : workbook.getSheetAt(0)) {
@@ -108,23 +167,7 @@ public class File {
                         continue;
                     }
 
-                    String creditOrDebit = (cdColPos >= 0) ? bankRow.getCell(cdColPos).toString() : "N/A";
-
-                    String originalDescription = bankRow.getCell(descColPos).toString();
-
-                    double amount = bankDto.getConfig().getAmount(bankRow.getCell(amountColPos).toString(),
-                            creditOrDebit);
-
-                    Date date = bankDto.getConfig().getFormatedDate(bankRow.getCell(dateColPos).toString());
-
-                    CategoryRuleDto categoryRule = categoryRuleService.getCategoryRules(originalDescription);
-
-                    String type = categoryRule.getType() != null ? categoryRule.getType() :
-                            bankDto.getConfig().getType(amount, creditOrDebit);
-
-                    // add new row, with values for each column, to Excel file
-                    addRow(bankName, date, type, categoryRule.getCategory(), categoryRule.getSubCategory(), amount,
-                            originalDescription);
+                    addRow(this.getXlsxLine(bankDto, bankRow));
                 }
             }
             workbook.close();
@@ -133,12 +176,62 @@ public class File {
         }
     }
 
+    private List<FileLineDto> previewXlsxFile(BankDto bankDto) {
+        List<FileLineDto> previewList = new java.util.ArrayList<>();
+        try {
+            Workbook workbook = WorkbookFactory.create(bankDto.getFile().getInputStream());
+            for (Row bankRow : workbook.getSheetAt(0)) {
+                if (bankRow.getRowNum() >= bankDto.getConfig().getFirstLine()) {
+                    String firstCell = bankRow.getCell(0).toString();
+
+                    if (firstCell.isEmpty()) {
+                        continue;
+                    }
+
+                    if (bankDto.getConfig().ignoreValues().contains(firstCell)) {
+                        continue;
+                    }
+
+                    previewList.add(this.getXlsxLine(bankDto, bankRow));
+                }
+            }
+            workbook.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return previewList;
+    }
+
     private void processFile(BankDto bankDto) {
-        String bankName = bankDto.getConfig().getBankName();
-        int cdColPos = bankDto.getConfig().getCreditDebitColumnPos();
-        int descColPos = bankDto.getConfig().getDescColumnPos();
-        int amountColPos = bankDto.getConfig().getAmountColumnPos();
-        int dateColPos = bankDto.getConfig().getDateColumnPos();
+        InputStream inputStream;
+        try {
+            inputStream = bankDto.getFile().getInputStream();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        int lineCount = 1;
+        List<String> lines =
+                new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines().toList();
+        for (String line : lines) {
+            try {
+                if (lineCount >= bankDto.getConfig().getFirstLine()) {
+                    String[] columns = line.split(bankDto.getConfig().getDelimiter());
+                    if (columns.length > 1) {
+                        addRow(this.getCsvLine(bankDto, columns));
+                    }
+                }
+
+
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            lineCount++;
+        }
+    }
+
+    private List<FileLineDto> previewFile(BankDto bankDto) {
+        List<FileLineDto> previewList = new java.util.ArrayList<>();
 
         InputStream inputStream;
         try {
@@ -154,23 +247,7 @@ public class File {
                 if (lineCount >= bankDto.getConfig().getFirstLine()) {
                     String[] columns = line.split(bankDto.getConfig().getDelimiter());
                     if (columns.length > 1) {
-
-                        String creditOrDebit = (cdColPos >= 0) ? columns[cdColPos] : "N/A";
-
-                        String originalDescription = columns[descColPos];
-
-                        double amount = bankDto.getConfig().getAmount(columns[amountColPos], creditOrDebit);
-
-                        Date date = bankDto.getConfig().getFormatedDate(columns[dateColPos]);
-
-                        CategoryRuleDto categoryRule = categoryRuleService.getCategoryRules(originalDescription);
-
-                        String type = categoryRule.getType() != null ? categoryRule.getType() :
-                                bankDto.getConfig().getType(amount, creditOrDebit);
-
-                        // add new row, with values for each column, to Excel file
-                        addRow(bankName, date, type, categoryRule.getCategory(), categoryRule.getSubCategory(), amount,
-                                originalDescription);
+                        previewList.add(this.getCsvLine(bankDto, columns));
                     }
                 }
 
@@ -180,18 +257,19 @@ public class File {
             }
             lineCount++;
         }
+
+        return previewList;
     }
 
-    private void addRow(String bankName, Date date, String type, String category, String subCategory, double amount,
-                        String originalDescription) {
+    private void addRow(FileLineDto fileLineDto) {
         int lastRow = excelFile.getSheetAt(0).getLastRowNum();
         Row row = excelFile.getSheetAt(0).createRow(lastRow + 1);
-        row.createCell(0).setCellValue(bankName);
-        row.createCell(1).setCellValue(date);
-        row.createCell(2).setCellValue(type);
-        row.createCell(3).setCellValue(category);
-        row.createCell(4).setCellValue(subCategory);
-        row.createCell(5).setCellValue(amount);
-        row.createCell(6).setCellValue(originalDescription);
+        row.createCell(0).setCellValue(fileLineDto.getBankName());
+        row.createCell(1).setCellValue(fileLineDto.getDate());
+        row.createCell(2).setCellValue(fileLineDto.getType());
+        row.createCell(3).setCellValue(fileLineDto.getCategory());
+        row.createCell(4).setCellValue(fileLineDto.getSubCategory());
+        row.createCell(5).setCellValue(fileLineDto.getValue());
+        row.createCell(6).setCellValue(fileLineDto.getOriginalDescription());
     }
 }

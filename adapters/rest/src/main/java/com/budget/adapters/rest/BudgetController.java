@@ -1,6 +1,7 @@
 package com.budget.adapters.rest;
 
 import com.budget.core.BudgetService;
+import com.budget.core.dto.FileLineDto;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -54,6 +55,23 @@ public class BudgetController {
         try {
             Workbook workbook = budgetService.allFilesToExcel(bankNames, files);
             return getBankFileResponse(workbook, "banks");
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping(value = "/file/preview-all", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @Operation(description = "From all banks files, previews the Excel file with the correct format")
+    @ApiResponse(responseCode = "200", description = "Excel file is generated successfully")
+    public ResponseEntity<List<FileLineDto>> previewAllFilesToExcel(@RequestParam List<String> bankNames,
+                                                                    @RequestParam List<MultipartFile> files) {
+        if (bankNames.size() != files.size()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            List<FileLineDto> preview = budgetService.previewAllFilesToExcel(bankNames, files);
+            return new ResponseEntity<>(preview, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
