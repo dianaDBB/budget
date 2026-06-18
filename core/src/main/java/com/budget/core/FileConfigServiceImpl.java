@@ -6,6 +6,8 @@ import com.budget.core.repository.FileConfigRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FileConfigServiceImpl implements FileConfigService {
 
@@ -16,6 +18,11 @@ public class FileConfigServiceImpl implements FileConfigService {
     public FileConfigEntity getBankFileConfig(String bankName) {
         return fileConfigRepository.findByBankName(bankName)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown bank: " + bankName));
+    }
+
+    @Override
+    public List<FileConfigEntity> getAllBankFileFormats() {
+        return fileConfigRepository.findAll();
     }
 
     @Override

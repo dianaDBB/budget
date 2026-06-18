@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @OpenAPIDefinition(info = @Info(title = "Budget API", version = "1.0"))
 @RequestMapping("/file-config")
@@ -51,6 +53,17 @@ public class FileConfigController {
             return ResponseEntity.ok(format);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/all", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Operation(description = "Returns the expected format for all bank input files")
+    @ApiResponse(responseCode = "200", description = "Format information retrieved successfully")
+    public ResponseEntity<List<FileConfigEntity>> getAllBankFileFormats() {
+        try {
+            return ResponseEntity.ok(fileConfigService.getAllBankFileFormats());
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
