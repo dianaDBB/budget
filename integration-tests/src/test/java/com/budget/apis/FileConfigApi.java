@@ -1,7 +1,7 @@
 package com.budget.apis;
 
 import com.budget.adapters.rest.dto.BankFileFormatDto;
-import com.budget.core.config.BankConfigRequest;
+import com.budget.core.dto.UpdateFileConfigRequestDto;
 
 import io.restassured.response.Response;
 
@@ -10,7 +10,7 @@ import static io.restassured.RestAssured.given;
 public class FileConfigApi {
     public static String updateConfigUrl = "/budget/file-config/{bankName}";
 
-    public static Response updateConfig(String bankName, BankConfigRequest request) {
+    public static Response updateConfig(String bankName, UpdateFileConfigRequestDto request) {
         return given()
                 .contentType("application/json")
                 .body(request)

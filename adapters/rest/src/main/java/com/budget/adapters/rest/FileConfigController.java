@@ -1,9 +1,10 @@
 package com.budget.adapters.rest;
 
 import com.budget.adapters.rest.dto.BankFileFormatDto;
+import com.budget.core.dto.UpdateFileConfigRequestDto;
 import com.budget.core.FileConfigService;
 import com.budget.core.config.FileConfigEntity;
-import com.budget.core.config.BankConfigRequest;
+
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -61,7 +62,7 @@ public class FileConfigController {
     @ApiResponse(responseCode = "400", description = "Unknown bank name")
     public ResponseEntity<Void> updateConfig(
             @PathVariable String bankName,
-            @RequestBody BankConfigRequest request) {
+            @RequestBody UpdateFileConfigRequestDto request) {
         try {
             fileConfigService.updateBankFileConfig(bankName, request);
             return new ResponseEntity<>(HttpStatus.OK);

@@ -1,6 +1,6 @@
-package com.budget.core.config;
+package com.budget.core.dto;
 
-public class BankConfigRequest {
+public class UpdateFileConfigRequestDto {
     private Integer firstLine;
     private String delimiter;
     private String dateFormat;

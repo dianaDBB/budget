@@ -2,9 +2,9 @@ package com.budget.tests;
 
 import com.budget.BaseIT;
 import com.budget.adapters.rest.dto.BankFileFormatDto;
+import com.budget.core.dto.UpdateFileConfigRequestDto;
 import com.budget.apis.BudgetApi;
 import com.budget.apis.FileConfigApi;
-import com.budget.core.config.BankConfigRequest;
 import com.budget.dto.EntryDto;
 import com.budget.helpers.ActivoBank;
 
@@ -26,7 +26,7 @@ public class UpdateFileConfigIT extends BaseIT {
 
     @AfterEach
     void resetActivoBankConfig() {
-        BankConfigRequest reset = new BankConfigRequest();
+        UpdateFileConfigRequestDto reset = new UpdateFileConfigRequestDto();
         reset.setFirstLine(8);
         reset.setDateFormat("dd-MMMM-yyyy");
         reset.setAmountColumnPosition(3);
@@ -38,7 +38,7 @@ public class UpdateFileConfigIT extends BaseIT {
 
     @AfterEach
     void resetCreditoAgricolaConfig() {
-        BankConfigRequest reset = new BankConfigRequest();
+        UpdateFileConfigRequestDto reset = new UpdateFileConfigRequestDto();
         reset.setFirstLine(6);
         reset.setDateFormat("dd/MM/yyyy");
         reset.setAmountColumnPosition(4);
@@ -50,7 +50,7 @@ public class UpdateFileConfigIT extends BaseIT {
 
     @AfterEach
     void resetCryptoComConfig() {
-        BankConfigRequest reset = new BankConfigRequest();
+        UpdateFileConfigRequestDto reset = new UpdateFileConfigRequestDto();
         reset.setFirstLine(2);
         reset.setDateFormat("yyyy-MM-dd hh:mm:ss");
         reset.setAmountColumnPosition(3);
@@ -65,7 +65,7 @@ public class UpdateFileConfigIT extends BaseIT {
 
     @Test
     void shouldUpdateActivoBankFirstLine() {
-        BankConfigRequest request = new BankConfigRequest();
+        UpdateFileConfigRequestDto request = new UpdateFileConfigRequestDto();
         request.setFirstLine(10);
 
         Response response = FileConfigApi.updateConfig("ActivoBank", request);
@@ -78,7 +78,7 @@ public class UpdateFileConfigIT extends BaseIT {
 
     @Test
     void shouldUpdateActivoBankDateFormat() {
-        BankConfigRequest request = new BankConfigRequest();
+        UpdateFileConfigRequestDto request = new UpdateFileConfigRequestDto();
         request.setDateFormat("yyyy-MM-dd");
 
         Response response = FileConfigApi.updateConfig("activoBank", request);
@@ -91,7 +91,7 @@ public class UpdateFileConfigIT extends BaseIT {
 
     @Test
     void shouldUpdateActivoBankAmountColumnPosition() {
-        BankConfigRequest request = new BankConfigRequest();
+        UpdateFileConfigRequestDto request = new UpdateFileConfigRequestDto();
         request.setAmountColumnPosition(4);
 
         Response response = FileConfigApi.updateConfig("ActivoBank", request);
@@ -104,7 +104,7 @@ public class UpdateFileConfigIT extends BaseIT {
 
     @Test
     void shouldApplyPartialUpdateToActivoBank() {
-        BankConfigRequest request = new BankConfigRequest();
+        UpdateFileConfigRequestDto request = new UpdateFileConfigRequestDto();
         request.setFirstLine(9);
         request.setDescriptionColumnPosition(1);
 
@@ -123,7 +123,7 @@ public class UpdateFileConfigIT extends BaseIT {
 
     @Test
     void shouldUpdateCreditoAgricolaFirstLine() {
-        BankConfigRequest request = new BankConfigRequest();
+        UpdateFileConfigRequestDto request = new UpdateFileConfigRequestDto();
         request.setFirstLine(8);
 
         Response response = FileConfigApi.updateConfig("CreditoAgricola", request);
@@ -136,7 +136,7 @@ public class UpdateFileConfigIT extends BaseIT {
 
     @Test
     void shouldUpdateCreditoAgricolaDateFormat() {
-        BankConfigRequest request = new BankConfigRequest();
+        UpdateFileConfigRequestDto request = new UpdateFileConfigRequestDto();
         request.setDateFormat("MM/dd/yyyy");
 
         Response response = FileConfigApi.updateConfig("CreditoAgricola", request);
@@ -151,7 +151,7 @@ public class UpdateFileConfigIT extends BaseIT {
 
     @Test
     void shouldUpdateCryptoComDelimiter() {
-        BankConfigRequest request = new BankConfigRequest();
+        UpdateFileConfigRequestDto request = new UpdateFileConfigRequestDto();
         request.setDelimiter(";");
 
         Response response = FileConfigApi.updateConfig("CryptoCom", request);
@@ -164,7 +164,7 @@ public class UpdateFileConfigIT extends BaseIT {
 
     @Test
     void shouldUpdateCryptoComDateFormat() {
-        BankConfigRequest request = new BankConfigRequest();
+        UpdateFileConfigRequestDto request = new UpdateFileConfigRequestDto();
         request.setDateFormat("dd-MM-yyyy HH:mm:ss");
 
         Response response = FileConfigApi.updateConfig("CryptoCom", request);
@@ -179,7 +179,7 @@ public class UpdateFileConfigIT extends BaseIT {
 
     @Test
     void shouldReturnBadRequestForUnknownBankName() {
-        BankConfigRequest request = new BankConfigRequest();
+        UpdateFileConfigRequestDto request = new UpdateFileConfigRequestDto();
         request.setFirstLine(5);
 
         Response response = FileConfigApi.updateConfig("unknownBank", request);
@@ -195,7 +195,7 @@ public class UpdateFileConfigIT extends BaseIT {
         // We update it so data starts at row index 5.
         int newFirstLine = 5;
 
-        BankConfigRequest request = new BankConfigRequest();
+        UpdateFileConfigRequestDto request = new UpdateFileConfigRequestDto();
         request.setFirstLine(newFirstLine);
         assertEquals(200, FileConfigApi.updateConfig("ActivoBank", request).statusCode());
 
