@@ -6,6 +6,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,6 +26,10 @@ import java.util.stream.Stream;
 
 @Entity
 @Table(name = "file_config")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class FileConfigEntity {
 
     @Id
@@ -58,92 +66,8 @@ public class FileConfigEntity {
     @Column(name = "ignore_values")
     private String ignoreValues;
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getBankName() {
-        return bankName;
-    }
-
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
-    }
-
-    public int getFirstLine() {
-        return firstLine;
-    }
-
-    public void setFirstLine(int firstLine) {
-        this.firstLine = firstLine;
-    }
-
-    public int getDateColumnPos() {
-        return dateColumnPos;
-    }
-
-    public void setDateColumnPos(int dateColumnPos) {
-        this.dateColumnPos = dateColumnPos;
-    }
-
-    public int getAmountColumnPos() {
-        return amountColumnPos;
-    }
-
-    public void setAmountColumnPos(int amountColumnPos) {
-        this.amountColumnPos = amountColumnPos;
-    }
-
-    public int getDescColumnPos() {
-        return descColumnPos;
-    }
-
-    public void setDescColumnPos(int descColumnPos) {
-        this.descColumnPos = descColumnPos;
-    }
-
-    public Integer getCreditDebitColumnPos() {
+    public Integer creditDebitColumnPosOrDefault() {
         return creditDebitColumnPos != null ? creditDebitColumnPos : -1;
-    }
-
-    public void setCreditDebitColumnPos(Integer creditDebitColumnPos) {
-        this.creditDebitColumnPos = creditDebitColumnPos;
-    }
-
-    public String getDateFormat() {
-        return dateFormat;
-    }
-
-    public void setDateFormat(String dateFormat) {
-        this.dateFormat = dateFormat;
-    }
-
-    public String getDelimiter() {
-        return delimiter;
-    }
-
-    public void setDelimiter(String delimiter) {
-        this.delimiter = delimiter;
-    }
-
-    public String getFileFormat() {
-        return fileFormat;
-    }
-
-    public void setFileFormat(String fileFormat) {
-        this.fileFormat = fileFormat;
-    }
-
-    public String getIgnoreValues() {
-        return ignoreValues;
-    }
-
-    public void setIgnoreValues(String ignoreValues) {
-        this.ignoreValues = ignoreValues;
     }
 
     public Set<String> ignoreValues() {
@@ -158,7 +82,7 @@ public class FileConfigEntity {
 
     public double getAmount(String value, String creditOrDebit) {
         double amount = Double.parseDouble(value);
-        int cdCol = getCreditDebitColumnPos();
+        int cdCol = creditDebitColumnPosOrDefault();
         if (cdCol >= 0 && !Objects.equals(creditOrDebit, "N/A")) {
             return creditOrDebit.equals("C") ? Math.abs(amount) : -Math.abs(amount);
         }
@@ -180,7 +104,7 @@ public class FileConfigEntity {
     }
 
     public String createXlsxExample() {
-        int cdCol = getCreditDebitColumnPos();
+        int cdCol = creditDebitColumnPosOrDefault();
         int maxCol = Stream.of(dateColumnPos, amountColumnPos, descColumnPos, cdCol)
                 .max(Integer::compareTo).orElse(0);
 
@@ -217,7 +141,7 @@ public class FileConfigEntity {
     }
 
     public String createCsvExample() {
-        int cdCol = getCreditDebitColumnPos();
+        int cdCol = creditDebitColumnPosOrDefault();
         int maxCol = Stream.of(dateColumnPos, amountColumnPos, descColumnPos, cdCol)
                 .max(Integer::compareTo).orElse(0);
 
