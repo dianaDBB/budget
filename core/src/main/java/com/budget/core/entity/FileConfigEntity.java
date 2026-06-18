@@ -67,9 +67,11 @@ public class FileConfigEntity {
     private String ignoreValues;
 
     public Set<String> ignoreValues() {
-        return (ignoreValues != null && !ignoreValues.isBlank())
-                ? Arrays.stream(ignoreValues.split(",")).map(String::trim).collect(Collectors.toSet())
-                : Set.of();
+        return (ignoreValues == null || ignoreValues.isBlank())
+                ? Set.of()
+                : Arrays.stream(ignoreValues.split(","))
+                .map(String::trim)
+                .collect(Collectors.toSet());
     }
 
     public Date getFormatedDate(String value) throws ParseException {
