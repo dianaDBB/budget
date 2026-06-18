@@ -19,7 +19,7 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CreditoAgricolaFileIT extends BaseIT {
-    private String bankName = "creditoAgricola";
+    private static final String bankName = "CreditoAgricola";
 
     @Test
     void shouldUploadFileAndReturnValidXlsx() throws Exception {
@@ -157,7 +157,8 @@ public class CreditoAgricolaFileIT extends BaseIT {
 
     @Test
     void shouldCategorizeContractorTransaction() throws Exception {
-        File inputFile = CreditoAgricola.createValidFile(List.of(new EntryDto("IDEIAS DECIMAIS Contractor", 150.00, "D")));
+        File inputFile = CreditoAgricola.createValidFile(List.of(new EntryDto("IDEIAS DECIMAIS Contractor", 150.00,
+                "D")));
 
         Workbook workbook = BudgetApi.generateBankFile(bankName, inputFile);
 
@@ -193,7 +194,8 @@ public class CreditoAgricolaFileIT extends BaseIT {
 
     @Test
     void shouldCategorizeLoanTransaction() throws Exception {
-        File inputFile = CreditoAgricola.createValidFile(List.of(new EntryDto("TRF.     0000351 00938121242", 250.00, "D")));
+        File inputFile = CreditoAgricola.createValidFile(List.of(new EntryDto("TRF.     0000351 00938121242", 250.00,
+                "D")));
 
         Workbook workbook = BudgetApi.generateBankFile(bankName, inputFile);
 

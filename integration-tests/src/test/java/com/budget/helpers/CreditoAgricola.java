@@ -66,8 +66,10 @@ public class CreditoAgricola {
 
     public static File createInvalidFile(String invalidValue) throws IOException {
         File file = new File("target/test-creditoAgrocila-invalid-" + System.currentTimeMillis() + ".xlsx");
-        LocalDate transDate = LocalDate.parse("01-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
-        LocalDate valueDate = LocalDate.parse("02-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
+        LocalDate transDate = LocalDate.parse("01-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy",
+                Locale.ENGLISH));
+        LocalDate valueDate = LocalDate.parse("02-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy",
+                Locale.ENGLISH));
 
         try (var workbook = new XSSFWorkbook()) {
             var sheet = workbook.createSheet("Invalid");

@@ -45,10 +45,12 @@ public class BudgetController {
     @PostMapping(value = "/file/all", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(description = "From all banks files, generates an Excel file with the correct format")
     @ApiResponse(responseCode = "200", description = "Excel file is generated successfully")
-    public ResponseEntity<ByteArrayResource> allFilesToExcel(
-            @RequestParam List<String> bankNames,
-            @RequestParam List<MultipartFile> files
-    ) {
+    public ResponseEntity<ByteArrayResource> allFilesToExcel(@RequestParam List<String> bankNames,
+                                                             @RequestParam List<MultipartFile> files) {
+        if (bankNames.size() != files.size()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         try {
             Workbook workbook = budgetService.allFilesToExcel(bankNames, files);
             return getBankFileResponse(workbook, "banks");
@@ -61,9 +63,8 @@ public class BudgetController {
     @Operation(description = "From the specified bank csv/xlsx file, generates an Excel file with the correct format")
     @ApiResponse(responseCode = "200", description = "Excel file is generated successfully")
     @ApiResponse(responseCode = "400", description = "Unknown bank name")
-    public ResponseEntity<ByteArrayResource> bankFileToExcel(
-            @PathVariable String bankName,
-            @RequestPart("file") MultipartFile file) {
+    public ResponseEntity<ByteArrayResource> bankFileToExcel(@PathVariable String bankName,
+                                                             @RequestPart("file") MultipartFile file) {
         try {
             Workbook workbook = budgetService.bankFileToExcel(bankName, file);
             return getBankFileResponse(workbook, bankName);

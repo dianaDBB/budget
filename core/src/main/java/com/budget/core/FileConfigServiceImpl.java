@@ -14,32 +14,30 @@ public class FileConfigServiceImpl implements FileConfigService {
 
     @Override
     public FileConfigEntity getBankFileConfig(String bankName) {
-        return fileConfigRepository.findByBankName(resolveName(bankName))
+        return fileConfigRepository.findByBankName(bankName)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown bank: " + bankName));
     }
 
     @Override
     public void updateBankFileConfig(String bankName, UpdateFileConfigRequestDto request) {
-        fileConfigRepository.findByBankName(resolveName(bankName)).ifPresent(entity -> {
-            if (request.getFirstLine() != null) entity.setFirstLine(request.getFirstLine());
-            if (request.getDelimiter() != null) entity.setDelimiter(request.getDelimiter());
-            if (request.getDateFormat() != null) entity.setDateformat(request.getDateFormat());
-            if (request.getAmountColumnPosition() != null) entity.setAmountColumnPos(request.getAmountColumnPosition());
-            if (request.getDateColumnPosition() != null) entity.setDateColumnPos(request.getDateColumnPosition());
-            if (request.getDescriptionColumnPosition() != null)
-                entity.setDescColumnPos(request.getDescriptionColumnPosition());
-            if (request.getCdColumnPosition() != null)
-                entity.setCreditDebitColumnPos(request.getCdColumnPosition() == -1 ? null : request.getCdColumnPosition());
-            fileConfigRepository.save(entity);
-        });
-    }
+        FileConfigEntity entity = fileConfigRepository.findByBankName(bankName)
+                .orElseThrow(() -> new IllegalArgumentException("Unknown bank: " + bankName));
 
-    private String resolveName(String bankName) {
-        return switch (bankName.toLowerCase()) {
-            case "activobank" -> "ActivoBank";
-            case "creditoagricola" -> "CreditoAgricola";
-            case "cryptocom" -> "CryptoCom";
-            default -> throw new IllegalArgumentException("Unknown bank: " + bankName);
-        };
+        if (request.getFirstLine() != null) entity.setFirstLine(request.getFirstLine());
+        if (request.getDelimiter() != null) entity.setDelimiter(request.getDelimiter());
+        if (request.getDateFormat() != null) entity.setDateFormat(request.getDateFormat());
+        if (request.getAmountColumnPosition() != null)
+            entity.setAmountColumnPos(request.getAmountColumnPosition());
+        if (request.getDateColumnPosition() != null)
+            entity.setDateColumnPos(request.getDateColumnPosition());
+        if (request.getDescriptionColumnPosition() != null)
+            entity.setDescColumnPos(request.getDescriptionColumnPosition());
+
+        if (request.getCdColumnPosition() != null)
+            entity.setCreditDebitColumnPos(
+                    request.getCdColumnPosition() == -1 ? null : request.getCdColumnPosition()
+            );
+
+        fileConfigRepository.save(entity);
     }
 }

@@ -18,8 +18,10 @@ public class ActivoBank {
     public static File createValidFile(List<EntryDto> entryList) throws IOException {
         File file = new File("target/test-activoBank-valid-" + System.currentTimeMillis() + ".xlsx");
         double initialBalance = 1000.00;
-        LocalDate transDate = LocalDate.parse("01-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
-        LocalDate valueDate = LocalDate.parse("02-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
+        LocalDate transDate = LocalDate.parse("01-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy",
+                Locale.ENGLISH));
+        LocalDate valueDate = LocalDate.parse("02-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy",
+                Locale.ENGLISH));
 
         try (var workbook = new XSSFWorkbook()) {
             var sheet = workbook.createSheet("Transactions");
@@ -62,8 +64,10 @@ public class ActivoBank {
 
     public static File createInvalidFile(String invalidValue) throws IOException {
         File file = new File("target/test-activoBank-invalid-" + System.currentTimeMillis() + ".xlsx");
-        LocalDate transDate = LocalDate.parse("01-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
-        LocalDate valueDate = LocalDate.parse("02-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
+        LocalDate transDate = LocalDate.parse("01-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy",
+                Locale.ENGLISH));
+        LocalDate valueDate = LocalDate.parse("02-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy",
+                Locale.ENGLISH));
 
         try (var workbook = new XSSFWorkbook()) {
             var sheet = workbook.createSheet("Invalid");
@@ -99,9 +103,12 @@ public class ActivoBank {
     }
 
     public static File createFileWithFirstLineAt(int dataStartRow, List<EntryDto> entryList) throws IOException {
-        File file = new File("target/test-activoBank-firstLine-" + dataStartRow + "-" + System.currentTimeMillis() + ".xlsx");
-        LocalDate transDate = LocalDate.parse("01-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
-        LocalDate valueDate = LocalDate.parse("02-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy", Locale.ENGLISH));
+        File file = new File("target/test-activoBank-firstLine-" + dataStartRow + "-" + System.currentTimeMillis() +
+                ".xlsx");
+        LocalDate transDate = LocalDate.parse("01-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy",
+                Locale.ENGLISH));
+        LocalDate valueDate = LocalDate.parse("02-May-2026", DateTimeFormatter.ofPattern("dd-MMMM-yyyy",
+                Locale.ENGLISH));
         double initialBalance = 1000.00;
 
         try (var workbook = new XSSFWorkbook()) {

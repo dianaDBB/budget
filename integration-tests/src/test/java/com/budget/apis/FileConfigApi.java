@@ -1,6 +1,6 @@
 package com.budget.apis;
 
-import com.budget.adapters.rest.dto.BankFileFormatDto;
+import com.budget.core.dto.GetBankFileFormatResponseDto;
 import com.budget.core.dto.UpdateFileConfigRequestDto;
 
 import io.restassured.response.Response;
@@ -21,7 +21,7 @@ public class FileConfigApi {
                 .response();
     }
 
-    public static BankFileFormatDto getConfig(String bankName) {
+    public static GetBankFileFormatResponseDto getConfig(String bankName) {
         Response response =
                 given()
                         .when()
@@ -31,6 +31,6 @@ public class FileConfigApi {
                         .extract()
                         .response();
 
-        return response.as(BankFileFormatDto.class);
+        return response.as(GetBankFileFormatResponseDto.class);
     }
 }

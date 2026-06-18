@@ -46,8 +46,8 @@ public class FileConfigEntity {
     @Column(name = "credit_debit_column_pos")
     private Integer creditDebitColumnPos;
 
-    @Column(name = "dateformat")
-    private String dateformat;
+    @Column(name = "date-format")
+    private String dateFormat;
 
     @Column(name = "delimiter")
     private String delimiter;
@@ -114,12 +114,12 @@ public class FileConfigEntity {
         this.creditDebitColumnPos = creditDebitColumnPos;
     }
 
-    public String getDateformat() {
-        return dateformat;
+    public String getDateFormat() {
+        return dateFormat;
     }
 
-    public void setDateformat(String dateformat) {
-        this.dateformat = dateformat;
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
     }
 
     public String getDelimiter() {
@@ -153,7 +153,7 @@ public class FileConfigEntity {
     }
 
     public Date getFormatedDate(String value) throws ParseException {
-        return new SimpleDateFormat(dateformat).parse(value);
+        return new SimpleDateFormat(dateFormat).parse(value);
     }
 
     public double getAmount(String value, String creditOrDebit) {
@@ -208,7 +208,7 @@ public class FileConfigEntity {
         html.append("</tr>");
 
         Map<Integer, String> data = Map.of(dateColumnPos,
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateformat)),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat)),
                 amountColumnPos, "-11.40", descColumnPos, "PAG BXVAL- 5004 VIAVERDE", cdCol, "C");
         html.append("<tr><td class=\"excelRow\">").append(firstLine + 1).append("</td>");
         for (int i = 0; i <= maxCol; i++) html.append("<td>").append(data.getOrDefault(i, "NA")).append("</td>");
@@ -235,7 +235,7 @@ public class FileConfigEntity {
         html.append("</tr>");
 
         Map<Integer, String> data = Map.of(dateColumnPos,
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateformat)),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat)),
                 amountColumnPos, "-11.40", descColumnPos, "PAG BXVAL- 5004 VIAVERDE", cdCol, "C");
         html.append("<tr>");
         for (int i = 0; i <= maxCol; i++) html.append("<td>").append(data.getOrDefault(i, "NA")).append("</td>");

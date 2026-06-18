@@ -1,6 +1,6 @@
 package com.budget.adapters.rest;
 
-import com.budget.adapters.rest.dto.BankFileFormatDto;
+import com.budget.core.dto.GetBankFileFormatResponseDto;
 import com.budget.core.dto.UpdateFileConfigRequestDto;
 import com.budget.core.FileConfigService;
 import com.budget.core.entity.FileConfigEntity;
@@ -28,16 +28,16 @@ public class FileConfigController {
     FileConfigService fileConfigService;
 
     @GetMapping(value = "/{bankName}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    @Operation(description = "Returns the expected format for the specified bank input files. Bank names: activoBank, creditoAgricola, cryptoCom")
+    @Operation(description = "Returns the expected format for the specified bank input files")
     @ApiResponse(responseCode = "200", description = "Format information retrieved successfully")
     @ApiResponse(responseCode = "400", description = "Unknown bank name")
-    public ResponseEntity<BankFileFormatDto> getBankFileFormat(@PathVariable String bankName) {
+    public ResponseEntity<GetBankFileFormatResponseDto> getBankFileFormat(@PathVariable String bankName) {
         try {
             FileConfigEntity config = fileConfigService.getBankFileConfig(bankName);
 
             boolean isCsv = "CSV".equals(config.getFileFormat());
             String htmlExample = isCsv ? config.createCsvExample() : config.createXlsxExample();
-            BankFileFormatDto format = new BankFileFormatDto(
+            GetBankFileFormatResponseDto format = new GetBankFileFormatResponseDto(
                     config.getBankName(),
                     isCsv ? "CSV" : "XLSX",
                     config.getFirstLine(),
@@ -45,7 +45,7 @@ public class FileConfigController {
                     config.getAmountColumnPos() + 1,
                     config.getDescColumnPos() + 1,
                     config.getCreditDebitColumnPos() == -1 ? null : config.getCreditDebitColumnPos() + 1,
-                    config.getDateformat(),
+                    config.getDateFormat(),
                     isCsv ? config.getDelimiter() : null,
                     htmlExample);
             return ResponseEntity.ok(format);
@@ -57,7 +57,7 @@ public class FileConfigController {
     }
 
     @PutMapping(value = "/{bankName}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(description = "Update the configuration for a specific bank at runtime. Bank names: activoBank, creditoAgricola, cryptoCom")
+    @Operation(description = "Update the configuration for a specific bank at runtime")
     @ApiResponse(responseCode = "200", description = "Configuration updated successfully")
     @ApiResponse(responseCode = "400", description = "Unknown bank name")
     public ResponseEntity<Void> updateConfig(

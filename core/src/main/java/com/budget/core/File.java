@@ -1,6 +1,6 @@
 package com.budget.core;
 
-import com.budget.core.config.Bank;
+import com.budget.core.dto.BankDto;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Row;
@@ -19,20 +19,20 @@ import java.util.Date;
 import java.util.List;
 
 public class File {
-    public List<Bank> banksList;
-    private final CategoryService categoryService;
+    public List<BankDto> banksList;
+    private final CategoryRuleService categoryRuleService;
     private Workbook excelFile;
 
-    public File(List<Bank> bankList, CategoryService categoryService) {
-        this.banksList = bankList;
-        this.categoryService = categoryService;
+    public File(List<BankDto> bankDtoList, CategoryRuleService categoryRuleService) {
+        this.banksList = bankDtoList;
+        this.categoryRuleService = categoryRuleService;
         this.excelFile = this.createExcelFile("allBanks");
     }
 
-    public File(Bank bank, CategoryService categoryService) {
-        this.banksList = List.of(bank);
-        this.categoryService = categoryService;
-        this.excelFile = this.createExcelFile(bank.config.getBankName());
+    public File(BankDto bankDto, CategoryRuleService categoryRuleService) {
+        this.banksList = List.of(bankDto);
+        this.categoryRuleService = categoryRuleService;
+        this.excelFile = this.createExcelFile(bankDto.getConfig().getBankName());
     }
 
     Workbook createExcelFile(String sheetName) {
@@ -75,42 +75,44 @@ public class File {
     }
 
     Workbook bankFileToExcelFile() {
-        banksList.forEach((bank) -> {
-            if ("XLSX".equals(bank.config.getFileFormat())) {
-                processXlsxFile(bank);
+        banksList.forEach((bankDto) -> {
+            if ("XLSX".equals(bankDto.getConfig().getFileFormat())) {
+                processXlsxFile(bankDto);
             } else {
-                processFile(bank);
+                processFile(bankDto);
             }
         });
 
         return excelFile;
     }
 
-    private void processXlsxFile(Bank bank) {
+    private void processXlsxFile(BankDto bankDto) {
         try {
-            Workbook workbook = WorkbookFactory.create(bank.file.getInputStream());
+            Workbook workbook = WorkbookFactory.create(bankDto.getFile().getInputStream());
             for (Row bankRow : workbook.getSheetAt(0)) {
-                if (bankRow.getRowNum() >= bank.config.getFirstLine()) {
+                if (bankRow.getRowNum() >= bankDto.getConfig().getFirstLine()) {
                     String firstCell = bankRow.getCell(0).toString();
 
                     if (firstCell.isEmpty()) {
                         continue;
                     }
 
-                    if (bank.config.ignoreValues().contains(firstCell)) {
+                    if (bankDto.getConfig().ignoreValues().contains(firstCell)) {
                         continue;
                     }
 
-                    String bankName = bank.config.getBankName();
-                    String creditOrDebit = (bank.config.getCreditDebitColumnPos() >= 0)
-                            ? bankRow.getCell(bank.config.getCreditDebitColumnPos()).toString()
+                    String bankName = bankDto.getConfig().getBankName();
+                    String creditOrDebit = (bankDto.getConfig().getCreditDebitColumnPos() >= 0)
+                            ? bankRow.getCell(bankDto.getConfig().getCreditDebitColumnPos()).toString()
                             : "N/A";
-                    String originalDescription = bankRow.getCell(bank.config.getDescColumnPos()).toString();
+                    String originalDescription = bankRow.getCell(bankDto.getConfig().getDescColumnPos()).toString();
 
-                    double amount = bank.config.getAmount(bankRow.getCell(bank.config.getAmountColumnPos()).toString(), creditOrDebit);
-                    Date date = bank.config.getFormatedDate(bankRow.getCell(bank.config.getDateColumnPos()).toString());
-                    String type = bank.config.getType(amount, creditOrDebit, originalDescription);
-                    String[] category = categoryService.getCategory(originalDescription);
+                    double amount =
+                            bankDto.getConfig().getAmount(bankRow.getCell(bankDto.getConfig().getAmountColumnPos()).toString(), creditOrDebit);
+                    Date date =
+                            bankDto.getConfig().getFormatedDate(bankRow.getCell(bankDto.getConfig().getDateColumnPos()).toString());
+                    String type = bankDto.getConfig().getType(amount, creditOrDebit, originalDescription);
+                    String[] category = categoryRuleService.getCategoryRules(originalDescription);
 
                     // add new row, with values for each column, to Excel file
                     addRow(bankName, date, type, category[0], category[1], amount, originalDescription);
@@ -122,30 +124,34 @@ public class File {
         }
     }
 
-    private void processFile(Bank bank) {
+    private void processFile(BankDto bankDto) {
         InputStream inputStream;
         try {
-            inputStream = bank.file.getInputStream();
+            inputStream = bankDto.getFile().getInputStream();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         int lineCount = 1;
-        List<String> lines = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines().toList();
+        List<String> lines =
+                new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).lines().toList();
         for (String line : lines) {
             try {
-                if (lineCount >= bank.config.getFirstLine()) {
-                    String[] columns = line.split(bank.config.getDelimiter());
+                if (lineCount >= bankDto.getConfig().getFirstLine()) {
+                    String[] columns = line.split(bankDto.getConfig().getDelimiter());
                     if (columns.length > 1) {
-                        String bankName = bank.config.getBankName();
-                        String creditOrDebit = (bank.config.getCreditDebitColumnPos() >= 0)
-                                ? columns[bank.config.getCreditDebitColumnPos()]
+                        String bankName = bankDto.getConfig().getBankName();
+                        String creditOrDebit = (bankDto.getConfig().getCreditDebitColumnPos() >= 0)
+                                ? columns[bankDto.getConfig().getCreditDebitColumnPos()]
                                 : "N/A";
-                        String originalDescription = columns[bank.config.getDescColumnPos()];
+                        String originalDescription = columns[bankDto.getConfig().getDescColumnPos()];
 
-                        double amount = bank.config.getAmount(columns[bank.config.getAmountColumnPos()], creditOrDebit);
-                        Date date = bank.config.getFormatedDate(columns[bank.config.getDateColumnPos()]);
-                        String type = bank.config.getType(amount, creditOrDebit, originalDescription);
-                        String[] category = categoryService.getCategory(originalDescription);
+                        double amount =
+                                bankDto.getConfig().getAmount(columns[bankDto.getConfig().getAmountColumnPos()],
+                                        creditOrDebit);
+                        Date date =
+                                bankDto.getConfig().getFormatedDate(columns[bankDto.getConfig().getDateColumnPos()]);
+                        String type = bankDto.getConfig().getType(amount, creditOrDebit, originalDescription);
+                        String[] category = categoryRuleService.getCategoryRules(originalDescription);
 
                         // add new row, with values for each column, to Excel file
                         addRow(bankName, date, type, category[0], category[1], amount, originalDescription);
@@ -160,7 +166,8 @@ public class File {
         }
     }
 
-    private void addRow(String bankName, Date date, String type, String category, String subCategory, double amount, String originalDescription) {
+    private void addRow(String bankName, Date date, String type, String category, String subCategory, double amount,
+                        String originalDescription) {
         int lastRow = excelFile.getSheetAt(0).getLastRowNum();
         Row row = excelFile.getSheetAt(0).createRow(lastRow + 1);
         row.createCell(0).setCellValue(bankName);

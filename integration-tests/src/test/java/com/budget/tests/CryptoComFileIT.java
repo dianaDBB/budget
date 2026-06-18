@@ -17,7 +17,7 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CryptoComFileIT extends BaseIT {
-    private String bankName = "cryptoCom";
+    private static final String bankName = "CryptoCom";
 
     @Test
     void shouldUploadFileAndReturnValidXlsx() throws Exception {

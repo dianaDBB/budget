@@ -10,8 +10,8 @@ import jakarta.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "category")
-public class CategoryEntity {
+@Table(name = "category_rule")
+public class CategoryRuleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

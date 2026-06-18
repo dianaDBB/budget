@@ -1,7 +1,7 @@
 package com.budget.tests;
 
 import com.budget.BaseIT;
-import com.budget.adapters.rest.dto.BankFileFormatDto;
+import com.budget.core.dto.GetBankFileFormatResponseDto;
 import com.budget.core.dto.UpdateFileConfigRequestDto;
 import com.budget.apis.BudgetApi;
 import com.budget.apis.FileConfigApi;
@@ -33,7 +33,7 @@ public class UpdateFileConfigIT extends BaseIT {
         reset.setDateColumnPosition(0);
         reset.setDescriptionColumnPosition(2);
         reset.setCdColumnPosition(-1);
-        FileConfigApi.updateConfig("activoBank", reset);
+        FileConfigApi.updateConfig("ActivoBank", reset);
     }
 
     @AfterEach
@@ -45,7 +45,7 @@ public class UpdateFileConfigIT extends BaseIT {
         reset.setDateColumnPosition(0);
         reset.setDescriptionColumnPosition(2);
         reset.setCdColumnPosition(5);
-        FileConfigApi.updateConfig("creditoAgricola", reset);
+        FileConfigApi.updateConfig("CreditoAgricola", reset);
     }
 
     @AfterEach
@@ -58,10 +58,8 @@ public class UpdateFileConfigIT extends BaseIT {
         reset.setDescriptionColumnPosition(1);
         reset.setCdColumnPosition(-1);
         reset.setDelimiter(",");
-        FileConfigApi.updateConfig("cryptoCom", reset);
+        FileConfigApi.updateConfig("CryptoCom", reset);
     }
-
-    // --- activoBank ---
 
     @Test
     void shouldUpdateActivoBankFirstLine() {
@@ -72,8 +70,8 @@ public class UpdateFileConfigIT extends BaseIT {
 
         assertEquals(200, response.statusCode());
 
-        BankFileFormatDto format = FileConfigApi.getConfig("ActivoBank");
-        assertEquals(10, format.firstDataLine());
+        GetBankFileFormatResponseDto format = FileConfigApi.getConfig("ActivoBank");
+        assertEquals(10, format.getFirstDataLine());
     }
 
     @Test
@@ -81,12 +79,12 @@ public class UpdateFileConfigIT extends BaseIT {
         UpdateFileConfigRequestDto request = new UpdateFileConfigRequestDto();
         request.setDateFormat("yyyy-MM-dd");
 
-        Response response = FileConfigApi.updateConfig("activoBank", request);
+        Response response = FileConfigApi.updateConfig("ActivoBank", request);
 
         assertEquals(200, response.statusCode());
 
-        BankFileFormatDto format = FileConfigApi.getConfig("ActivoBank");
-        assertEquals("yyyy-MM-dd", format.dateFormat());
+        GetBankFileFormatResponseDto format = FileConfigApi.getConfig("ActivoBank");
+        assertEquals("yyyy-MM-dd", format.getDateFormat());
     }
 
     @Test
@@ -98,8 +96,8 @@ public class UpdateFileConfigIT extends BaseIT {
 
         assertEquals(200, response.statusCode());
 
-        BankFileFormatDto format = FileConfigApi.getConfig("ActivoBank");
-        assertEquals(5, format.amountColumnPosition()); // 1-indexed
+        GetBankFileFormatResponseDto format = FileConfigApi.getConfig("ActivoBank");
+        assertEquals(5, format.getAmountColumnPosition()); // 1-indexed
     }
 
     @Test
@@ -112,14 +110,12 @@ public class UpdateFileConfigIT extends BaseIT {
 
         assertEquals(200, response.statusCode());
 
-        BankFileFormatDto format = FileConfigApi.getConfig("ActivoBank");
-        assertEquals(9, format.firstDataLine());
-        assertEquals(2, format.descriptionColumnPosition()); // 1-indexed
+        GetBankFileFormatResponseDto format = FileConfigApi.getConfig("ActivoBank");
+        assertEquals(9, format.getFirstDataLine());
+        assertEquals(2, format.getDescriptionColumnPosition()); // 1-indexed
         // unchanged fields stay the same
-        assertEquals("dd-MMMM-yyyy", format.dateFormat());
+        assertEquals("dd-MMMM-yyyy", format.getDateFormat());
     }
-
-    // --- creditoAgricola ---
 
     @Test
     void shouldUpdateCreditoAgricolaFirstLine() {
@@ -130,8 +126,8 @@ public class UpdateFileConfigIT extends BaseIT {
 
         assertEquals(200, response.statusCode());
 
-        BankFileFormatDto format = FileConfigApi.getConfig("CreditoAgricola");
-        assertEquals(8, format.firstDataLine());
+        GetBankFileFormatResponseDto format = FileConfigApi.getConfig("CreditoAgricola");
+        assertEquals(8, format.getFirstDataLine());
     }
 
     @Test
@@ -143,11 +139,9 @@ public class UpdateFileConfigIT extends BaseIT {
 
         assertEquals(200, response.statusCode());
 
-        BankFileFormatDto format = FileConfigApi.getConfig("CreditoAgricola");
-        assertEquals("MM/dd/yyyy", format.dateFormat());
+        GetBankFileFormatResponseDto format = FileConfigApi.getConfig("CreditoAgricola");
+        assertEquals("MM/dd/yyyy", format.getDateFormat());
     }
-
-    // --- cryptoCom ---
 
     @Test
     void shouldUpdateCryptoComDelimiter() {
@@ -158,8 +152,8 @@ public class UpdateFileConfigIT extends BaseIT {
 
         assertEquals(200, response.statusCode());
 
-        BankFileFormatDto format = FileConfigApi.getConfig("CryptoCom");
-        assertEquals(";", format.delimiter());
+        GetBankFileFormatResponseDto format = FileConfigApi.getConfig("CryptoCom");
+        assertEquals(";", format.getDelimiter());
     }
 
     @Test
@@ -171,8 +165,8 @@ public class UpdateFileConfigIT extends BaseIT {
 
         assertEquals(200, response.statusCode());
 
-        BankFileFormatDto format = FileConfigApi.getConfig("CryptoCom");
-        assertEquals("dd-MM-yyyy HH:mm:ss", format.dateFormat());
+        GetBankFileFormatResponseDto format = FileConfigApi.getConfig("CryptoCom");
+        assertEquals("dd-MM-yyyy HH:mm:ss", format.getDateFormat());
     }
 
     // --- unknown bank ---
@@ -186,8 +180,6 @@ public class UpdateFileConfigIT extends BaseIT {
 
         assertEquals(400, response.statusCode());
     }
-
-    // --- config change affects file processing ---
 
     @Test
     void shouldProcessFileWithNewConfigAndRejectFileWithOldConfig() throws Exception {

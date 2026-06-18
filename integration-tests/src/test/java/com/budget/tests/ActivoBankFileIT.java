@@ -19,7 +19,7 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ActivoBankFileIT extends BaseIT {
-    private String bankName = "activoBank";
+    private static final String bankName = "ActivoBank";
 
     @Test
     void shouldUploadFileAndReturnValidXlsx() throws Exception {
