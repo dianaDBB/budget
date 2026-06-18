@@ -19,8 +19,8 @@ import java.util.Date;
 import java.util.List;
 
 public class File {
-    public List<BankDto> banksList;
     private final CategoryRuleService categoryRuleService;
+    public List<BankDto> banksList;
     private Workbook excelFile;
 
     public File(List<BankDto> bankDtoList, CategoryRuleService categoryRuleService) {
