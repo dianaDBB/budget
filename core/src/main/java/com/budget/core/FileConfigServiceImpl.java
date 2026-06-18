@@ -24,19 +24,12 @@ public class FileConfigServiceImpl implements FileConfigService {
                 .orElseThrow(() -> new IllegalArgumentException("Unknown bank: " + bankName));
 
         if (request.getFirstLine() != null) entity.setFirstLine(request.getFirstLine());
-        if (request.getDelimiter() != null) entity.setDelimiter(request.getDelimiter());
+        if (request.getDateColumnPosition() != null) entity.setDateColumnPos(request.getDateColumnPosition());
+        if (request.getAmountColumnPosition() != null) entity.setAmountColumnPos(request.getAmountColumnPosition());
+        if (request.getDescColumnPosition() != null) entity.setDescColumnPos(request.getDescColumnPosition());
+        if (request.getCdColumnPosition() != null) entity.setDescColumnPos(request.getCdColumnPosition());
         if (request.getDateFormat() != null) entity.setDateFormat(request.getDateFormat());
-        if (request.getAmountColumnPosition() != null)
-            entity.setAmountColumnPos(request.getAmountColumnPosition());
-        if (request.getDateColumnPosition() != null)
-            entity.setDateColumnPos(request.getDateColumnPosition());
-        if (request.getDescriptionColumnPosition() != null)
-            entity.setDescColumnPos(request.getDescriptionColumnPosition());
-
-        if (request.getCdColumnPosition() != null)
-            entity.setCreditDebitColumnPos(
-                    request.getCdColumnPosition() == -1 ? null : request.getCdColumnPosition()
-            );
+        if (request.getDelimiter() != null) entity.setDelimiter(request.getDelimiter());
 
         fileConfigRepository.save(entity);
     }

@@ -44,7 +44,7 @@ public class FileConfigController {
                     config.getDateColumnPos() + 1,
                     config.getAmountColumnPos() + 1,
                     config.getDescColumnPos() + 1,
-                    config.creditDebitColumnPosOrDefault() == -1 ? null : config.creditDebitColumnPosOrDefault() + 1,
+                    config.getCreditDebitColumnPos() == -1 ? null : config.getCreditDebitColumnPos() + 1,
                     config.getDateFormat(),
                     isCsv ? config.getDelimiter() : null,
                     htmlExample);

@@ -102,8 +102,8 @@ public class File {
                     }
 
                     String bankName = bankDto.getConfig().getBankName();
-                    String creditOrDebit = (bankDto.getConfig().creditDebitColumnPosOrDefault() >= 0)
-                            ? bankRow.getCell(bankDto.getConfig().creditDebitColumnPosOrDefault()).toString()
+                    String creditOrDebit = (bankDto.getConfig().getCreditDebitColumnPos() >= 0)
+                            ? bankRow.getCell(bankDto.getConfig().getCreditDebitColumnPos()).toString()
                             : "N/A";
                     String originalDescription = bankRow.getCell(bankDto.getConfig().getDescColumnPos()).toString();
 
@@ -140,8 +140,8 @@ public class File {
                     String[] columns = line.split(bankDto.getConfig().getDelimiter());
                     if (columns.length > 1) {
                         String bankName = bankDto.getConfig().getBankName();
-                        String creditOrDebit = (bankDto.getConfig().creditDebitColumnPosOrDefault() >= 0)
-                                ? columns[bankDto.getConfig().creditDebitColumnPosOrDefault()]
+                        String creditOrDebit = (bankDto.getConfig().getCreditDebitColumnPos() >= 0)
+                                ? columns[bankDto.getConfig().getCreditDebitColumnPos()]
                                 : "N/A";
                         String originalDescription = columns[bankDto.getConfig().getDescColumnPos()];
 

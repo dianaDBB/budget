@@ -66,10 +66,6 @@ public class FileConfigEntity {
     @Column(name = "ignore_values")
     private String ignoreValues;
 
-    public Integer creditDebitColumnPosOrDefault() {
-        return creditDebitColumnPos != null ? creditDebitColumnPos : -1;
-    }
-
     public Set<String> ignoreValues() {
         return (ignoreValues != null && !ignoreValues.isBlank())
                 ? Arrays.stream(ignoreValues.split(",")).map(String::trim).collect(Collectors.toSet())
@@ -82,8 +78,7 @@ public class FileConfigEntity {
 
     public double getAmount(String value, String creditOrDebit) {
         double amount = Double.parseDouble(value);
-        int cdCol = creditDebitColumnPosOrDefault();
-        if (cdCol >= 0 && !Objects.equals(creditOrDebit, "N/A")) {
+        if (creditDebitColumnPos >= 0 && !Objects.equals(creditOrDebit, "N/A")) {
             return creditOrDebit.equals("C") ? Math.abs(amount) : -Math.abs(amount);
         }
         return amount;
@@ -104,8 +99,7 @@ public class FileConfigEntity {
     }
 
     public String createXlsxExample() {
-        int cdCol = creditDebitColumnPosOrDefault();
-        int maxCol = Stream.of(dateColumnPos, amountColumnPos, descColumnPos, cdCol)
+        int maxCol = Stream.of(dateColumnPos, amountColumnPos, descColumnPos, creditDebitColumnPos)
                 .max(Integer::compareTo).orElse(0);
 
         StringBuilder html = new StringBuilder("""
@@ -126,14 +120,14 @@ public class FileConfigEntity {
                     .append("<td colspan=\"").append(maxCol + 1).append("\">Row ").append(i + 1).append("</td></tr>");
 
         Map<Integer, String> headers = Map.of(dateColumnPos, "Date", amountColumnPos, "Amount",
-                descColumnPos, "Description", cdCol, "Credit/Debit");
+                descColumnPos, "Description", creditDebitColumnPos, "Credit/Debit");
         html.append("<tr><td class=\"excelRow\">").append(firstLine).append("</td>");
         for (int i = 0; i <= maxCol; i++) html.append("<th>").append(headers.getOrDefault(i, "NA")).append("</th>");
         html.append("</tr>");
 
         Map<Integer, String> data = Map.of(dateColumnPos,
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat)),
-                amountColumnPos, "-11.40", descColumnPos, "PAG BXVAL- 5004 VIAVERDE", cdCol, "C");
+                amountColumnPos, "-11.40", descColumnPos, "PAG BXVAL- 5004 VIAVERDE", creditDebitColumnPos, "C");
         html.append("<tr><td class=\"excelRow\">").append(firstLine + 1).append("</td>");
         for (int i = 0; i <= maxCol; i++) html.append("<td>").append(data.getOrDefault(i, "NA")).append("</td>");
         html.append("</tr></table>");
@@ -141,8 +135,7 @@ public class FileConfigEntity {
     }
 
     public String createCsvExample() {
-        int cdCol = creditDebitColumnPosOrDefault();
-        int maxCol = Stream.of(dateColumnPos, amountColumnPos, descColumnPos, cdCol)
+        int maxCol = Stream.of(dateColumnPos, amountColumnPos, descColumnPos, creditDebitColumnPos)
                 .max(Integer::compareTo).orElse(0);
 
         StringBuilder html = new StringBuilder("""
@@ -153,14 +146,14 @@ public class FileConfigEntity {
                 <table>""");
 
         Map<Integer, String> headers = Map.of(dateColumnPos, "Date", amountColumnPos, "Amount",
-                descColumnPos, "Description", cdCol, "Credit/Debit");
+                descColumnPos, "Description", creditDebitColumnPos, "Credit/Debit");
         html.append("<tr>");
         for (int i = 0; i <= maxCol; i++) html.append("<th>").append(headers.getOrDefault(i, "NA")).append("</th>");
         html.append("</tr>");
 
         Map<Integer, String> data = Map.of(dateColumnPos,
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat)),
-                amountColumnPos, "-11.40", descColumnPos, "PAG BXVAL- 5004 VIAVERDE", cdCol, "C");
+                amountColumnPos, "-11.40", descColumnPos, "PAG BXVAL- 5004 VIAVERDE", creditDebitColumnPos, "C");
         html.append("<tr>");
         for (int i = 0; i <= maxCol; i++) html.append("<td>").append(data.getOrDefault(i, "NA")).append("</td>");
         html.append("</tr></table>");

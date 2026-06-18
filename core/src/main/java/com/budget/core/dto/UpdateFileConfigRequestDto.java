@@ -9,6 +9,6 @@ public class UpdateFileConfigRequestDto {
     private String dateFormat;
     private Integer amountColumnPosition;
     private Integer dateColumnPosition;
-    private Integer descriptionColumnPosition;
+    private Integer descColumnPosition;
     private Integer cdColumnPosition;
 }
