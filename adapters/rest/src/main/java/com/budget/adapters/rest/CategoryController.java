@@ -1,7 +1,7 @@
 package com.budget.adapters.rest;
 
 import com.budget.core.CategoryService;
-import com.budget.core.config.CategoryEntity;
+import com.budget.core.entity.CategoryEntity;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;

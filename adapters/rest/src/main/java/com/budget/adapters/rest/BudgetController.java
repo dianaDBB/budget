@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @OpenAPIDefinition(info = @Info(title = "Budget API", version = "1.0"))
@@ -42,15 +43,14 @@ public class BudgetController {
     }
 
     @PostMapping(value = "/file/all", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    @Operation(description = "From all banks csv file, generates an Excel file with the correct format")
+    @Operation(description = "From all banks files, generates an Excel file with the correct format")
     @ApiResponse(responseCode = "200", description = "Excel file is generated successfully")
     public ResponseEntity<ByteArrayResource> allFilesToExcel(
-            @RequestParam("activoBankFile") MultipartFile activoBankFile,
-            @RequestParam("creditoAgricolaFile") MultipartFile creditoAgricolaFile,
-            @RequestParam("cryptoComFile") MultipartFile cryptoComFile
+            @RequestParam List<String> bankNames,
+            @RequestParam List<MultipartFile> files
     ) {
         try {
-            Workbook workbook = budgetService.allFilesToExcel(activoBankFile, creditoAgricolaFile, cryptoComFile);
+            Workbook workbook = budgetService.allFilesToExcel(bankNames, files);
             return getBankFileResponse(workbook, "banks");
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

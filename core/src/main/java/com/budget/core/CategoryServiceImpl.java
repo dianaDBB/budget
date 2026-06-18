@@ -1,7 +1,7 @@
 package com.budget.core;
 
 import com.budget.core.repository.CategoryRepository;
-import com.budget.core.config.CategoryEntity;
+import com.budget.core.entity.CategoryEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

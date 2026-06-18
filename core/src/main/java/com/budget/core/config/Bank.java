@@ -1,5 +1,6 @@
 package com.budget.core.config;
 
+import com.budget.core.entity.FileConfigEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 public class Bank {

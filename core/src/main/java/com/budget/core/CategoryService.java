@@ -1,6 +1,6 @@
 package com.budget.core;
 
-import com.budget.core.config.CategoryEntity;
+import com.budget.core.entity.CategoryEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

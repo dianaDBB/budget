@@ -3,7 +3,7 @@ package com.budget.adapters.rest;
 import com.budget.adapters.rest.dto.BankFileFormatDto;
 import com.budget.core.dto.UpdateFileConfigRequestDto;
 import com.budget.core.FileConfigService;
-import com.budget.core.config.FileConfigEntity;
+import com.budget.core.entity.FileConfigEntity;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;

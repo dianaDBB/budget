@@ -1,4 +1,4 @@
-package com.budget.core.config;
+package com.budget.core.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

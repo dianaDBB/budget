@@ -1,13 +1,14 @@
 package com.budget.core;
 
 import com.budget.core.config.Bank;
-import com.budget.core.config.FileConfigEntity;
+import com.budget.core.entity.FileConfigEntity;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Service
 public class BudgetServiceImpl implements BudgetService {
@@ -19,14 +20,15 @@ public class BudgetServiceImpl implements BudgetService {
     CategoryService categoryService;
 
     @Override
-    public Workbook allFilesToExcel(MultipartFile activoBankFile,
-                                    MultipartFile creditoAgricolaFile,
-                                    MultipartFile cryptoComFile) {
-        return new File(List.of(
-                new Bank(fileConfigService.getBankFileConfig("activobank"), activoBankFile),
-                new Bank(fileConfigService.getBankFileConfig("creditoagricola"), creditoAgricolaFile),
-                new Bank(fileConfigService.getBankFileConfig("cryptocom"), cryptoComFile)
-        ), categoryService).bankFileToExcelFile();
+    public Workbook allFilesToExcel(List<String> bankNames, List<MultipartFile> files) {
+        List<Bank> banks = IntStream.range(0, bankNames.size())
+                .mapToObj(i -> new Bank(
+                        fileConfigService.getBankFileConfig(bankNames.get(i)),
+                        files.get(i)
+                ))
+                .toList();
+
+        return new File(banks, categoryService).bankFileToExcelFile();
     }
 
     @Override

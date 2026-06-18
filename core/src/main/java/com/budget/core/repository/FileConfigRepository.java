@@ -1,6 +1,6 @@
 package com.budget.core.repository;
 
-import com.budget.core.config.FileConfigEntity;
+import com.budget.core.entity.FileConfigEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
