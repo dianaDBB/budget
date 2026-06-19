@@ -1,10 +1,7 @@
 package com.budget.core;
 
 import com.budget.core.dto.CategoryRuleDto;
-import com.budget.core.entity.CategoryEntity;
-import com.budget.core.entity.CategoryRuleEntity;
-import com.budget.core.entity.FileConfigEntity;
-import com.budget.core.entity.SubcategoryEntity;
+import com.budget.core.entity.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,4 +21,6 @@ public interface CacheService {
     List<CategoryEntity> getAllCategories();
 
     List<SubcategoryEntity> getAllSubcategories(String categoryName);
+
+    List<TypeEntity> getAllTypes();
 }

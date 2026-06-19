@@ -1,14 +1,8 @@
 package com.budget.core;
 
 import com.budget.core.dto.CategoryRuleDto;
-import com.budget.core.entity.CategoryEntity;
-import com.budget.core.entity.CategoryRuleEntity;
-import com.budget.core.entity.FileConfigEntity;
-import com.budget.core.entity.SubcategoryEntity;
-import com.budget.core.repository.CategoryRuleRepository;
-import com.budget.core.repository.CategoryRepository;
-import com.budget.core.repository.FileConfigRepository;
-import com.budget.core.repository.SubcategoryRepository;
+import com.budget.core.entity.*;
+import com.budget.core.repository.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,11 +27,15 @@ public class CacheServiceImpl implements CacheService {
     @Autowired
     private SubcategoryRepository subcategoryRepository;
 
+    @Autowired
+    private TypeRepository typeRepository;
+
     private volatile Map<String, FileConfigEntity> fileConfigByBankName = Map.of();
     private volatile List<FileConfigEntity> fileConfigs = List.of();
     private volatile List<CategoryRuleEntity> categoryRules = List.of();
     private volatile List<CategoryEntity> categories = List.of();
     private volatile List<SubcategoryEntity> subcategories = List.of();
+    private volatile List<TypeEntity> types = List.of();
 
     @PostConstruct
     public void loadCache() {
@@ -57,6 +55,8 @@ public class CacheServiceImpl implements CacheService {
         categories = List.copyOf(categoryRepository.findAll());
 
         subcategories = List.copyOf(subcategoryRepository.findAll());
+
+        types = List.copyOf(typeRepository.findAll());
     }
 
     @Override
@@ -106,5 +106,10 @@ public class CacheServiceImpl implements CacheService {
                         .filter(subcategory -> category.getId().equals(subcategory.getCategory_id()))
                         .toList())
                 .orElse(List.of());
+    }
+
+    @Override
+    public List<TypeEntity> getAllTypes() {
+        return new ArrayList<>(types);
     }
 }
