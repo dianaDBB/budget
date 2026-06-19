@@ -37,6 +37,11 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
+    public Workbook fileLinesToExcel(List<FileLineDto> fileLines) {
+        return new File(List.of(), categoryRuleService).fileLinesToExcelFile(fileLines);
+    }
+
+    @Override
     public Workbook bankFileToExcel(String bankName, MultipartFile multipartFile) {
         FileConfigEntity config = fileConfigService.getBankFileConfig(bankName);
         return new File(new BankDto(config, multipartFile), categoryRuleService).bankFileToExcelFile();

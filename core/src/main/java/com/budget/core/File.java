@@ -102,6 +102,12 @@ public class File {
         return previewFile;
     }
 
+    Workbook fileLinesToExcelFile(List<FileLineDto> fileLines) {
+        excelFile = createExcelFile("preview");
+        fileLines.forEach(this::addRow);
+        return excelFile;
+    }
+
     private FileLineDto getXlsxLine(BankDto bankDto, Row bankRow) throws ParseException {
         String bankName = bankDto.getConfig().getBankName();
         int cdColPos = bankDto.getConfig().getCreditDebitColumnPos();

@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,6 +73,18 @@ public class BudgetController {
         try {
             List<FileLineDto> preview = budgetService.previewAllFilesToExcel(bankNames, files);
             return new ResponseEntity<>(preview, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping(value = "/file/preview-all/excel", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(description = "From a preview of bank files, generates an Excel file with the correct format")
+    @ApiResponse(responseCode = "200", description = "Excel file is generated successfully")
+    public ResponseEntity<ByteArrayResource> previewAllFilesToExcelFile(@RequestBody List<FileLineDto> fileLines) {
+        try {
+            Workbook workbook = budgetService.fileLinesToExcel(fileLines);
+            return getBankFileResponse(workbook, "preview");
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

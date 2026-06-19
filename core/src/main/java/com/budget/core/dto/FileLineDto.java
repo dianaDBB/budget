@@ -1,8 +1,10 @@
 package com.budget.core.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class FileLineDto {
     private String bankName;
     private String date;
