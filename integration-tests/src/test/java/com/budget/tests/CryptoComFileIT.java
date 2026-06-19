@@ -100,7 +100,7 @@ public class CryptoComFileIT extends BaseIT {
         Workbook workbook = BudgetApi.generateBankFile(bankName, inputFile);
 
         assertEquals("Daily_Livings", getCellStringValue(workbook, 1, 3));
-        assertEquals("Gym", getCellStringValue(workbook, 1, 4));
+        assertEquals("Gym/Sports", getCellStringValue(workbook, 1, 4));
 
         assertTrue(inputFile.delete(), "Fail to delete the input file");
     }
@@ -135,7 +135,7 @@ public class CryptoComFileIT extends BaseIT {
 
         Workbook workbook = BudgetApi.generateBankFile(bankName, inputFile);
 
-        assertEquals("Car", getCellStringValue(workbook, 1, 3));
+        assertEquals("Cars", getCellStringValue(workbook, 1, 3));
         assertEquals("Fuel", getCellStringValue(workbook, 1, 4));
 
         assertTrue(inputFile.delete(), "Fail to delete the input file");
@@ -147,7 +147,7 @@ public class CryptoComFileIT extends BaseIT {
 
         Workbook workbook = BudgetApi.generateBankFile(bankName, inputFile);
 
-        assertEquals("Car", getCellStringValue(workbook, 1, 3));
+        assertEquals("Cars", getCellStringValue(workbook, 1, 3));
         assertEquals("Tolls", getCellStringValue(workbook, 1, 4));
 
         assertTrue(inputFile.delete(), "Fail to delete the input file");
@@ -159,7 +159,7 @@ public class CryptoComFileIT extends BaseIT {
 
         Workbook workbook = BudgetApi.generateBankFile(bankName, inputFile);
 
-        assertEquals("House_Construction", getCellStringValue(workbook, 1, 3));
+        assertEquals("House_Constructions", getCellStringValue(workbook, 1, 3));
         assertEquals("Contractor", getCellStringValue(workbook, 1, 4));
 
         assertTrue(inputFile.delete(), "Fail to delete the input file");

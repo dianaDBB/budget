@@ -28,12 +28,12 @@ public class CategoryRuleEntity {
     @Column(name = "keyword")
     private String keyword;
 
-    @Column(name = "category")
-    private String category;
+    @Column(name = "category_id")
+    private UUID categoryId;
 
-    @Column(name = "sub_category")
-    private String subCategory;
+    @Column(name = "subcategory_id")
+    private UUID subcategoryId;
 
-    @Column(name = "type")
-    private String type;
+    @Column(name = "type_id")
+    private UUID typeId;
 }
