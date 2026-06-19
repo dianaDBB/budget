@@ -104,9 +104,9 @@ public class CacheServiceImpl implements CacheService {
                     .findFirst()
                     .orElse(null);
 
-            categoryRuleList.add(new CategoryRuleDto(categoryRuleEntity.getKeyword(), category,
-                    categoryRuleEntity.getCategoryId(), subcategory, categoryRuleEntity.getSubcategoryId(), type,
-                    categoryRuleEntity.getTypeId()));
+            categoryRuleList.add(new CategoryRuleDto(categoryRuleEntity.getId(), categoryRuleEntity.getKeyword(),
+                    category, categoryRuleEntity.getCategoryId(), subcategory, categoryRuleEntity.getSubcategoryId(),
+                    type, categoryRuleEntity.getTypeId()));
         }
 
         return categoryRuleList;
@@ -121,7 +121,7 @@ public class CacheServiceImpl implements CacheService {
                 .findFirst().orElse(null);
 
         if (categoryRuleEntity == null) {
-            return new CategoryRuleDto(null, null, null, null, null, null, null);
+            return new CategoryRuleDto(null, null, null, null, null, null, null, null);
         }
 
         String category = categories.stream()
@@ -142,8 +142,9 @@ public class CacheServiceImpl implements CacheService {
                 .findFirst()
                 .orElse(null);
 
-        return new CategoryRuleDto(categoryRuleEntity.getKeyword(), category, categoryRuleEntity.getCategoryId(),
-                subcategory, categoryRuleEntity.getSubcategoryId(), type, categoryRuleEntity.getTypeId());
+        return new CategoryRuleDto(categoryRuleEntity.getId(), categoryRuleEntity.getKeyword(), category,
+                categoryRuleEntity.getCategoryId(), subcategory, categoryRuleEntity.getSubcategoryId(), type,
+                categoryRuleEntity.getTypeId());
     }
 
     @Override

@@ -6,6 +6,7 @@ import java.util.UUID;
 
 @Data
 public class CategoryRuleDto {
+    private UUID id;
     private String keyword;
     private String category;
     private UUID category_id;
@@ -14,8 +15,9 @@ public class CategoryRuleDto {
     private String type;
     private UUID type_id;
 
-    public CategoryRuleDto(String keyword, String category, UUID category_id, String subCategory, UUID subCategory_id, String type,
-                           UUID type_id) {
+    public CategoryRuleDto(UUID id, String keyword, String category, UUID category_id, String subCategory,
+                           UUID subCategory_id, String type, UUID type_id) {
+        this.id = id;
         this.keyword = keyword;
         this.category = category;
         this.category_id = category_id;
