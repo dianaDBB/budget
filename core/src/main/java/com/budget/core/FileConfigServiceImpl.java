@@ -14,15 +14,17 @@ public class FileConfigServiceImpl implements FileConfigService {
     @Autowired
     FileConfigRepository fileConfigRepository;
 
+    @Autowired
+    ConfigurationCacheService configurationCacheService;
+
     @Override
     public FileConfigEntity getBankFileConfig(String bankName) {
-        return fileConfigRepository.findByBankName(bankName)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown bank: " + bankName));
+        return configurationCacheService.getBankFileConfig(bankName);
     }
 
     @Override
     public List<FileConfigEntity> getAllBankFileFormats() {
-        return fileConfigRepository.findAll();
+        return configurationCacheService.getAllBankFileFormats();
     }
 
     @Override
@@ -34,10 +36,11 @@ public class FileConfigServiceImpl implements FileConfigService {
         if (request.getDateColumnPosition() != null) entity.setDateColumnPos(request.getDateColumnPosition());
         if (request.getAmountColumnPosition() != null) entity.setAmountColumnPos(request.getAmountColumnPosition());
         if (request.getDescColumnPosition() != null) entity.setDescColumnPos(request.getDescColumnPosition());
-        if (request.getCdColumnPosition() != null) entity.setDescColumnPos(request.getCdColumnPosition());
+        if (request.getCdColumnPosition() != null) entity.setCreditDebitColumnPos(request.getCdColumnPosition());
         if (request.getDateFormat() != null) entity.setDateFormat(request.getDateFormat());
         if (request.getDelimiter() != null) entity.setDelimiter(request.getDelimiter());
 
         fileConfigRepository.save(entity);
+        configurationCacheService.refreshCache();
     }
 }
