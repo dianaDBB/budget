@@ -82,8 +82,32 @@ public class CacheServiceImpl implements CacheService {
     }
 
     @Override
-    public List<CategoryRuleEntity> getAllCategoryRules() {
-        return new ArrayList<>(categoryRules);
+    public List<CategoryRuleDto> getAllCategoryRules() {
+        List<CategoryRuleDto> categoryRuleList = new ArrayList<>();
+
+        for (CategoryRuleEntity categoryRuleEntity : categoryRules) {
+            String category = categories.stream()
+                    .filter(cat -> cat.getId().equals(categoryRuleEntity.getCategoryId()))
+                    .map(CategoryEntity::getCategory)
+                    .findFirst()
+                    .orElse(null);
+
+            String subcategory = subcategories.stream()
+                    .filter(sc -> sc.getId().equals(categoryRuleEntity.getSubcategoryId()))
+                    .map(SubcategoryEntity::getSubcategory)
+                    .findFirst()
+                    .orElse(null);
+
+            String type = types.stream()
+                    .filter(tc -> tc.getId().equals(categoryRuleEntity.getTypeId()))
+                    .map(TypeEntity::getType)
+                    .findFirst()
+                    .orElse(null);
+
+            categoryRuleList.add(new CategoryRuleDto(category, categoryRuleEntity.getCategoryId(), subcategory, categoryRuleEntity.getSubcategoryId(), type, categoryRuleEntity.getTypeId()));
+        }
+
+        return categoryRuleList;
     }
 
     @Override
@@ -95,7 +119,7 @@ public class CacheServiceImpl implements CacheService {
                 .findFirst().orElse(null);
 
         if (categoryRuleEntity == null) {
-            return new CategoryRuleDto(null, null, null);
+            return new CategoryRuleDto(null, null, null, null, null, null);
         }
 
         String category = categories.stream()
@@ -116,7 +140,7 @@ public class CacheServiceImpl implements CacheService {
                 .findFirst()
                 .orElse(null);
 
-        return new CategoryRuleDto(category, subcategory, type);
+        return new CategoryRuleDto(category, categoryRuleEntity.getCategoryId(), subcategory, categoryRuleEntity.getSubcategoryId(), type, categoryRuleEntity.getTypeId());
     }
 
     @Override

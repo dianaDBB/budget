@@ -17,7 +17,7 @@ public class CategoryRuleServiceImpl implements CategoryRuleService {
     private CacheServiceImpl cacheServiceImpl;
 
     @Override
-    public List<CategoryRuleEntity> getAllCategoryRules() {
+    public List<CategoryRuleDto> getAllCategoryRules() {
         return cacheServiceImpl.getAllCategoryRules();
     }
 

@@ -1,6 +1,7 @@
 package com.budget.adapters.rest;
 
 import com.budget.core.CategoryRuleService;
+import com.budget.core.dto.CategoryRuleDto;
 import com.budget.core.entity.CategoryRuleEntity;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +29,7 @@ public class CategoryRuleController {
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(description = "Returns the current category rules")
     @ApiResponse(responseCode = "200", description = "Category rules retrieved successfully")
-    public ResponseEntity<List<CategoryRuleEntity>> getCategoryRules() {
+    public ResponseEntity<List<CategoryRuleDto>> getCategoryRules() {
         return ResponseEntity.ok(categoryRuleService.getAllCategoryRules());
     }
 

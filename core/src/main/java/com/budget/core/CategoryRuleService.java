@@ -8,7 +8,7 @@ import java.util.List;
 
 @Component
 public interface CategoryRuleService {
-    List<CategoryRuleEntity> getAllCategoryRules();
+    List<CategoryRuleDto> getAllCategoryRules();
 
     CategoryRuleDto getCategoryRules(String value);
 

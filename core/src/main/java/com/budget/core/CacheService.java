@@ -14,7 +14,7 @@ public interface CacheService {
 
     List<FileConfigEntity> getAllBankFileFormats();
 
-    List<CategoryRuleEntity> getAllCategoryRules();
+    List<CategoryRuleDto> getAllCategoryRules();
 
     CategoryRuleDto getCategoryRules(String keyword);
 
