@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@OpenAPIDefinition(info = @Info(title = "Cache API", version = "1.0"))
+@OpenAPIDefinition(info = @Info(title = "Budget API", version = "1.0"))
 @RequestMapping("/cache")
 public class CacheController {
     @Autowired
