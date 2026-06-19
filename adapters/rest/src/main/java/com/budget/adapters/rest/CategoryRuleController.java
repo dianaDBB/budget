@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@OpenAPIDefinition(info = @Info(title = "Budget API", version = "1.0"))
+@OpenAPIDefinition(info = @Info(title = "Category Rule API", version = "1.0"))
 @RequestMapping("/category-rule")
 public class CategoryRuleController {
     @Autowired

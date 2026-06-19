@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ConfigurationCacheService {
+public class CacheServiceImpl implements CacheService {
 
     @Autowired
     private FileConfigRepository fileConfigRepository;
@@ -32,6 +32,7 @@ public class ConfigurationCacheService {
         refreshCache();
     }
 
+    @Override
     public synchronized void refreshCache() {
         List<FileConfigEntity> loadedFileConfigs = fileConfigRepository.findAll();
         fileConfigs = List.copyOf(loadedFileConfigs);
@@ -41,6 +42,7 @@ public class ConfigurationCacheService {
         categoryRules = List.copyOf(categoryRuleRepository.findAll());
     }
 
+    @Override
     public FileConfigEntity getBankFileConfig(String bankName) {
         FileConfigEntity config = fileConfigByBankName.get(bankName);
         if (config == null) {
@@ -49,14 +51,17 @@ public class ConfigurationCacheService {
         return config;
     }
 
+    @Override
     public List<FileConfigEntity> getAllBankFileFormats() {
         return new ArrayList<>(fileConfigs);
     }
 
+    @Override
     public List<CategoryRuleEntity> getAllCategoryRules() {
         return new ArrayList<>(categoryRules);
     }
 
+    @Override
     public CategoryRuleDto getCategoryRules(String keyword) {
         String normalizedKeyword = keyword == null ? "" : keyword.toUpperCase();
         return categoryRules.stream()

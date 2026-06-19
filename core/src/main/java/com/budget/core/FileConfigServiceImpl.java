@@ -15,16 +15,16 @@ public class FileConfigServiceImpl implements FileConfigService {
     FileConfigRepository fileConfigRepository;
 
     @Autowired
-    ConfigurationCacheService configurationCacheService;
+    CacheServiceImpl cacheServiceImpl;
 
     @Override
     public FileConfigEntity getBankFileConfig(String bankName) {
-        return configurationCacheService.getBankFileConfig(bankName);
+        return cacheServiceImpl.getBankFileConfig(bankName);
     }
 
     @Override
     public List<FileConfigEntity> getAllBankFileFormats() {
-        return configurationCacheService.getAllBankFileFormats();
+        return cacheServiceImpl.getAllBankFileFormats();
     }
 
     @Override
@@ -41,6 +41,6 @@ public class FileConfigServiceImpl implements FileConfigService {
         if (request.getDelimiter() != null) entity.setDelimiter(request.getDelimiter());
 
         fileConfigRepository.save(entity);
-        configurationCacheService.refreshCache();
+        cacheServiceImpl.refreshCache();
     }
 }

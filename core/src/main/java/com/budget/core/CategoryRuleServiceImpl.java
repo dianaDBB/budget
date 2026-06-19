@@ -14,22 +14,22 @@ public class CategoryRuleServiceImpl implements CategoryRuleService {
     private CategoryRuleRepository categoryRuleRepository;
 
     @Autowired
-    private ConfigurationCacheService configurationCacheService;
+    private CacheServiceImpl cacheServiceImpl;
 
     @Override
     public List<CategoryRuleEntity> getAllCategoryRules() {
-        return configurationCacheService.getAllCategoryRules();
+        return cacheServiceImpl.getAllCategoryRules();
     }
 
     @Override
     public CategoryRuleDto getCategoryRules(String keyword) {
-        return configurationCacheService.getCategoryRules(keyword);
+        return cacheServiceImpl.getCategoryRules(keyword);
     }
 
     @Override
     public void updateCategoryRules(List<CategoryRuleEntity> categoryRules) {
         categoryRuleRepository.deleteAll();
         categoryRuleRepository.saveAll(categoryRules);
-        configurationCacheService.refreshCache();
+        cacheServiceImpl.refreshCache();
     }
 }

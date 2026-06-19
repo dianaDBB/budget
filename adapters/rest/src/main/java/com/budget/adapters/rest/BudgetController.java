@@ -1,7 +1,6 @@
 package com.budget.adapters.rest;
 
 import com.budget.core.BudgetService;
-import com.budget.core.ConfigurationCacheService;
 import com.budget.core.dto.FileLineDto;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,9 +31,6 @@ import java.util.List;
 public class BudgetController {
     @Autowired
     BudgetService budgetService;
-
-    @Autowired
-    ConfigurationCacheService configurationCacheService;
 
     private ResponseEntity<ByteArrayResource> getBankFileResponse(Workbook workbook, String fileName) throws IOException {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -97,13 +93,5 @@ public class BudgetController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @PostMapping("/cache/refresh")
-    @Operation(description = "Reloads file configs and category rules from the database into memory")
-    @ApiResponse(responseCode = "200", description = "Cache refreshed successfully")
-    public ResponseEntity<Void> refreshCache() {
-        configurationCacheService.refreshCache();
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
