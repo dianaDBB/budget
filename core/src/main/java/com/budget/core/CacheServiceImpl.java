@@ -90,53 +90,33 @@ public class CacheServiceImpl implements CacheService {
     public CategoryRuleDto getCategoryRules(String keyword) {
         String normalizedKeyword = keyword == null ? "" : keyword.toUpperCase();
 
-        return categoryRules.stream()
+        CategoryRuleEntity categoryRuleEntity = categoryRules.stream()
                 .filter(rule -> rule.getKeyword() != null && normalizedKeyword.contains(rule.getKeyword().toUpperCase()))
-                .findFirst()
-                .map(rule -> {
-                    SubcategoryEntity subcategoryEntity = rule.getSubcategoryId() == null
-                            ? null
-                            : subcategoryRepository.findById(rule.getSubcategoryId())
-                            .orElse(null);
-                    if (subcategoryEntity == null && rule.getCategoryId() != null) {
-                        subcategoryEntity = subcategoryRepository.findAll().stream()
-                                .filter(subcategory -> rule.getCategoryId().equals(subcategory.getCategory_id()))
-                                .filter(subcategory -> keywordContainsSubcategory(normalizedKeyword,
-                                        subcategory.getSubcategory()))
-                                .findFirst()
-                                .orElse(null);
-                    }
-                    String subcategoryName = subcategoryEntity == null ? null : subcategoryEntity.getSubcategory();
+                .findFirst().orElse(null);
 
-                    String categoryName = rule.getCategoryId() == null
-                            ? null
-                            : categoryRepository.findById(rule.getCategoryId())
-                            .map(CategoryEntity::getCategory)
-                            .orElse(null);
-                    if (categoryName == null && subcategoryEntity != null) {
-                        categoryName = categoryRepository.findById(subcategoryEntity.getCategory_id())
-                                .map(CategoryEntity::getCategory)
-                                .orElse(null);
-                    }
-
-                    String typeName = rule.getTypeId() == null
-                            ? null
-                            : typeRepository.findById(rule.getTypeId())
-                            .map(TypeEntity::getType)
-                            .orElse(null);
-
-                    return new CategoryRuleDto(categoryName, subcategoryName, typeName);
-                })
-                .orElse(new CategoryRuleDto(null, null, null));
-    }
-
-    private boolean keywordContainsSubcategory(String keyword, String subcategory) {
-        if (subcategory == null) {
-            return false;
+        if (categoryRuleEntity == null) {
+            return new CategoryRuleDto(null, null, null);
         }
-        return java.util.Arrays.stream(subcategory.toUpperCase().split("[^A-Z0-9]+"))
-                .filter(token -> token.length() >= 3)
-                .anyMatch(keyword::contains);
+
+        String category = categories.stream()
+                .filter(cat -> cat.getId().equals(categoryRuleEntity.getCategoryId()))
+                .map(CategoryEntity::getCategory)
+                .findFirst()
+                .orElse(null);
+
+        String subcategory = subcategories.stream()
+                .filter(sc -> sc.getId().equals(categoryRuleEntity.getSubcategoryId()))
+                .map(SubcategoryEntity::getSubcategory)
+                .findFirst()
+                .orElse(null);
+
+        String type = types.stream()
+                .filter(tc -> tc.getId().equals(categoryRuleEntity.getTypeId()))
+                .map(TypeEntity::getType)
+                .findFirst()
+                .orElse(null);
+
+        return new CategoryRuleDto(category, subcategory, type);
     }
 
     @Override
