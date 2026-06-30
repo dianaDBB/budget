@@ -3,7 +3,8 @@ package com.budget.core.dto;
 import lombok.Data;
 
 @Data
-public class UpdateFileConfigRequestDto {
+public class AddFileConfigRequestDto {
+    private String bankName;
     private String fileFormat;
     private Integer firstLine;
     private String delimiter;
@@ -12,5 +13,4 @@ public class UpdateFileConfigRequestDto {
     private Integer dateColumnPosition;
     private Integer descColumnPosition;
     private Integer cdColumnPosition;
-    private String ignoreValues;
 }

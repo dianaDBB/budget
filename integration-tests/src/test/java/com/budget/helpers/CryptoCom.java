@@ -11,8 +11,8 @@ public class CryptoCom {
     public static File createValidFile(List<EntryDto> entryList) throws IOException {
         File file = new File("target/test-cryptoCom-" + System.currentTimeMillis() + ".csv");
         StringBuilder content = new StringBuilder("Timestamp (UTC),Transaction Description,Currency,Amount,To " +
-                "Currency,To Amount,Native Currency,Native Amount,Native Amount (in USD),Transaction Kind,Transaction" +
-                " Hash\n");
+                "Currency,To Amount,Native Currency,Native Amount,Native Amount (in USD),Transaction Kind," +
+                "Transaction" + " Hash\n");
 
         for (EntryDto entry : entryList) {
             double nativeAmount = entry.amount() * 1.1;
@@ -27,9 +27,10 @@ public class CryptoCom {
     public static File createInvalidFile(String invalidValue) throws IOException {
         File file = new File("target/test-cryptoCom-" + System.currentTimeMillis() + ".csv");
 
-        Files.write(file.toPath(), ("Timestamp (UTC),Transaction Description,Currency,Amount,To Currency,To Amount," +
-                "Native Currency,Native Amount,Native Amount (in USD),Transaction Kind,Transaction Hash\n"
-                + String.format("2026-06-09 10:00:00,Invalid value,EUR,%s,,,EUR,8,8,,\n", invalidValue)).getBytes());
+        Files.write(file.toPath(),
+                ("Timestamp (UTC),Transaction Description,Currency,Amount,To Currency,To Amount," + "Native Currency," +
+                        "Native Amount,Native Amount (in USD),Transaction Kind,Transaction Hash\n" + String.format(
+                                "2026-06-09 10:00:00,Invalid value,EUR,%s,,,EUR,8,8,,\n", invalidValue)).getBytes());
         return file;
     }
 }

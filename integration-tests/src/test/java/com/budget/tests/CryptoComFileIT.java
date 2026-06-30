@@ -247,11 +247,8 @@ public class CryptoComFileIT extends BaseIT {
     void shouldReturnOkWhenFileIsEmpty() throws Exception {
         File emptyFile = createEmptyFile();
 
-        Response response = given()
-                .multiPart("file", emptyFile)
-                .contentType("multipart/form-data")
-                .when()
-                .post(BudgetApi.generateFileUrl, bankName);
+        Response response =
+                given().multiPart("file", emptyFile).contentType("multipart/form-data").when().post(BudgetApi.generateFileUrl, bankName);
 
         int statusCode = response.statusCode();
         assertEquals(200, statusCode, "Should return error status code (200), got: " + statusCode);
@@ -263,11 +260,8 @@ public class CryptoComFileIT extends BaseIT {
     void shouldReturnErrorWhenFileHasInvalidFormat() throws Exception {
         File invalidFile = CryptoCom.createInvalidFile("this is not a number");
 
-        Response response = given()
-                .multiPart("file", invalidFile)
-                .contentType("multipart/form-data")
-                .when()
-                .post(BudgetApi.generateFileUrl, bankName);
+        Response response =
+                given().multiPart("file", invalidFile).contentType("multipart/form-data").when().post(BudgetApi.generateFileUrl, bankName);
 
         int statusCode = response.statusCode();
         assertEquals(500, statusCode, "Should return error status code (500), got: " + statusCode);

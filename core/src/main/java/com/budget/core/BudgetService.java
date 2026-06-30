@@ -15,6 +15,4 @@ public interface BudgetService {
     List<FileLineDto> previewAllFilesToExcel(List<String> bankNames, List<MultipartFile> files) throws IOException;
 
     Workbook fileLinesToExcel(List<FileLineDto> fileLines) throws IOException;
-
-    Workbook bankFileToExcel(String bankName, MultipartFile multipartFile) throws IOException;
 }

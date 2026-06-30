@@ -2,7 +2,6 @@ package com.budget.core;
 
 import com.budget.core.dto.BankDto;
 import com.budget.core.dto.FileLineDto;
-import com.budget.core.entity.FileConfigEntity;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public Workbook allFilesToExcel(List<String> bankNames, List<MultipartFile> files) {
         List<BankDto> banks =
-                IntStream.range(0, bankNames.size()).mapToObj(i -> new BankDto(fileConfigService.getBankFileConfig(bankNames.get(i)), files.get(i))).toList();
+                IntStream.range(0, bankNames.size()).mapToObj(i -> new BankDto(fileConfigService.getFileConfig(bankNames.get(i)), files.get(i))).toList();
 
         return new File(banks, categoryRuleService).bankFileToExcelFile();
     }
@@ -31,7 +30,7 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public List<FileLineDto> previewAllFilesToExcel(List<String> bankNames, List<MultipartFile> files) {
         List<BankDto> banks =
-                IntStream.range(0, bankNames.size()).mapToObj(i -> new BankDto(fileConfigService.getBankFileConfig(bankNames.get(i)), files.get(i))).toList();
+                IntStream.range(0, bankNames.size()).mapToObj(i -> new BankDto(fileConfigService.getFileConfig(bankNames.get(i)), files.get(i))).toList();
 
         return new File(banks, categoryRuleService).previewBankFileToExcelFile();
     }
@@ -39,11 +38,5 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public Workbook fileLinesToExcel(List<FileLineDto> fileLines) {
         return new File(List.of(), categoryRuleService).fileLinesToExcelFile(fileLines);
-    }
-
-    @Override
-    public Workbook bankFileToExcel(String bankName, MultipartFile multipartFile) {
-        FileConfigEntity config = fileConfigService.getBankFileConfig(bankName);
-        return new File(new BankDto(config, multipartFile), categoryRuleService).bankFileToExcelFile();
     }
 }

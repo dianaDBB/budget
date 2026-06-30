@@ -40,7 +40,7 @@ dotenv -e .env mvn spring-boot:run
 
 - Or select the file `delivery/src/main/java/com.budget/BudgetApiApplication.java`, right click and select "Run"
 
-# Swagger
+## Swagger
 
 - Local: http://localhost:8443/budget/swagger-ui/index.html#/
 - Release: https://budget-cemp.onrender.com/budget/swagger-ui/index.html
@@ -48,3 +48,7 @@ dotenv -e .env mvn spring-boot:run
 ## Deploy
 
 Deploy is done using [Render](https://dashboard.render.com/)
+
+## DB
+
+Database is SQL, hosted on [Neon](https://console.neon.tech/).

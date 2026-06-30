@@ -11,12 +11,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -67,15 +65,12 @@ public class FileConfigEntity {
     private String ignoreValues;
 
     public Set<String> ignoreValues() {
-        return (ignoreValues == null || ignoreValues.isBlank())
-                ? Set.of()
-                : Arrays.stream(ignoreValues.split(","))
-                .map(String::trim)
-                .collect(Collectors.toSet());
+        return (ignoreValues == null || ignoreValues.isBlank()) ? Set.of() :
+                Arrays.stream(ignoreValues.split(",")).map(String::trim).collect(Collectors.toSet());
     }
 
-    public Date getFormatedDate(String value) throws ParseException {
-        return new SimpleDateFormat(dateFormat).parse(value);
+    public LocalDate getFormatedDate(String value) {
+        return LocalDate.parse(value, DateTimeFormatter.ofPattern(dateFormat));
     }
 
     public double getAmount(String value, String creditOrDebit) {
@@ -87,14 +82,13 @@ public class FileConfigEntity {
     }
 
     public String getType(double value, String creditOrDebit) {
-        if (!Objects.equals(creditOrDebit, "N/A"))
-            return creditOrDebit.equals("C") ? "Income" : "Expense";
+        if (!Objects.equals(creditOrDebit, "N/A")) return creditOrDebit.equals("C") ? "Income" : "Expense";
         return (value > 0) ? "Income" : "Expense";
     }
 
     public String createXlsxExample() {
-        int maxCol = Stream.of(dateColumnPos, amountColumnPos, descColumnPos, creditDebitColumnPos)
-                .max(Integer::compareTo).orElse(0);
+        int maxCol =
+                Stream.of(dateColumnPos, amountColumnPos, descColumnPos, creditDebitColumnPos).max(Integer::compareTo).orElse(0);
 
         StringBuilder html = new StringBuilder("""
                 <style>
@@ -110,18 +104,17 @@ public class FileConfigEntity {
         html.append("</tr>");
 
         for (int i = 0; i < firstLine - 1; i++)
-            html.append("<tr><td class=\"excelRow\">").append(i + 1).append("</td>")
-                    .append("<td colspan=\"").append(maxCol + 1).append("\">Row ").append(i + 1).append("</td></tr>");
+            html.append("<tr><td class=\"excelRow\">").append(i + 1).append("</td>").append("<td colspan=\"").append(maxCol + 1).append("\">Row ").append(i + 1).append("</td></tr>");
 
-        Map<Integer, String> headers = Map.of(dateColumnPos, "Date", amountColumnPos, "Amount",
-                descColumnPos, "Description", creditDebitColumnPos, "Credit/Debit");
+        Map<Integer, String> headers = Map.of(dateColumnPos, "Date", amountColumnPos, "Amount", descColumnPos,
+                "Description", creditDebitColumnPos, "Credit/Debit");
         html.append("<tr><td class=\"excelRow\">").append(firstLine).append("</td>");
         for (int i = 0; i <= maxCol; i++) html.append("<th>").append(headers.getOrDefault(i, "NA")).append("</th>");
         html.append("</tr>");
 
         Map<Integer, String> data = Map.of(dateColumnPos,
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat)),
-                amountColumnPos, "-11.40", descColumnPos, "PAG BXVAL- 5004 VIAVERDE", creditDebitColumnPos, "C");
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat)), amountColumnPos, "-11.40",
+                descColumnPos, "PAG BXVAL- 5004 VIAVERDE", creditDebitColumnPos, "C");
         html.append("<tr><td class=\"excelRow\">").append(firstLine + 1).append("</td>");
         for (int i = 0; i <= maxCol; i++) html.append("<td>").append(data.getOrDefault(i, "NA")).append("</td>");
         html.append("</tr></table>");
@@ -129,8 +122,8 @@ public class FileConfigEntity {
     }
 
     public String createCsvExample() {
-        int maxCol = Stream.of(dateColumnPos, amountColumnPos, descColumnPos, creditDebitColumnPos)
-                .max(Integer::compareTo).orElse(0);
+        int maxCol =
+                Stream.of(dateColumnPos, amountColumnPos, descColumnPos, creditDebitColumnPos).max(Integer::compareTo).orElse(0);
 
         StringBuilder html = new StringBuilder("""
                 <style>
@@ -139,15 +132,15 @@ public class FileConfigEntity {
                 </style>
                 <table>""");
 
-        Map<Integer, String> headers = Map.of(dateColumnPos, "Date", amountColumnPos, "Amount",
-                descColumnPos, "Description", creditDebitColumnPos, "Credit/Debit");
+        Map<Integer, String> headers = Map.of(dateColumnPos, "Date", amountColumnPos, "Amount", descColumnPos,
+                "Description", creditDebitColumnPos, "Credit/Debit");
         html.append("<tr>");
         for (int i = 0; i <= maxCol; i++) html.append("<th>").append(headers.getOrDefault(i, "NA")).append("</th>");
         html.append("</tr>");
 
         Map<Integer, String> data = Map.of(dateColumnPos,
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat)),
-                amountColumnPos, "-11.40", descColumnPos, "PAG BXVAL- 5004 VIAVERDE", creditDebitColumnPos, "C");
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat)), amountColumnPos, "-11.40",
+                descColumnPos, "PAG BXVAL- 5004 VIAVERDE", creditDebitColumnPos, "C");
         html.append("<tr>");
         for (int i = 0; i <= maxCol; i++) html.append("<td>").append(data.getOrDefault(i, "NA")).append("</td>");
         html.append("</tr></table>");

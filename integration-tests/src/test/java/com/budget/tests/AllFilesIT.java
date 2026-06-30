@@ -95,19 +95,12 @@ public class AllFilesIT extends BaseIT {
 
     @Test
     void shouldHandleMultipleTransactionsPerBank() throws Exception {
-        File activoBankFile = ActivoBank.createValidFile(List.of(
-                new EntryDto("COMPRA CONTINENTE Store", -45.50),
-                new EntryDto("NETFLIX Subscription", -12.99),
-                new EntryDto("GALP Fuel Station", -60.00)
-        ));
-        File creditoAgricolaFile = CreditoAgricola.createValidFile(List.of(
-                new EntryDto("UBER    EATS Restaurant", 22.30, "D"),
-                new EntryDto("VODAFONE Internet", 35.99, "D")
-        ));
-        File cryptoComFile = CryptoCom.createValidFile(List.of(
-                new EntryDto("Bitcoin Purchase", -100.00),
-                new EntryDto("Ethereum Purchase", -50.00)
-        ));
+        File activoBankFile = ActivoBank.createValidFile(List.of(new EntryDto("COMPRA CONTINENTE Store", -45.50),
+                new EntryDto("NETFLIX Subscription", -12.99), new EntryDto("GALP Fuel Station", -60.00)));
+        File creditoAgricolaFile = CreditoAgricola.createValidFile(List.of(new EntryDto("UBER    EATS Restaurant",
+                22.30, "D"), new EntryDto("VODAFONE Internet", 35.99, "D")));
+        File cryptoComFile = CryptoCom.createValidFile(List.of(new EntryDto("Bitcoin Purchase", -100.00),
+                new EntryDto("Ethereum Purchase", -50.00)));
 
         Workbook workbook = BudgetApi.generateAllBanksFile(List.of("ActivoBank", "CreditoAgricola", "CryptoCom"),
                 List.of(activoBankFile, creditoAgricolaFile, cryptoComFile));
@@ -176,16 +169,11 @@ public class AllFilesIT extends BaseIT {
 
     @Test
     void shouldClassifyIncomeAndExpenseTransactionsFromAllBanks() throws Exception {
-        File activoBankFile = ActivoBank.createValidFile(List.of(
-                new EntryDto("EUR Deposit Income", 1000.00),
-                new EntryDto("COMPRA CONTINENTE Store", -45.50)
-        ));
-        File creditoAgricolaFile = CreditoAgricola.createValidFile(List.of(
-                new EntryDto("UBER    EATS Restaurant", 22.30, "D")
-        ));
-        File cryptoComFile = CryptoCom.createValidFile(List.of(
-                new EntryDto("Bitcoin Purchase", -100.00)
-        ));
+        File activoBankFile = ActivoBank.createValidFile(List.of(new EntryDto("EUR Deposit Income", 1000.00),
+                new EntryDto("COMPRA CONTINENTE Store", -45.50)));
+        File creditoAgricolaFile = CreditoAgricola.createValidFile(List.of(new EntryDto("UBER    EATS Restaurant",
+                22.30, "D")));
+        File cryptoComFile = CryptoCom.createValidFile(List.of(new EntryDto("Bitcoin Purchase", -100.00)));
 
         Workbook workbook = BudgetApi.generateAllBanksFile(List.of("ActivoBank", "CreditoAgricola", "CryptoCom"),
                 List.of(activoBankFile, creditoAgricolaFile, cryptoComFile));

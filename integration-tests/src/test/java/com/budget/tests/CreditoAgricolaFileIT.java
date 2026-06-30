@@ -251,11 +251,8 @@ public class CreditoAgricolaFileIT extends BaseIT {
     void shouldReturnErrorWhenFileIsEmpty() throws Exception {
         File emptyFile = createEmptyFile();
 
-        Response response = given()
-                .multiPart("file", emptyFile)
-                .contentType("multipart/form-data")
-                .when()
-                .post(BudgetApi.generateFileUrl, bankName);
+        Response response =
+                given().multiPart("file", emptyFile).contentType("multipart/form-data").when().post(BudgetApi.generateFileUrl, bankName);
 
         int statusCode = response.statusCode();
         assertEquals(500, statusCode, "Should return error status code (500), got: " + statusCode);
@@ -267,11 +264,8 @@ public class CreditoAgricolaFileIT extends BaseIT {
     void shouldReturnErrorWhenFileHasInvalidFormat() throws Exception {
         File invalidFile = CreditoAgricola.createInvalidFile("this is not a number");
 
-        Response response = given()
-                .multiPart("file", invalidFile)
-                .contentType("multipart/form-data")
-                .when()
-                .post(BudgetApi.generateFileUrl, bankName);
+        Response response =
+                given().multiPart("file", invalidFile).contentType("multipart/form-data").when().post(BudgetApi.generateFileUrl, bankName);
 
         int statusCode = response.statusCode();
         assertEquals(500, statusCode, "Should return error status code (500), got: " + statusCode);

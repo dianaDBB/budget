@@ -192,8 +192,8 @@ public class UpdateFileConfig_SKIP extends BaseIT {
         assertEquals(200, FileConfigApi.updateConfig("ActivoBank", request).statusCode());
 
         // --- upload a file built for the NEW config (data at row 5) → should succeed ---
-        File newFormatFile = ActivoBank.createFileWithFirstLineAt(newFirstLine,
-                List.of(new EntryDto("COMPRA CONTINENTE New Format", -30.00)));
+        File newFormatFile = ActivoBank.createFileWithFirstLineAt(newFirstLine, List.of(new EntryDto("COMPRA " +
+                "CONTINENTE New Format", -30.00)));
 
         Workbook workbook = BudgetApi.generateBankFile("ActivoBank", newFormatFile);
 
@@ -208,12 +208,11 @@ public class UpdateFileConfig_SKIP extends BaseIT {
         // --- upload a file built for the OLD config (data at row 8) → should fail ---
         // With firstLine=5 the parser reads rows starting at index 5. In the original
         // file those rows contain header labels, which cannot be parsed as dates → 500.
-        File oldFormatFile = ActivoBank.createValidFile(
-                List.of(new EntryDto("COMPRA CONTINENTE Old Format", -30.00)));
+        File oldFormatFile = ActivoBank.createValidFile(List.of(new EntryDto("COMPRA CONTINENTE Old Format", -30.00)));
 
         Response errorResponse = BudgetApi.generateBankFileRaw("ActivoBank", oldFormatFile);
-        assertEquals(500, errorResponse.statusCode(),
-                "Uploading an old-format file after config change should return 500");
+        assertEquals(500, errorResponse.statusCode(), "Uploading an old-format file after config change should return" +
+                " 500");
 
         assertTrue(oldFormatFile.delete(), "Fail to delete old-format test file");
     }

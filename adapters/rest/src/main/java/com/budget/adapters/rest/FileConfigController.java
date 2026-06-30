@@ -1,5 +1,6 @@
 package com.budget.adapters.rest;
 
+import com.budget.core.dto.AddFileConfigRequestDto;
 import com.budget.core.dto.GetBankFileFormatResponseDto;
 import com.budget.core.dto.UpdateFileConfigRequestDto;
 import com.budget.core.FileConfigService;
@@ -13,12 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,28 +30,16 @@ public class FileConfigController {
     @ApiResponse(responseCode = "200", description = "Format information retrieved successfully")
     @ApiResponse(responseCode = "400", description = "Unknown bank name")
     public ResponseEntity<GetBankFileFormatResponseDto> getBankFileFormat(@PathVariable String bankName) {
-        try {
-            FileConfigEntity config = fileConfigService.getBankFileConfig(bankName);
+        FileConfigEntity config = fileConfigService.getFileConfig(bankName);
 
-            boolean isCsv = "CSV".equals(config.getFileFormat());
-            String htmlExample = isCsv ? config.createCsvExample() : config.createXlsxExample();
-            GetBankFileFormatResponseDto format = new GetBankFileFormatResponseDto(
-                    config.getBankName(),
-                    isCsv ? "CSV" : "XLSX",
-                    config.getFirstLine(),
-                    config.getDateColumnPos() + 1,
-                    config.getAmountColumnPos() + 1,
-                    config.getDescColumnPos() + 1,
-                    config.getCreditDebitColumnPos() == -1 ? null : config.getCreditDebitColumnPos() + 1,
-                    config.getDateFormat(),
-                    isCsv ? config.getDelimiter() : null,
-                    htmlExample);
-            return ResponseEntity.ok(format);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        boolean isCsv = "CSV".equals(config.getFileFormat());
+        String htmlExample = isCsv ? config.createCsvExample() : config.createXlsxExample();
+        GetBankFileFormatResponseDto format = new GetBankFileFormatResponseDto(config.getBankName(), isCsv ? "CSV" :
+                "XLSX", config.getFirstLine(), config.getDateColumnPos(), config.getAmountColumnPos(),
+                config.getDescColumnPos(), config.getCreditDebitColumnPos() == -1 ? null :
+                config.getCreditDebitColumnPos(), config.getDateFormat(), isCsv ? config.getDelimiter() : null,
+                config.ignoreValues(), htmlExample);
+        return ResponseEntity.ok(format);
     }
 
     @GetMapping(value = "/all", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -63,7 +47,7 @@ public class FileConfigController {
     @ApiResponse(responseCode = "200", description = "Format information retrieved successfully")
     public ResponseEntity<List<FileConfigEntity>> getAllBankFileFormats() {
         try {
-            return ResponseEntity.ok(fileConfigService.getAllBankFileFormats());
+            return ResponseEntity.ok(fileConfigService.getAllFilesConfigs());
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -73,14 +57,25 @@ public class FileConfigController {
     @Operation(description = "Update the configuration for a specific bank at runtime")
     @ApiResponse(responseCode = "200", description = "Configuration updated successfully")
     @ApiResponse(responseCode = "400", description = "Unknown bank name")
-    public ResponseEntity<Void> updateConfig(
-            @PathVariable String bankName,
-            @RequestBody UpdateFileConfigRequestDto request) {
-        try {
-            fileConfigService.updateBankFileConfig(bankName, request);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Void> updateConfig(@PathVariable String bankName,
+                                             @RequestBody UpdateFileConfigRequestDto request) {
+        fileConfigService.updateFileConfig(bankName, request);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(description = "Add a new configuration for a bank")
+    @ApiResponse(responseCode = "200", description = "Configuration added successfully")
+    public ResponseEntity<Void> addConfig(@RequestBody AddFileConfigRequestDto request) {
+        fileConfigService.addFileConfig(request);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{bankName}")
+    @Operation(description = "Delete the bank configuration")
+    @ApiResponse(responseCode = "200", description = "Configuration removed successfully")
+    public ResponseEntity<Void> deleteBankFileFormat(@PathVariable String bankName) {
+        fileConfigService.deleteFileConfig(bankName);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

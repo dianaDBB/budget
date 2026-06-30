@@ -6,12 +6,7 @@ import com.budget.core.repository.CategoryRuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,19 +29,13 @@ public class CategoryRuleServiceImpl implements CategoryRuleService {
 
     @Override
     public void updateCategoryRules(List<CategoryRuleEntity> categoryRules) {
-        Map<UUID, CategoryRuleEntity> requestedRulesById = categoryRules.stream()
-                .filter(rule -> rule.getId() != null)
-                .collect(Collectors.toMap(
-                        CategoryRuleEntity::getId,
-                        rule -> rule,
-                        (first, second) -> {
-                            throw new IllegalArgumentException("Duplicate category rule id: " + first.getId());
-                        }));
+        Map<UUID, CategoryRuleEntity> requestedRulesById =
+                categoryRules.stream().filter(rule -> rule.getId() != null).collect(Collectors.toMap(CategoryRuleEntity::getId, rule -> rule, (first, second) -> {
+            throw new IllegalArgumentException("Duplicate category rule id: " + first.getId());
+        }));
 
         Map<UUID, CategoryRuleEntity> existingRulesById =
-                categoryRuleRepository.findAllById(requestedRulesById.keySet())
-                .stream()
-                .collect(Collectors.toMap(CategoryRuleEntity::getId, rule -> rule));
+                categoryRuleRepository.findAllById(requestedRulesById.keySet()).stream().collect(Collectors.toMap(CategoryRuleEntity::getId, rule -> rule));
 
         if (existingRulesById.size() != requestedRulesById.size()) {
             Set<UUID> missingRuleIds = new HashSet<>(requestedRulesById.keySet());
@@ -63,9 +52,7 @@ public class CategoryRuleServiceImpl implements CategoryRuleService {
             existingRule.setTypeId(update.getTypeId());
         }
 
-        List<CategoryRuleEntity> rulesToCreate = categoryRules.stream()
-                .filter(rule -> rule.getId() == null)
-                .toList();
+        List<CategoryRuleEntity> rulesToCreate = categoryRules.stream().filter(rule -> rule.getId() == null).toList();
 
         List<CategoryRuleEntity> rulesToSave = new ArrayList<>(existingRulesById.values());
         rulesToSave.addAll(rulesToCreate);
@@ -73,6 +60,13 @@ public class CategoryRuleServiceImpl implements CategoryRuleService {
         if (!rulesToSave.isEmpty()) {
             categoryRuleRepository.saveAll(rulesToSave);
         }
+        cacheServiceImpl.refreshCache();
+    }
+
+    @Override
+    public void deleteCategoryRules(List<UUID> ids) {
+        categoryRuleRepository.deleteAllById(ids.stream().toList());
+
         cacheServiceImpl.refreshCache();
     }
 }

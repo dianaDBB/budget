@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class File {
@@ -29,12 +29,6 @@ public class File {
         this.banksList = bankDtoList;
         this.categoryRuleService = categoryRuleService;
         this.excelFile = this.createExcelFile("allBanks");
-    }
-
-    public File(BankDto bankDto, CategoryRuleService categoryRuleService) {
-        this.banksList = List.of(bankDto);
-        this.categoryRuleService = categoryRuleService;
-        this.excelFile = this.createExcelFile(bankDto.getConfig().getBankName());
     }
 
     Workbook createExcelFile(String sheetName) {
@@ -108,7 +102,7 @@ public class File {
         return excelFile;
     }
 
-    private FileLineDto getXlsxLine(BankDto bankDto, Row bankRow) throws ParseException {
+    private FileLineDto getXlsxLine(BankDto bankDto, Row bankRow) {
         String bankName = bankDto.getConfig().getBankName();
         int cdColPos = bankDto.getConfig().getCreditDebitColumnPos();
         int descColPos = bankDto.getConfig().getDescColumnPos();
@@ -119,18 +113,17 @@ public class File {
 
         String originalDescription = bankRow.getCell(descColPos).toString();
 
-        double amount = bankDto.getConfig().getAmount(bankRow.getCell(amountColPos).toString(),
-                creditOrDebit);
+        double amount = bankDto.getConfig().getAmount(bankRow.getCell(amountColPos).toString(), creditOrDebit);
 
-        Date date = bankDto.getConfig().getFormatedDate(bankRow.getCell(dateColPos).toString());
+        LocalDate date = bankDto.getConfig().getFormatedDate(bankRow.getCell(dateColPos).toString());
 
         CategoryRuleDto categoryRule = categoryRuleService.getCategoryRules(originalDescription);
 
-        String type = categoryRule.getType() != null ? categoryRule.getType() :
-                bankDto.getConfig().getType(amount, creditOrDebit);
+        String type = categoryRule.getType() != null ? categoryRule.getType() : bankDto.getConfig().getType(amount,
+                creditOrDebit);
 
-        return new FileLineDto(bankName, date.toString(), type, categoryRule.getCategory(),
-                categoryRule.getSubCategory(), amount, originalDescription);
+        return new FileLineDto(bankName, date, type, categoryRule.getCategory(), categoryRule.getSubCategory(),
+                amount, originalDescription);
     }
 
     private FileLineDto getCsvLine(BankDto bankDto, String[] columns) throws ParseException {
@@ -147,15 +140,15 @@ public class File {
 
         double amount = bankDto.getConfig().getAmount(columns[amountColPos], creditOrDebit);
 
-        Date date = bankDto.getConfig().getFormatedDate(columns[dateColPos]);
+        LocalDate date = bankDto.getConfig().getFormatedDate(columns[dateColPos]);
 
         CategoryRuleDto categoryRule = categoryRuleService.getCategoryRules(originalDescription);
 
-        String type = categoryRule.getType() != null ? categoryRule.getType() :
-                bankDto.getConfig().getType(amount, creditOrDebit);
+        String type = categoryRule.getType() != null ? categoryRule.getType() : bankDto.getConfig().getType(amount,
+                creditOrDebit);
 
-        return new FileLineDto(bankName, date.toString(), type, categoryRule.getCategory(),
-                categoryRule.getSubCategory(), amount, originalDescription);
+        return new FileLineDto(bankName, date, type, categoryRule.getCategory(), categoryRule.getSubCategory(),
+                amount, originalDescription);
     }
 
     private void processXlsxFile(BankDto bankDto) {

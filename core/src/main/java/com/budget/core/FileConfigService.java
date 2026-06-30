@@ -1,5 +1,6 @@
 package com.budget.core;
 
+import com.budget.core.dto.AddFileConfigRequestDto;
 import com.budget.core.dto.UpdateFileConfigRequestDto;
 import com.budget.core.entity.FileConfigEntity;
 
@@ -9,9 +10,13 @@ import java.util.List;
 
 @Component
 public interface FileConfigService {
-    FileConfigEntity getBankFileConfig(String bankName);
+    FileConfigEntity getFileConfig(String bankName);
 
-    List<FileConfigEntity> getAllBankFileFormats();
+    List<FileConfigEntity> getAllFilesConfigs();
 
-    void updateBankFileConfig(String bankName, UpdateFileConfigRequestDto request);
+    void updateFileConfig(String bankName, UpdateFileConfigRequestDto request);
+
+    void addFileConfig(AddFileConfigRequestDto request);
+
+    void deleteFileConfig(String bankName);
 }

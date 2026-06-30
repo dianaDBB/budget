@@ -11,25 +11,11 @@ public class FileConfigApi {
     public static String updateConfigUrl = "/budget/file-config/{bankName}";
 
     public static Response updateConfig(String bankName, UpdateFileConfigRequestDto request) {
-        return given()
-                .contentType("application/json")
-                .body(request)
-                .when()
-                .put(updateConfigUrl, bankName)
-                .then()
-                .extract()
-                .response();
+        return given().contentType("application/json").body(request).when().put(updateConfigUrl, bankName).then().extract().response();
     }
 
     public static GetBankFileFormatResponseDto getConfig(String bankName) {
-        Response response =
-                given()
-                        .when()
-                        .get(updateConfigUrl, bankName)
-                        .then()
-                        .statusCode(200)
-                        .extract()
-                        .response();
+        Response response = given().when().get(updateConfigUrl, bankName).then().statusCode(200).extract().response();
 
         return response.as(GetBankFileFormatResponseDto.class);
     }

@@ -16,24 +16,14 @@ public class BudgetApi {
     public static String generateFileUrl = "/budget/budget/file/{bankName}";
 
     public static Response generateBankFileRaw(String bankName, File inputFile) {
-        return given()
-                .multiPart("file", inputFile)
-                .contentType("multipart/form-data")
-                .when()
-                .post(generateFileUrl, bankName);
+        return given().multiPart("file", inputFile).contentType("multipart/form-data").when().post(generateFileUrl,
+                bankName);
     }
 
     public static XSSFWorkbook generateBankFile(String bankName, File inputFile) throws IOException {
         Response response =
-                given()
-                        .multiPart("file", inputFile)
-                        .contentType("multipart/form-data")
-                        .when()
-                        .post(generateFileUrl, bankName)
-                        .then()
-                        .statusCode(200)
-                        .extract()
-                        .response();
+                given().multiPart("file", inputFile).contentType("multipart/form-data").when().post(generateFileUrl,
+                        bankName).then().statusCode(200).extract().response();
 
         byte[] bytes = response.asByteArray();
         assertTrue(bytes.length > 0, "Response bytes length should be bigger that 0");
@@ -42,25 +32,16 @@ public class BudgetApi {
     }
 
     public static XSSFWorkbook generateAllBanksFile(List<String> bankNames, List<File> files) throws IOException {
-        RequestSpecification request = given()
-                .contentType("multipart/form-data");
+        RequestSpecification request = given().contentType("multipart/form-data");
 
         for (int i = 0; i < bankNames.size(); i++) {
             request.multiPart("bankNames", bankNames.get(i));
 
-            request.multiPart(
-                    "files",
-                    files.get(i)              // <-- just File
+            request.multiPart("files", files.get(i)              // <-- just File
             );
         }
 
-        Response response = request
-                .when()
-                .post(generateFileUrl, "all")
-                .then()
-                .statusCode(200)
-                .extract()
-                .response();
+        Response response = request.when().post(generateFileUrl, "all").then().statusCode(200).extract().response();
 
         byte[] bytes = response.asByteArray();
         assertTrue(bytes.length > 0, "Response bytes length should be bigger than 0");
